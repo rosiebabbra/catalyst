@@ -31,6 +31,7 @@
 **/.pub-cache/
 **/.pub/
 **/build/
+frontend/.metadata
 
 # Symbolication related
 **/app.*.symbols
@@ -44,11 +45,14 @@
 **/android/app/release
 
 # New directory structure
-frontend/assets/
-frontend/build/
-frontend/ios/
-frontend/linux/
-frontend/macos/
+frontend/assets/images/**
+frontend/assets/videos/**
+frontend/build/**
+frontend/ios/**
+frontend/android/**
+frontend/web/**
+frontend/linux/**
+frontend/macos/**
 frontend/pubspec.lock
 frontend/windows/
 python/bin/
