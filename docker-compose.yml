@@ -1,0 +1,15 @@
+version: '3'
+services:
+  backend:
+    build: 
+      context: backend
+      dockerfile: Dockerfile
+    environment:
+      - FLASK_RUN_PORT=8081
+    ports:
+      - "8080:8080"
+    # volumes:
+    #   - ./backend:/app/backend
+    container_name: backend-hobby-app-container
+    tty: true
+    stdin_open: true
