@@ -41,15 +41,15 @@ class _BackgroundVideoState extends State<MyApp> {
   void initState() {
     super.initState();
     // Pointing the video controller to our local asset.
-    _controller = VideoPlayerController.asset(
-        'assets/videos/pexels-cottonbro-studio-4881825.mp4')
-      ..initialize().then((_) {
-        // Once the video has been loaded we play the video and set looping to true.
-        _controller.play();
-        _controller.setLooping(true);
-        // Ensure the first frame is shown after the video is initialized.
-        setState(() {});
-      });
+    _controller =
+        VideoPlayerController.asset('assets/videos/production_id_4881692.mp4')
+          ..initialize().then((_) {
+            // Once the video has been loaded we play the video and set looping to true.
+            _controller.play();
+            _controller.setLooping(true);
+            // Ensure the first frame is shown after the video is initialized.
+            setState(() {});
+          });
   }
 
   @override
@@ -67,7 +67,7 @@ class _BackgroundVideoState extends State<MyApp> {
       900: Color.fromRGBO(115, 1, 228, 1),
     };
 
-    MaterialColor colorCustom = MaterialColor(0xff7301E4, color);
+    MaterialColor colorCustom = MaterialColor(0xFF4f4f4f, color);
 
     return MaterialApp(
       title: 'Flutter Demo',
@@ -103,7 +103,7 @@ class _BackgroundVideoState extends State<MyApp> {
                   gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.transparent, Colors.black],
+            colors: [Colors.white, Colors.transparent],
           ))),
           const HomeScreen()
         ],

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import '../home/home_screen.dart';
 import '../repositories/database/database_repository.dart';
 import '../utils/format_phone_number.dart';
 import '../models/user_data.dart';
@@ -54,125 +55,111 @@ class _PhoneVerificationState extends State<PhoneVerification> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
-          child: SizedBox(
-              height: 75,
-              width: 75,
-              child: Container(
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(width: 3.5, color: Colors.transparent),
-                    gradient: const LinearGradient(
-                      transform: GradientRotation(math.pi / 4),
-                      colors: [
-                        Color(0xff7301E4),
-                        Color(0xff0E8BFF),
-                        Color(0xff09CBC8),
-                        Color(0xff33D15F),
-                      ],
-                    )),
-                child: Container(
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle, color: Colors.white),
-                  child: TextButton(
-                    child: const Icon(Icons.arrow_forward_ios,
-                        color: Colors.black),
-                    onPressed: () async {
-                      // set phone number state
-                      Provider.of<MyPhoneNumberProvider>(context, listen: false)
-                              .myPhoneNumber =
-                          UserPhoneNumber(
-                              exitCode: widget.exitCode,
-                              phoneNumber: widget.phoneNumber);
-
-                      int statusCode =
-                          await checkUserPresence(widget.phoneNumber);
-
-                      if (statusCode == 200) {
-                        // This condition occurs when a user already exists but is attemping to register
-                        if (widget.forgotPassword == false) {
-                          // Show a SnackBar with a message and redirect to login page
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            duration: const Duration(seconds: 5),
-                            content: Column(
-                              children: const [
-                                Text(
-                                  "Hey, we've seen you here before!",
-                                  style: TextStyle(fontSize: 22),
-                                ),
-                                Text(
-                                    'Looks like you\'ve already registered, so you will now be redirected to our login page'),
-                              ],
-                            ),
-                            action: SnackBarAction(
-                              label: '',
-                              onPressed: () {},
-                            ),
-                          ));
-                          Future.delayed(const Duration(seconds: 6), () {
-                            Navigator.pushNamed(context, '/matches');
-                          });
-                        }
-                        // CHECKED! This condition occurs when a user already exists but has forgetten their password
-                        else {
-                          _isElevated = !_isElevated;
-                          // Comment out while developing, uncomment before deploying
-                          verifyUserPhoneNumber(
-                              formatPhoneNumber(
-                                  widget.exitCode, widget.phoneNumber, true),
-                              widget.verificationCode);
-
-                          // Instead of 'resetting the password' since we're not actually using
-                          // email password login, just go to the matches page after verifying...
-
-                          // Future.delayed(const Duration(seconds: 6), () {
-                          //   Navigator.pushNamed(context, '/password-reset');
-                          // });
-
-                          Future.delayed(const Duration(seconds: 6), () {
-                            Navigator.pushNamed(
-                                context, '/verification-screen');
-                          });
-                        }
-                      } else {
-                        // CHECKED! This condition occurs when a user does not exist and is attempting to reset their password
-                        if (widget.forgotPassword == true) {
-                          // Show a SnackBar with a message and redirect to login page
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            duration: const Duration(seconds: 5),
-                            content: Column(
-                              children: const [
-                                Text(
-                                  "Looks like you're new here!",
-                                  style: TextStyle(fontSize: 22),
-                                ),
-                                Text(
-                                    "Since you haven't registered yet, you'll now be redirected to our registration page"),
-                              ],
-                            ),
-                            action: SnackBarAction(
-                              label: '',
-                              onPressed: () {},
-                            ),
-                          ));
-                          Future.delayed(const Duration(seconds: 6), () {
-                            Navigator.pushNamed(context, '/onboarding');
-                          });
-                        } else {
-                          print('exit codeeeeee');
-                          print(widget.exitCode);
-                          createUser(widget.exitCode, widget.phoneNumber,
-                              'testing', 'testing', '2');
-                          Navigator.pushNamed(context, '/onboarding-name');
-                        }
-                      }
-                    },
+          child: ClipOval(
+            child: TextButton(
+              style: ButtonStyle(
+                  fixedSize: MaterialStateProperty.all<Size>(
+                    Size(200.0, 50.0), // Adjust the width and height as needed
                   ),
-                ),
-              )),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          20.0), // Adjust the radius as needed
+                    ),
+                  )),
+              onPressed: () async {
+                Provider.of<MyPhoneNumberProvider>(context, listen: false)
+                        .myPhoneNumber =
+                    UserPhoneNumber(
+                        exitCode: widget.exitCode,
+                        phoneNumber: widget.phoneNumber);
+
+                int statusCode = await checkUserPresence(widget.phoneNumber);
+
+                if (statusCode == 200) {
+                  // This condition occurs when a user already exists but is attemping to register
+                  if (widget.forgotPassword == false) {
+                    // Show a SnackBar with a message and redirect to login page
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      duration: const Duration(seconds: 5),
+                      content: Column(
+                        children: const [
+                          Text(
+                            "Hey, we've seen you here before!",
+                            style: TextStyle(fontSize: 22),
+                          ),
+                          Text(
+                              'Looks like you\'ve already registered, so you will now be redirected to our login page'),
+                        ],
+                      ),
+                      action: SnackBarAction(
+                        label: '',
+                        onPressed: () {},
+                      ),
+                    ));
+                    Future.delayed(const Duration(seconds: 6), () {
+                      Navigator.pushNamed(context, '/matches');
+                    });
+                  }
+                  // CHECKED! This condition occurs when a user already exists but has forgetten their password
+                  else {
+                    _isElevated = !_isElevated;
+                    // Comment out while developing, uncomment before deploying
+                    verifyUserPhoneNumber(
+                        formatPhoneNumber(
+                            widget.exitCode, widget.phoneNumber, true),
+                        widget.verificationCode);
+
+                    // Instead of 'resetting the password' since we're not actually using
+                    // email password login, just go to the matches page after verifying...
+
+                    // Future.delayed(const Duration(seconds: 6), () {
+                    //   Navigator.pushNamed(context, '/password-reset');
+                    // });
+
+                    Future.delayed(const Duration(seconds: 6), () {
+                      Navigator.pushNamed(context, '/verification-screen');
+                    });
+                  }
+                } else {
+                  // CHECKED! This condition occurs when a user does not exist and is attempting to reset their password
+                  if (widget.forgotPassword == true) {
+                    // Show a SnackBar with a message and redirect to login page
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      duration: const Duration(seconds: 5),
+                      content: Column(
+                        children: const [
+                          Text(
+                            "Looks like you're new here!",
+                            style: TextStyle(fontSize: 22),
+                          ),
+                          Text(
+                              "Since you haven't registered yet, you'll now be redirected to our registration page"),
+                        ],
+                      ),
+                      action: SnackBarAction(
+                        label: '',
+                        onPressed: () {},
+                      ),
+                    ));
+                    Future.delayed(const Duration(seconds: 6), () {
+                      Navigator.pushNamed(context, '/onboarding');
+                    });
+                  } else {
+                    print('exit codeeeeee');
+                    print(widget.exitCode);
+                    createUser(widget.exitCode, widget.phoneNumber, 'testing',
+                        'testing', '2');
+                    // Navigator.pushNamed(context, '/onboarding-name');
+                  }
+                }
+              },
+              child: Text('There will be a button here...'),
+            ),
+          ),
         ),
       ],
     );
@@ -261,44 +248,31 @@ class _PhoneNumberEntryScreenState extends State<PhoneNumberEntryScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Colors.black, // Set border color
-                              width: 3.0),
-                          borderRadius: BorderRadius.circular(36)),
-                      child: const CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        radius: 25.0,
-                        child: Icon(
-                          Icons.phone,
-                          color: Colors.black,
-                          size: 36.0,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: const [
+                  children: [
                     Flexible(
-                      child: Text("What's your phone number?",
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold)),
+                      child: SlideFadeTransition(
+                        animationDuration: const Duration(milliseconds: 400),
+                        offset: 2,
+                        child: Text("What's your phone number?",
+                            style: TextStyle(
+                                fontSize: 30, fontWeight: FontWeight.bold)),
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 15),
                 Row(
-                  children: const [
+                  children: [
                     Flexible(
-                      child: Text(
-                          'You will be sent a six digit number to verify your identity.'),
+                      child: SlideFadeTransition(
+                        animationDuration: const Duration(milliseconds: 1200),
+                        offset: 2,
+                        child: Text(
+                            'You will be sent a six digit number to verify your identity.'),
+                      ),
                     )
                   ],
                 ),
