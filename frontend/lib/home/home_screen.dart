@@ -9,6 +9,25 @@ import 'dart:math' as math;
 
 bool firstRun = true;
 
+Widget AnimatedButtonStyle(
+    width, height, label, backgroundColor, foregroundColor,
+    [fontWeight]) {
+  return Container(
+    width: width,
+    height: height,
+    decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(25),
+        ),
+        color: backgroundColor),
+    child: Center(
+      child: Text(label,
+          style: TextStyle(
+              fontWeight: fontWeight, color: foregroundColor, fontSize: 16)),
+    ),
+  );
+}
+
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
@@ -24,15 +43,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 animationDuration: const Duration(milliseconds: 1000),
                 offset: 2,
                 child: Text(
-                  '<3',
-                  style:
-                      GoogleFonts.openSans(fontSize: 70, color: Colors.white),
+                  'hatched',
+                  style: GoogleFonts.openSans(
+                      fontSize: 70,
+                      color: Colors.white,
+                      shadows: const [
+                        Shadow(
+                          color: Colors.black45,
+                          blurRadius: 10.0,
+                          offset: Offset(5, 5),
+                        ),
+                      ]),
                 )),
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height / 3.5,
           ),
-          BouncingButton(),
+          AnimatedButton(
+              width: MediaQuery.of(context).size.width / 1.75,
+              height: MediaQuery.of(context).size.height / 20,
+              buttonText: 'Create account',
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.green,
+              fontWeight: FontWeight.bold),
           const SizedBox(height: 20),
           RichText(
               text: TextSpan(
@@ -50,12 +83,28 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class BouncingButton extends StatefulWidget {
+class AnimatedButton extends StatefulWidget {
+  double width;
+  double height;
+  String buttonText;
+  MaterialColor backgroundColor;
+  MaterialColor foregroundColor;
+  FontWeight fontWeight;
+
+  AnimatedButton(
+      {super.key,
+      required this.width,
+      required this.height,
+      required this.buttonText,
+      required this.backgroundColor,
+      required this.foregroundColor,
+      required this.fontWeight});
+
   @override
-  _BouncingButtonState createState() => _BouncingButtonState();
+  AnimatedButtonState createState() => AnimatedButtonState();
 }
 
-class _BouncingButtonState extends State<BouncingButton>
+class AnimatedButtonState extends State<AnimatedButton>
     with SingleTickerProviderStateMixin {
   late double _scale;
   late AnimationController _controller;
@@ -88,26 +137,13 @@ class _BouncingButtonState extends State<BouncingButton>
       onTapUp: _tapUp,
       child: Transform.scale(
         scale: _scale,
-        child: _animatedButton(),
-      ),
-    );
-  }
-
-  Widget _animatedButton() {
-    return Container(
-      width: MediaQuery.of(context).size.width / 1.75,
-      height: MediaQuery.of(context).size.height / 20,
-      decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(25),
-          ),
-          color: Colors.white),
-      child: const Center(
-        child: Text('Create account',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontSize: 16)),
+        child: AnimatedButtonStyle(
+            widget.width,
+            widget.height,
+            widget.buttonText,
+            widget.backgroundColor,
+            widget.foregroundColor,
+            widget.fontWeight),
       ),
     );
   }

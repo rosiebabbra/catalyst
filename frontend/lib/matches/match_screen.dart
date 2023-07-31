@@ -566,7 +566,6 @@ class _MatchProfileState extends State<MatchProfile> {
                 ],
               ),
             ),
-            const Positioned(top: 175, right: 15, child: InteractionGrid()),
           ],
         ),
       ),
@@ -697,103 +696,6 @@ class InterestsWidget extends StatelessWidget {
             )
         ],
       ),
-    );
-  }
-}
-
-class InteractionGrid extends StatelessWidget {
-  const InteractionGrid({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                  blurRadius: 10, color: Colors.grey[700]!, spreadRadius: 3)
-            ],
-          ),
-          child: CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 35,
-              child: TextButton(
-                onPressed: () {
-                  // executeFriend();
-                },
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<CircleBorder>(
-                        const CircleBorder(
-                            side: BorderSide(color: Colors.white))),
-                    shadowColor:
-                        MaterialStateProperty.all<Color>(Colors.black)),
-                child: const Icon(Icons.group_add,
-                    color: Color(0xff33D15F), size: 35),
-              )),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 15.0, 0, 0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                    blurRadius: 10, color: Colors.grey[700]!, spreadRadius: 3)
-              ],
-            ),
-            child: CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 35,
-                child: TextButton(
-                  onPressed: () {
-                    // executeNetwork();
-                  },
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all<CircleBorder>(
-                        const CircleBorder(
-                            side: BorderSide(color: Colors.white))),
-                  ),
-                  child: const Icon(Icons.work,
-                      color: Color(0xff0E8BFF), size: 40),
-                )),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 15.0, 0, 0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                    blurRadius: 10, color: Colors.grey[700]!, spreadRadius: 3)
-              ],
-            ),
-            child: CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 35,
-                child: TextButton(
-                  onPressed: () {
-                    // executeDate();
-                  },
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all<CircleBorder>(
-                        const CircleBorder(
-                            side: BorderSide(color: Colors.white))),
-                  ),
-                  child: const Icon(Icons.favorite,
-                      color: Color(0xff7301E4), size: 40),
-                )),
-          ),
-        ),
-      ],
     );
   }
 }
