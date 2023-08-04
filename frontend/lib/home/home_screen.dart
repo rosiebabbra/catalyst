@@ -63,9 +63,13 @@ class _HomeScreenState extends State<HomeScreen> {
               width: MediaQuery.of(context).size.width / 1.75,
               height: MediaQuery.of(context).size.height / 20,
               buttonText: 'Create account',
-              backgroundColor: Colors.green,
-              foregroundColor: Colors.green,
-              fontWeight: FontWeight.bold),
+              backgroundColor: const MaterialColor(0xFFFFFFFF, <int, Color>{
+                50: Color(0xFFFFFFFF),
+              }),
+              foregroundColor: const MaterialColor(0xFF000000, <int, Color>{
+                50: Color(0x00000000),
+              }),
+              fontWeight: FontWeight.w700),
           const SizedBox(height: 20),
           RichText(
               text: TextSpan(
