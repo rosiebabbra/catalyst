@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/hobbies/main.dart';
 import 'package:my_app/login/password_reset_screen.dart';
 import 'package:my_app/onboarding/ideal_date_screen.dart';
 import 'package:my_app/onboarding/ideal_match_screen.dart';
@@ -7,6 +8,7 @@ import 'package:video_player/video_player.dart';
 import 'home/home_screen.dart';
 import 'login/forgot_password_screen.dart';
 import 'matches/match_screen.dart';
+import 'hobbies/main.dart';
 import 'models/user_data.dart';
 import 'onboarding/dob_screen.dart';
 import 'onboarding/gender_identification_screen.dart';
@@ -17,7 +19,6 @@ import 'onboarding/location_disclaimer_screen.dart';
 import 'onboarding/name_screen.dart';
 import 'onboarding/phone_number_screen.dart';
 import 'onboarding/verification_code_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
@@ -33,21 +34,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _BackgroundVideoState extends State<MyApp> {
-  // TODO 4: Create a VideoPlayerController object.
   late VideoPlayerController _controller;
 
-  // TODO 5: Override the initState() method and setup your VideoPlayerController
   @override
   void initState() {
     super.initState();
-    // Pointing the video controller to our local asset.
     _controller =
         VideoPlayerController.asset('assets/videos/production_id_4881692.mp4')
           ..initialize().then((_) {
-            // Once the video has been loaded we play the video and set looping to true.
             _controller.play();
             _controller.setLooping(true);
-            // Ensure the first frame is shown after the video is initialized.
             setState(() {});
           });
   }
@@ -82,6 +78,7 @@ class _BackgroundVideoState extends State<MyApp> {
         '/matches': (context) => const MatchScreen(
               userId: 555,
             ),
+        '/hobbies': (context) => HobbyScreen(hobby: 'Tennis'),
         '/onboarding': (context) => const PhoneNumberEntryScreen(),
         '/onboarding-name': (context) => const NameEntryScreen(),
         '/onboarding-dob': (context) => const DOBEntryScreen(),
