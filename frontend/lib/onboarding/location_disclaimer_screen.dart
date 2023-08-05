@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../home/home_screen.dart';
+import '../widgets/button.dart';
 
 class LocationDisclaimerScreen extends StatelessWidget {
   const LocationDisclaimerScreen({super.key});
