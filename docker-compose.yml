@@ -1,7 +1,7 @@
 version: '3'
 services:
   backend:
-    build: 
+    build:
       context: backend
       dockerfile: Dockerfile
     environment:
