@@ -247,7 +247,11 @@ class _PhoneNumberEntryScreenState extends State<PhoneNumberEntryScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 20),
+                const SizedBox(height: 200),
+                // Align(
+                //     alignment: Alignment.centerLeft,
+                //     child: Icon(Icons.phone_iphone, size: 45)),
+                // const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -270,7 +274,7 @@ class _PhoneNumberEntryScreenState extends State<PhoneNumberEntryScreen> {
                         animationDuration: const Duration(milliseconds: 1200),
                         offset: 2,
                         child: const Text(
-                            'You will be sent a six digit number to verify your identity.'),
+                            'You will be sent a six digit code to verify your identity.'),
                       ),
                     )
                   ],
@@ -315,7 +319,7 @@ class _PhoneNumberEntryScreenState extends State<PhoneNumberEntryScreen> {
                     onSaved: (PhoneNumber number) {},
                     spaceBetweenSelectorAndTextField: 0),
                 const SizedBox(
-                  height: 45,
+                  height: 175,
                 ),
                 PhoneVerification(
                   exitCode: dialCode,
