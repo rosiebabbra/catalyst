@@ -1,5 +1,4 @@
 import uuid
-import json
 
 from utils.utils import unpack_query_results, format_phone_number
 from typing import Any
