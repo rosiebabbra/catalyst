@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 Widget animatedButtonStyle(
     width, height, label, backgroundColor, foregroundColor,
-    [fontWeight]) {
+    [fontWeight, fontSize]) {
   return Container(
     width: width,
     height: height,
@@ -16,7 +16,9 @@ Widget animatedButtonStyle(
     child: Center(
       child: Text(label,
           style: TextStyle(
-              fontWeight: fontWeight, color: foregroundColor, fontSize: 16)),
+              fontWeight: fontWeight,
+              color: foregroundColor,
+              fontSize: fontSize)),
     ),
   );
 }
@@ -28,6 +30,7 @@ class AnimatedButton extends StatefulWidget {
   MaterialColor backgroundColor;
   MaterialColor foregroundColor;
   FontWeight fontWeight;
+  double fontSize;
   VoidCallback? onPressed;
   String? landingPage;
 
@@ -39,6 +42,7 @@ class AnimatedButton extends StatefulWidget {
       required this.backgroundColor,
       required this.foregroundColor,
       required this.fontWeight,
+      required this.fontSize,
       this.onPressed,
       this.landingPage});
 
