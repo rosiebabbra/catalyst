@@ -8,3 +8,6 @@ file can be retrieved from the Firebase console.
 5. Go to "Service Accounts" in the left sidebar
 6. Click the 3 dots under the "Actions" column and hit "Manage keys"
 7. Create a new JSON key and save it in the python/database directory
+
+### Development
+docker-compose up -d --build
