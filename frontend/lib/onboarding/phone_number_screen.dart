@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../home/home_screen.dart';
 import '../utils/format_phone_number.dart';
 import '../models/user_data.dart';
+import '../utils/text_fade.dart';
 import '../widgets/button.dart';
 import 'package:http/http.dart' as http;
 
@@ -65,6 +68,7 @@ class _PhoneVerificationState extends State<PhoneVerification> {
               50: Color(0x00000000),
             }),
             buttonText: 'Next',
+            fontSize: 16,
             fontWeight: FontWeight.bold,
             onPressed: () async {
               Provider.of<MyPhoneNumberProvider>(context, listen: false)
@@ -224,17 +228,20 @@ class _PhoneNumberEntryScreenState extends State<PhoneNumberEntryScreen> {
       PhoneNumber(isoCode: 'US', dialCode: '+1', phoneNumber: '');
   String dialCode = '+1';
 
+  bool devMode = (Platform.environment['DEV_MODE'] == null) ? false : true;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-          // TODO: Remove appbar for user, keep for admin/dev
-          appBar: AppBar(
-            elevation: 0,
-            foregroundColor: Colors.black,
-            backgroundColor: Colors.white,
-          ),
+          appBar: devMode
+              ? AppBar(
+                  elevation: 0,
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.white,
+                )
+              : null,
           body: Padding(
             padding: const EdgeInsets.fromLTRB(45.0, 0, 65.0, 0),
             child: Column(
@@ -245,7 +252,7 @@ class _PhoneNumberEntryScreenState extends State<PhoneNumberEntryScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Flexible(
-                      child: SlideFadeTransition(
+                      child: FadeInText(
                         animationDuration: const Duration(milliseconds: 400),
                         offset: 2,
                         child: const Text("What's your phone number?",
@@ -259,7 +266,7 @@ class _PhoneNumberEntryScreenState extends State<PhoneNumberEntryScreen> {
                 Row(
                   children: [
                     Flexible(
-                      child: SlideFadeTransition(
+                      child: FadeInText(
                         animationDuration: const Duration(milliseconds: 1200),
                         offset: 2,
                         child: const Text(

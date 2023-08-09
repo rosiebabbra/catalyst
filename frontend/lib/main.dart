@@ -4,12 +4,14 @@ import 'package:my_app/login/password_reset_screen.dart';
 import 'package:my_app/onboarding/ideal_date_screen.dart';
 import 'package:my_app/onboarding/ideal_match_screen.dart';
 import 'package:my_app/onboarding/interests_screen.dart';
+import 'package:my_app/swipes_completed/main.dart';
 import 'package:video_player/video_player.dart';
 import 'home/home_screen.dart';
 import 'login/forgot_password_screen.dart';
 import 'matches/match_screen.dart';
 import 'hobbies/main.dart';
 import 'models/user_data.dart';
+import 'my_profile/my_profile_screen.dart';
 import 'onboarding/dob_screen.dart';
 import 'onboarding/gender_identification_screen.dart';
 import 'onboarding/ethnicity_identification_screen.dart';
@@ -90,7 +92,9 @@ class _BackgroundVideoState extends State<MyApp> {
         '/onboarding-ideal-match': (context) => const IdealMatchScreen(),
         '/onboarding-interests': (context) => InterestsScreen(),
         '/generating-matches': (context) => GeneratingMatchesScreen(),
-        '/verification-screen': (context) => VerificationScreen()
+        '/verification-screen': (context) => VerificationScreen(),
+        '/swipes-completed': (context) => SwipesCompletedScreen(),
+        '/subscription-page': (context) => MyProfileScreen()
       },
       home: Stack(
         children: <Widget>[
