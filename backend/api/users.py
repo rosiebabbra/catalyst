@@ -86,13 +86,25 @@ def create_new_user(db: firestore.client,
     #     phone_number=phone_number
     # )
 
-    collection_ref = db.collection("users")
-    collection_ref.add({
+    users_cf = db.collection("users")
+    users_cf.add({
         'user_id' : user_id,
         'phone_number' : phone_number,
         'created_at' : datetime.now(),
         'role_id' : int(role_id)
     })
+
+    selected_interests_cf = db.collection("selected_interests")
+    selected_interests_cf.add({
+        'user_id' : user_id
+    })
+
+    declined_interests_cf = db.collection("declined_interests")
+    declined_interests_cf.add({
+        'user_id' : user_id
+    })
+
+
 
 
 def update_user_info(db: firestore.client, 
