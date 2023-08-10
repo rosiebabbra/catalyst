@@ -34,7 +34,7 @@ def sanitize_input(input):
     return input
 
 
-def ward_injection_attempt(input_string):
+def thwart_injection_attempt(input_string):
     """Check if the input string contains SQL code or potential SQL injection patterns"""
     
     # Check for common SQL keywords or statements
