@@ -4,7 +4,7 @@ from flask import g, Flask, jsonify, make_response, request
 from database.db import db
 from api.users import get_user_info, create_new_user, format_phone_number, check_user_existence, update_user_info
 from api.ethnicity import write_ethnicity
-from api.interests.selections import write_interests, write_noninterests
+from api.interests.selections import write_selected_interests, write_declined_interests
 from utils.utils import sanitize_input, ward_injection_attempt
 
 
@@ -96,14 +96,14 @@ def ethnicity():
 @app.route('/interests', methods=['PUT'])
 def interests():
     
-    write_interests(db, 1, ['some crap'])
+    write_selected_interests(db, 1, ['some crap'])
     return make_response('Interests updated', 204)
 
 
 @app.route('/noninterests', methods=['PUT'])
 def noninterests():
 
-    write_noninterests(db, 1, ['some crap'])
+    write_declined_interests(db, 1, ['some crap'])
     return make_response('Non-interests updated', 204)
 
 
