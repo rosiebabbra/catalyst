@@ -5,7 +5,7 @@ from database.db import db
 from api.users import get_user_info, create_new_user, format_phone_number, check_user_existence, update_user_info
 from api.ethnicity import write_ethnicity
 from api.interests.selections import write_selected_interests, write_declined_interests
-from utils.utils import sanitize_input, ward_injection_attempt
+from utils.utils import sanitize_input, thwart_injection_attempt
 
 
 app = Flask(__name__)
@@ -19,8 +19,8 @@ def store_user_input():
 @app.route("/user_presence", methods=['POST'])
 def user_existence():
 
-    exit_code = ward_injection_attempt(request.form['exit_code'])
-    phone_number = ward_injection_attempt(request.form['phone_number'])
+    exit_code = thwart_injection_attempt(request.form['exit_code'])
+    phone_number = thwart_injection_attempt(request.form['phone_number'])
 
     user_exists = check_user_existence(
         db, 
@@ -37,9 +37,9 @@ def user_existence():
 @app.route("/create_user", methods=["POST"])
 def create_user():
 
-    exit_code = ward_injection_attempt(request.form['exit_code'])
-    phone_number = ward_injection_attempt(request.form['phone_number'])
-    role_id = ward_injection_attempt(request.form['role_id'])
+    exit_code = thwart_injection_attempt(request.form['exit_code'])
+    phone_number = thwart_injection_attempt(request.form['phone_number'])
+    role_id = thwart_injection_attempt(request.form['role_id'])
 
     create_new_user(
         db, 
@@ -79,32 +79,18 @@ def user_data():
     return user
 
 
-@app.route("/ethnicity", methods=['POST'])
-def ethnicity():
-
-    user_id = int(
-        request.form['user_id']
-    )
-    ethnicity_id = int(
-        request.form['ethnicity_id']
-    )
-    
-    write_ethnicity(user_id, ethnicity_id)
-    print('ethnicity written')
-
-
-@app.route('/interests', methods=['PUT'])
-def interests():
+@app.route('/selected-interests', methods=['PUT'])
+def selected_interests():
     
     write_selected_interests(db, 1, ['some crap'])
-    return make_response('Interests updated', 204)
+    return make_response('Selected interests updated', 204)
 
 
-@app.route('/noninterests', methods=['PUT'])
-def noninterests():
+@app.route('/declined-interests', methods=['PUT'])
+def declined_interests():
 
     write_declined_interests(db, 1, ['some crap'])
-    return make_response('Non-interests updated', 204)
+    return make_response('Declined interests updated', 204)
 
 
 if __name__ == '__main__':
