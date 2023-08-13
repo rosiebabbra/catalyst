@@ -84,6 +84,7 @@ flutter:
     - assets/images/profPic2.jpg
     - assets/images/profPic3.jpg
     - assets/images/erin.jpg
+    - assets/files/hobbies.txt
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
