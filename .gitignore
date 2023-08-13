@@ -32,6 +32,7 @@
 **/.pub/
 **/build/
 frontend/.metadata
+frontend/hobby-app/hobby-app.xcodeproj/**
 
 # Symbolication related
 **/app.*.symbols
@@ -45,6 +46,7 @@ frontend/.metadata
 **/android/app/release
 
 # New directory structure
+frontend/assets/files/**
 frontend/assets/images/**
 frontend/assets/videos/**
 frontend/build/**
