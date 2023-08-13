@@ -32,6 +32,7 @@ dependencies:
   flutter:
     sdk: flutter
   swipeable_card_stack: ^0.0.5
+  swipable_stack: ^2.0.0
   google_fonts: ^4.0.3
   url_launcher: ^6.1.6
   permission_handler: ^10.2.0

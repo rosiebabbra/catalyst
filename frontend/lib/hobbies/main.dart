@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:swipeable_card_stack/swipeable_card_stack.dart';
+import 'package:swipable_stack/swipable_stack.dart';
 
 import '../utils/text_fade.dart';
 
@@ -28,11 +28,14 @@ class HobbyScreen extends StatefulWidget {
 
 class HobbyScreenState extends State<HobbyScreen> {
   List<String> hobbies = [];
+  late final SwipableStackController _controller;
+  void _listenController() => setState(() {});
 
   @override
   void initState() {
     super.initState();
     populateList();
+    _controller = SwipableStackController()..addListener(_listenController);
   }
 
   void populateList() async {
@@ -41,9 +44,15 @@ class HobbyScreenState extends State<HobbyScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _controller
+      ..removeListener(_listenController)
+      ..dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    SwipeableCardSectionController cardController =
-        SwipeableCardSectionController();
     List<Card> stack = [];
     int counter = 0;
     for (var item in hobbies) {
@@ -79,36 +88,27 @@ class HobbyScreenState extends State<HobbyScreen> {
           backgroundColor: Colors.white,
         ),
         body: SizedBox(
-          height: 500,
-          width: 200,
-          child: SwipeableCardsSection(
-            enableSwipeUp: false,
-            enableSwipeDown: false,
-            cardHeightTopMul: 0.9,
-            cardWidthTopMul: 0.9,
-            cardWidthMiddleMul: 0.9,
-            cardWidthBottomMul: 0.9,
-            cardHeightMiddleMul: 0.9,
-            cardHeightBottomMul: 0.9,
-            cardController: cardController,
-            context: context,
-            items: stack,
-            // onCardSwiped: (dir, index, widget) {
-            //   if (counter < stack.length) {
-            //     // if (dir == Direction.right) {
-            //     //// add to db of users' interests
-            //     // } else {
-            //     //// add to db of things user is NOT interested in
-            //     // }
-            //     //// regardless of whether the user is interested in the current
-            //     //// card or not, after a swipe, move to the next hobby
-            //     counter++;
-            //   } else {
-            //     Navigator.pushNamed(context, '/swipes-completed');
-            //   }
-            // },
-          ),
-        ));
+            height: 500,
+            width: 200,
+            child: SwipableStack(
+                detectableSwipeDirections: const {
+                  SwipeDirection.right,
+                  SwipeDirection.left,
+                },
+                controller: _controller,
+                stackClipBehaviour: Clip.none,
+                onSwipeCompleted: (index, direction) {
+                  print('$index, $direction');
+                  // if direction == SwipeDirection.right, add to selected_interests table
+                  // else, add to declined_interests
+                },
+                horizontalSwipeThreshold: 0.8,
+                verticalSwipeThreshold: 0.8,
+                builder: (context, properties) {
+                  final itemIndex = properties.index % stack.length;
+
+                  return stack[itemIndex];
+                })));
   }
 }
 
