@@ -1,8 +1,22 @@
+import 'dart:io';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swipeable_card_stack/swipeable_card_stack.dart';
 
 import '../utils/text_fade.dart';
+
+Future<List<String>> readAndPopulateList() async {
+  try {
+    String fileContents =
+        await rootBundle.loadString('assets/files/hobbies.txt');
+    List<String> lines = fileContents.split('\n');
+    return lines;
+  } catch (e) {
+    print('Error reading the file: $e');
+    return [];
+  }
+}
 
 class HobbyScreen extends StatefulWidget {
   String hobby;
@@ -13,10 +27,18 @@ class HobbyScreen extends StatefulWidget {
 }
 
 class HobbyScreenState extends State<HobbyScreen> {
-  List<Hobby> hobbies = [
-    Hobby(id: 1, name: 'Tennis'),
-    Hobby(id: 2, name: 'Golf')
-  ];
+  List<String> hobbies = [];
+
+  @override
+  void initState() {
+    super.initState();
+    populateList();
+  }
+
+  void populateList() async {
+    hobbies = await readAndPopulateList();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +46,6 @@ class HobbyScreenState extends State<HobbyScreen> {
         SwipeableCardSectionController();
     List<Card> stack = [];
     int counter = 0;
-
     for (var item in hobbies) {
       stack.add(
         Card(
@@ -39,7 +60,7 @@ class HobbyScreenState extends State<HobbyScreen> {
           shadowColor: Colors.white,
           child: Center(
             child: FadeInText(
-              child: Text(item.name,
+              child: Text(item,
                   style: GoogleFonts.openSans(
                     fontSize: 32,
                     color: Colors.black,
@@ -58,8 +79,8 @@ class HobbyScreenState extends State<HobbyScreen> {
           backgroundColor: Colors.white,
         ),
         body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
+          height: 500,
+          width: 200,
           child: SwipeableCardsSection(
             enableSwipeUp: false,
             enableSwipeDown: false,
@@ -71,24 +92,21 @@ class HobbyScreenState extends State<HobbyScreen> {
             cardHeightBottomMul: 0.9,
             cardController: cardController,
             context: context,
-            items: [SizedBox.expand(child: stack[counter])],
-            onCardSwiped: (dir, index, widget) {
-              if (counter < stack.length) {
-                // if (dir == Direction.right) {
-                //// add to db of users' interests
-                // } else {
-                //// add to db of things user is NOT interested in
-                // }
-                //// regardless of whether the user is interested in the current
-                //// card or not, after a swipe, move to the next hobby
-                counter++;
-                try {
-                  cardController.addItem(stack[counter]);
-                } on RangeError catch (e) {
-                  Navigator.pushNamed(context, '/swipes-completed');
-                }
-              }
-            },
+            items: stack,
+            // onCardSwiped: (dir, index, widget) {
+            //   if (counter < stack.length) {
+            //     // if (dir == Direction.right) {
+            //     //// add to db of users' interests
+            //     // } else {
+            //     //// add to db of things user is NOT interested in
+            //     // }
+            //     //// regardless of whether the user is interested in the current
+            //     //// card or not, after a swipe, move to the next hobby
+            //     counter++;
+            //   } else {
+            //     Navigator.pushNamed(context, '/swipes-completed');
+            //   }
+            // },
           ),
         ));
   }
