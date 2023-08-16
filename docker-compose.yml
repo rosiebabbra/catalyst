@@ -9,6 +9,6 @@ services:
       - DEV_MODE=1
     ports:
       - "8080:8080"
-    container_name: backend-hobby-app-container
+    container_name: backend-container
     tty: true
     stdin_open: true
