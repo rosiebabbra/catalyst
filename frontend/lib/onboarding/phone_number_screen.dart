@@ -34,7 +34,6 @@ class _PhoneVerificationState extends State<PhoneVerification> {
 
   @override
   void initState() {
-    print(widget.phoneNumber);
     super.initState();
   }
 
