@@ -81,14 +81,26 @@ def user_data():
 @app.route('/selected-interests', methods=['PUT'])
 def selected_interests():
     
-    write_interests(db, 1, 7, Interest.selected)
+    user_id = int(
+        request.form['user_id'],
+    )
+    interest_id = int(
+        request.form['interest_id'],
+    )
+    write_interests(db, user_id, interest_id, Interest.selected)
     return make_response('Selected interests updated', 204)
 
 
 @app.route('/declined-interests', methods=['PUT'])
 def declined_interests():
 
-    write_interests(db, 1, 9, Interest.declined)
+    user_id = int(
+        request.form['user_id'],
+    )
+    interest_id = int(
+        request.form['interest_id'],
+    )
+    write_interests(db, user_id, interest_id, Interest.declined)
     return make_response('Declined interests updated', 204)
 
 
