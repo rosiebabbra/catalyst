@@ -2,10 +2,9 @@ import json
 
 from flask import g, Flask, jsonify, make_response, request
 from database.db import db
-from api.users import get_user_info, create_new_user, format_phone_number, check_user_existence, update_user_info
-from api.ethnicity import write_ethnicity
-from api.interests.selections import write_selected_interests, write_declined_interests
-from utils.utils import sanitize_input, thwart_injection_attempt
+from api.users import get_user_info, create_new_user, check_user_existence, update_user_info
+from api.interests.selections import write_interests, Interest
+from utils.utils import thwart_injection_attempt
 
 
 app = Flask(__name__)
@@ -82,14 +81,14 @@ def user_data():
 @app.route('/selected-interests', methods=['PUT'])
 def selected_interests():
     
-    write_selected_interests(db, 1, ['some crap'])
+    write_interests(db, 1, 7, Interest.selected)
     return make_response('Selected interests updated', 204)
 
 
 @app.route('/declined-interests', methods=['PUT'])
 def declined_interests():
 
-    write_declined_interests(db, 1, ['some crap'])
+    write_interests(db, 1, 9, Interest.declined)
     return make_response('Declined interests updated', 204)
 
 
