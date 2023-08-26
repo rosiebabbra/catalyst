@@ -1,5 +1,5 @@
 from firebase_admin import firestore
-from enum import Enum, auto
+from enum import Enum
 
 
 class Interest(Enum):
@@ -7,7 +7,7 @@ class Interest(Enum):
     declined = 'declined'
 
 
-def get_user(db, user_id):
+def check_user_existence_in_selections(db, user_id):
 
     query = db.collection('selected_interests').where('user_id', '==', user_id)
     results = query.get()
@@ -15,10 +15,25 @@ def get_user(db, user_id):
     return results
 
 
+def get_interests(db):
+
+    query = db.collection('interests')
+    results = query.get()
+    interests = []
+    
+    for i in results:
+        interests.append({
+            'interest_id': i.get('interest_id'),
+            'interest_desc': i.get('interest_desc')
+        })
+
+    return interests
+
+
 def write_interests(db: firestore.client, user_id: int, interest_id: list, interest_type: Interest):
 
     table_name = f'{interest_type.name}_interests'
-    results = get_user(db, user_id)
+    results = check_user_existence_in_selections(db, user_id)
 
     if results:
         for doc in results:
