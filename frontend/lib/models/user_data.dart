@@ -7,14 +7,13 @@ class UserPhoneNumber {
   UserPhoneNumber({required this.exitCode, required this.phoneNumber});
 }
 
-class MyPhoneNumberProvider extends ChangeNotifier {
-  UserPhoneNumber _myPhoneNumber =
-      UserPhoneNumber(exitCode: '', phoneNumber: '');
+class PhoneNumberProvider extends ChangeNotifier {
+  UserPhoneNumber _phoneNumber = UserPhoneNumber(exitCode: '', phoneNumber: '');
 
-  UserPhoneNumber get myPhoneNumber => _myPhoneNumber;
+  UserPhoneNumber get phoneNumber => _phoneNumber;
 
-  set myPhoneNumber(UserPhoneNumber newValue) {
-    _myPhoneNumber = newValue;
+  void updateData(UserPhoneNumber newData) {
+    _phoneNumber = newData;
     notifyListeners();
   }
 }

@@ -55,106 +55,93 @@ class _PhoneVerificationState extends State<PhoneVerification> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 30, 10, 0),
-          child: AnimatedButton(
-            width: MediaQuery.of(context).size.width / 1.75,
-            height: MediaQuery.of(context).size.height / 20,
-            backgroundColor: const MaterialColor(0xFF000000, <int, Color>{
-              50: Color(0xFFFFFFFF),
-            }),
-            foregroundColor: const MaterialColor(0xFFFFFFFF, <int, Color>{
-              50: Color(0x00000000),
-            }),
-            buttonText: 'Next',
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            onPressed: () async {
-              Provider.of<MyPhoneNumberProvider>(context, listen: false)
-                      .myPhoneNumber =
-                  UserPhoneNumber(
-                      exitCode: widget.exitCode,
-                      phoneNumber: widget.phoneNumber);
+        ElevatedButton(
+          child: Text('Next'),
+          onPressed: () async {
+            print('pressed');
+            PhoneNumberProvider provider =
+                Provider.of<PhoneNumberProvider>(context, listen: false);
+            provider.updateData(UserPhoneNumber(
+                exitCode: widget.exitCode, phoneNumber: widget.phoneNumber));
 
-              int statusCode = await checkUserPresence(widget.phoneNumber);
+            int statusCode = await checkUserPresence(widget.phoneNumber);
 
-              if (statusCode == 200) {
-                // This condition occurs when a user already exists but is attemping to register
-                if (widget.forgotPassword == false) {
-                  // Show a SnackBar with a message and redirect to login page
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    duration: const Duration(seconds: 5),
-                    content: Column(
-                      children: const [
-                        Text(
-                          "Hey, we've seen you here before!",
-                          style: TextStyle(fontSize: 22),
-                        ),
-                        Text(
-                            'Looks like you\'ve already registered, so you will now be redirected to our login page'),
-                      ],
-                    ),
-                    action: SnackBarAction(
-                      label: '',
-                      onPressed: () {},
-                    ),
-                  ));
-                  Future.delayed(const Duration(seconds: 6), () {
-                    Navigator.pushNamed(context, '/matches');
-                  });
-                }
-                // CHECKED! This condition occurs when a user already exists but has forgetten their password
-                else {
-                  _isElevated = !_isElevated;
-                  // Comment out while developing, uncomment before deploying
-                  verifyUserPhoneNumber(
-                      formatPhoneNumber(
-                          widget.exitCode, widget.phoneNumber, true),
-                      widget.verificationCode);
-
-                  // Instead of 'resetting the password' since we're not actually using
-                  // email password login, just go to the matches page after verifying...
-
-                  // Future.delayed(const Duration(seconds: 6), () {
-                  //   Navigator.pushNamed(context, '/password-reset');
-                  // });
-
-                  Future.delayed(const Duration(seconds: 6), () {
-                    Navigator.pushNamed(context, '/verification-screen');
-                  });
-                }
-              } else {
-                // CHECKED! This condition occurs when a user does not exist and is attempting to reset their password
-                if (widget.forgotPassword == true) {
-                  // Show a SnackBar with a message and redirect to login page
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    duration: const Duration(seconds: 5),
-                    content: Column(
-                      children: const [
-                        Text(
-                          "Looks like you're new here!",
-                          style: TextStyle(fontSize: 22),
-                        ),
-                        Text(
-                            "Since you haven't registered yet, you'll now be redirected to our registration page"),
-                      ],
-                    ),
-                    action: SnackBarAction(
-                      label: '',
-                      onPressed: () {},
-                    ),
-                  ));
-                  Future.delayed(const Duration(seconds: 6), () {
-                    Navigator.pushNamed(context, '/onboarding');
-                  });
-                } else {
-                  createUser(widget.exitCode, widget.phoneNumber, 'testing',
-                      'testing', '2');
-                  // Navigator.pushNamed(context, '/onboarding-name');
-                }
+            if (statusCode == 200) {
+              // This condition occurs when a user already exists but is attemping to register
+              if (widget.forgotPassword == false) {
+                // Show a SnackBar with a message and redirect to login page
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  duration: const Duration(seconds: 5),
+                  content: Column(
+                    children: const [
+                      Text(
+                        "Hey, we've seen you here before!",
+                        style: TextStyle(fontSize: 22),
+                      ),
+                      Text(
+                          'Looks like you\'ve already registered, so you will now be redirected to our login page'),
+                    ],
+                  ),
+                  action: SnackBarAction(
+                    label: '',
+                    onPressed: () {},
+                  ),
+                ));
+                Future.delayed(const Duration(seconds: 6), () {
+                  Navigator.pushNamed(context, '/matches');
+                });
               }
-            },
-          ),
+              // CHECKED! This condition occurs when a user already exists but has forgetten their password
+              else {
+                _isElevated = !_isElevated;
+                // Comment out while developing, uncomment before deploying
+                verifyUserPhoneNumber(
+                    formatPhoneNumber(
+                        widget.exitCode, widget.phoneNumber, true),
+                    widget.verificationCode);
+
+                // Instead of 'resetting the password' since we're not actually using
+                // email password login, just go to the matches page after verifying...
+
+                // Future.delayed(const Duration(seconds: 6), () {
+                //   Navigator.pushNamed(context, '/password-reset');
+                // });
+
+                Future.delayed(const Duration(seconds: 6), () {
+                  Navigator.pushNamed(context, '/verification-screen');
+                });
+              }
+            } else {
+              // CHECKED! This condition occurs when a user does not exist and is attempting to reset their password
+              if (widget.forgotPassword == true) {
+                // Show a SnackBar with a message and redirect to login page
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  duration: const Duration(seconds: 5),
+                  content: Column(
+                    children: const [
+                      Text(
+                        "Looks like you're new here!",
+                        style: TextStyle(fontSize: 22),
+                      ),
+                      Text(
+                          "Since you haven't registered yet, you'll now be redirected to our registration page"),
+                    ],
+                  ),
+                  action: SnackBarAction(
+                    label: '',
+                    onPressed: () {},
+                  ),
+                ));
+                Future.delayed(const Duration(seconds: 6), () {
+                  Navigator.pushNamed(context, '/onboarding');
+                });
+              } else {
+                createUser(widget.exitCode, widget.phoneNumber, 'testing',
+                    'testing', '2');
+                Navigator.pushNamed(context, '/onboarding-name');
+              }
+            }
+          },
         ),
       ],
     );
@@ -293,9 +280,6 @@ class _PhoneNumberEntryScreenState extends State<PhoneNumberEntryScreen> {
                     onInputChanged: (PhoneNumber number) {
                       controller.selection = TextSelection.collapsed(
                           offset: controller.text.length);
-                      // print(number);
-                      print('dial code in widget');
-                      print(number.dialCode);
                       setState(() {
                         number = number;
                         dialCode = number.dialCode ?? '+1';

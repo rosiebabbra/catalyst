@@ -42,9 +42,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final myProvider = Provider.of<MyPhoneNumberProvider>(context);
-    final exitCode = myProvider.myPhoneNumber.exitCode;
-    final userPhoneNumber = myProvider.myPhoneNumber.phoneNumber;
+    final myProvider = Provider.of<PhoneNumberProvider>(context);
+    final exitCode = myProvider.phoneNumber.exitCode;
+    final userPhoneNumber = myProvider.phoneNumber.phoneNumber;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(

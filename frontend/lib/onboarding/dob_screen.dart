@@ -37,9 +37,9 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final myProvider = Provider.of<MyPhoneNumberProvider>(context);
-    final exitCode = myProvider.myPhoneNumber.exitCode;
-    final userPhoneNumber = myProvider.myPhoneNumber.phoneNumber;
+    final myProvider = Provider.of<PhoneNumberProvider>(context);
+    final exitCode = myProvider.phoneNumber.exitCode;
+    final userPhoneNumber = myProvider.phoneNumber.phoneNumber;
 
     TextEditingController m1Controller = TextEditingController();
     TextEditingController m2Controller = TextEditingController();
