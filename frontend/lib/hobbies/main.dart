@@ -1,24 +1,11 @@
 import 'dart:io';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:swipable_stack/swipable_stack.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import '../utils/text_fade.dart';
-
-Future<List<String>> readAndPopulateList() async {
-  try {
-    String fileContents =
-        await rootBundle.loadString('assets/files/hobbies.txt');
-    List<String> lines = fileContents.split('\n');
-    return lines;
-  } catch (e) {
-    print('Error reading the file: $e');
-    return [];
-  }
-}
 
 class HobbyScreen extends StatefulWidget {
   String hobby;
@@ -26,6 +13,12 @@ class HobbyScreen extends StatefulWidget {
 
   @override
   HobbyScreenState createState() => HobbyScreenState();
+}
+
+Future<String> getInterests() async {
+  var response = await http.get(Uri.parse('http://127.0.0.1:8080/interests'));
+
+  return response.body;
 }
 
 Future<int?> writeSelectedInterest(userId, interestId) async {
@@ -45,20 +38,26 @@ Future<int?> writeDeclinedInterest(userId, interestId) async {
 }
 
 class HobbyScreenState extends State<HobbyScreen> {
-  List<String> hobbies = [];
+  List<dynamic> hobbies = [];
   late final SwipableStackController _controller;
   void _listenController() => setState(() {});
+
+  Future<List> serializeInterestsLlist() async {
+    var result = await getInterests();
+    var interests = jsonDecode(result);
+    return interests;
+  }
+
+  void populateList() async {
+    hobbies = await serializeInterestsLlist();
+    setState(() {});
+  }
 
   @override
   void initState() {
     super.initState();
-    populateList();
     _controller = SwipableStackController()..addListener(_listenController);
-  }
-
-  void populateList() async {
-    hobbies = await readAndPopulateList();
-    setState(() {});
+    populateList();
   }
 
   @override
@@ -75,16 +74,12 @@ class HobbyScreenState extends State<HobbyScreen> {
     for (int i = 0; i < hobbies.length; i++) {
       stack.add(
         Card(
-          key: Key(i.toString()),
-          elevation: 0, // Set elevation to 0 to remove the shadow
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15), // Set no border radius
-          ),
-          color: Colors.green,
-          surfaceTintColor: Colors.white,
+          elevation: 5,
+          color: Colors.white,
+          shadowColor: Colors.grey,
           child: Center(
             child: FadeInText(
-              child: Text(hobbies[i],
+              child: Text(hobbies[i]['interest_desc'],
                   style: GoogleFonts.openSans(
                     fontSize: 32,
                     color: Colors.black,
@@ -120,28 +115,45 @@ class HobbyScreenState extends State<HobbyScreen> {
                   controller: _controller,
                   stackClipBehaviour: Clip.none,
                   onSwipeCompleted: (index, direction) {
-                    // if direction == SwipeDirection.right, add to selected_interests table
-                    // else, add to declined_interests
                     if (direction == SwipeDirection.right) {
-                      writeSelectedInterest('1', '8');
-                    } else {
-                      writeDeclinedInterest('1', '1');
+                      writeSelectedInterest(
+                          '4', hobbies[index]['interest_id'].toString());
+                    } else if (direction == SwipeDirection.left) {
+                      writeDeclinedInterest(
+                          '1', hobbies[index]['interest_id'].toString());
                     }
                   },
                   horizontalSwipeThreshold: 0.5,
                   verticalSwipeThreshold: 0.8,
                   builder: (context, properties) {
+                    if (stack.isEmpty) {
+                      return const UnconstrainedBox(
+                        child: SizedBox(
+                            height: 100,
+                            width: 100,
+                            child: CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.pink),
+                              strokeWidth: 8,
+                            )),
+                      );
+                    }
                     final itemIndex = properties.index % stack.length;
 
                     return stack[itemIndex];
                   },
                   overlayBuilder: (context, swipeProperty) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Opacity(
-                          opacity: swipeProperty.swipeProgress.clamp(0.1, 0.9),
-                          child: Container(color: Colors.pink)),
-                    );
+                    Color swipeColor =
+                        swipeProperty.direction == SwipeDirection.right
+                            ? Colors.green
+                            : Colors.red;
+                    return Opacity(
+                        opacity: swipeProperty.swipeProgress.clamp(0.1, 0.9),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(color: swipeColor, width: 5),
+                              color: Colors.white),
+                        ));
                   },
                 )),
           ],

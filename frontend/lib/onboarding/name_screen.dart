@@ -31,9 +31,9 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final myProvider = Provider.of<MyPhoneNumberProvider>(context);
-    final exitCode = myProvider.myPhoneNumber.exitCode;
-    final userPhoneNumber = myProvider.myPhoneNumber.phoneNumber;
+    final phoneNumberProvider = Provider.of<PhoneNumberProvider>(context);
+    final exitCode = phoneNumberProvider.phoneNumber.exitCode;
+    final userPhoneNumber = phoneNumberProvider.phoneNumber.phoneNumber;
 
     final phoneNumber = formatPhoneNumber(exitCode, userPhoneNumber, false);
 

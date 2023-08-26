@@ -20,9 +20,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final myProvider = Provider.of<MyPhoneNumberProvider>(context);
-    final exitCode = myProvider.myPhoneNumber.exitCode;
-    final userPhoneNumber = myProvider.myPhoneNumber.phoneNumber;
+    final myProvider = Provider.of<PhoneNumberProvider>(context);
+    final exitCode = myProvider.phoneNumber.exitCode;
+    final userPhoneNumber = myProvider.phoneNumber.phoneNumber;
     PhoneNumber number =
         PhoneNumber(isoCode: 'US', dialCode: '+1', phoneNumber: '');
     return Scaffold(
