@@ -2,8 +2,8 @@ import json
 
 from flask import g, Flask, jsonify, make_response, request
 from database.db import db
-from api.users import get_user_info, create_new_user, check_user_existence, update_user_info
-from api.interests.selections import write_interests, Interest
+from api.users import get_user_info, create_new_user, check_user_existence, update_user_info, update_user_role
+from api.interests.selections import write_interests, get_interests, Interest
 from utils.utils import thwart_injection_attempt
 
 
@@ -67,6 +67,20 @@ def update_user():
     return make_response('User updated', 204)
 
 
+@app.route("/user_role", methods=['POST'])
+def update_role():
+
+    user_id = int(
+        request.form['user_id']
+    )
+    update_user_role(
+        db, 
+        user_id
+    )
+
+    return make_response('User updated', 204)
+
+
 @app.route("/users", methods=['POST'])
 def user_data():
 
@@ -76,6 +90,12 @@ def user_data():
     user = get_user_info(db, user_id)
 
     return user
+
+
+@app.route("/interests", methods=['GET'])
+def interests():
+
+    return get_interests(db)
 
 
 @app.route('/selected-interests', methods=['PUT'])

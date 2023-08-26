@@ -149,3 +149,10 @@ def get_user_info(db: firestore.client, user_id: int) -> list:
     results = unpack_query_results(docs)
 
     return results
+
+
+def update_user_role(db: firestore.client, user_id: int, role_id: int) -> Any:
+
+    users = db.collection("users")
+    query = users.where("user_id", "==", user_id)
+    query.update({'role_id' : role_id})
