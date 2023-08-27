@@ -1,4 +1,4 @@
-import os, json, requests
+import os, requests
 import openai
 
 from bs4 import BeautifulSoup
