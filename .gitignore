@@ -63,3 +63,6 @@ frontend/windows/
 python/bin/
 python/lib/
 python/database/serviceAccountKey.json
+
+# keys
+**/.env
