@@ -24,13 +24,14 @@ def get_interests(db):
     for i in results:
         interests.append({
             'interest_id': i.get('interest_id'),
-            'interest_desc': i.get('interest_desc')
+            'interest_desc': i.get('interest_desc'),
+            'interest': i.get('interest')
         })
 
     return interests
 
 
-def write_interests(db: firestore.client, user_id: int, interest_id: list, interest_type: Interest):
+def write_interest_selections(db: firestore.client, user_id: int, interest_id: list, interest_type: Interest):
 
     table_name = f'{interest_type.name}_interests'
     results = check_user_existence_in_selections(db, user_id)
