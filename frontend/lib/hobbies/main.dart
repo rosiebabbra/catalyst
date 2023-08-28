@@ -41,6 +41,7 @@ class HobbyScreenState extends State<HobbyScreen> {
   List<dynamic> hobbies = [];
   late final SwipableStackController _controller;
   void _listenController() => setState(() {});
+  int currentNavbarIndex = 0;
 
   Future<List> serializeInterestsList() async {
     var result = await getInterests();
@@ -107,7 +108,26 @@ class HobbyScreenState extends State<HobbyScreen> {
 
     bool devMode = (Platform.environment['DEV_MODE'] == null) ? false : true;
 
+    void onTabTapped(int index) {
+      setState(() {
+        currentNavbarIndex = index;
+      });
+    }
+
     return Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: currentNavbarIndex,
+          onTap: onTabTapped,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Explore'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.notifications), label: 'Hatches'),
+            BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.star), label: 'My Profile'),
+          ],
+        ),
         backgroundColor: Colors.white,
         appBar: devMode
             ? AppBar(
