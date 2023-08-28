@@ -3,7 +3,7 @@ import json
 from flask import g, Flask, jsonify, make_response, request
 from database.db import db
 from api.users import get_user_info, create_new_user, check_user_existence, update_user_info, update_user_role
-from api.interests.selections import write_interests, get_interests, Interest
+from api.interests.selections import write_interest_selections, get_interests, Interest
 from utils.utils import thwart_injection_attempt
 
 
@@ -107,7 +107,7 @@ def selected_interests():
     interest_id = int(
         request.form['interest_id'],
     )
-    write_interests(db, user_id, interest_id, Interest.selected)
+    write_interest_selections(db, user_id, interest_id, Interest.selected)
     return make_response('Selected interests updated', 204)
 
 
@@ -120,7 +120,7 @@ def declined_interests():
     interest_id = int(
         request.form['interest_id'],
     )
-    write_interests(db, user_id, interest_id, Interest.declined)
+    write_interest_selections(db, user_id, interest_id, Interest.declined)
     return make_response('Declined interests updated', 204)
 
 
