@@ -89,7 +89,7 @@ class HobbyScreenState extends State<HobbyScreen> {
                     textAlign: TextAlign.center),
               ),
               FadeInText(
-                delayStart: const Duration(seconds: 1),
+                delayStart: const Duration(milliseconds: 500),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(hobbies[i]['interest_desc'],
@@ -114,6 +114,8 @@ class HobbyScreenState extends State<HobbyScreen> {
       });
     }
 
+    final List<Widget> pages = [interestSwipe(context, stack)];
+
     return Scaffold(
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
@@ -136,62 +138,66 @@ class HobbyScreenState extends State<HobbyScreen> {
                 backgroundColor: Colors.white,
               )
             : null,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-                height: MediaQuery.of(context).size.height * 0.8,
-                width: MediaQuery.of(context).size.width,
-                child: SwipableStack(
-                  detectableSwipeDirections: const {
-                    SwipeDirection.right,
-                    SwipeDirection.left,
-                  },
-                  controller: _controller,
-                  stackClipBehaviour: Clip.none,
-                  onSwipeCompleted: (index, direction) {
-                    if (direction == SwipeDirection.right) {
-                      writeSelectedInterest(
-                          '4', hobbies[index]['interest_id'].toString());
-                    } else if (direction == SwipeDirection.left) {
-                      writeDeclinedInterest(
-                          '1', hobbies[index]['interest_id'].toString());
-                    }
-                  },
-                  horizontalSwipeThreshold: 0.5,
-                  verticalSwipeThreshold: 0.8,
-                  builder: (context, properties) {
-                    if (stack.isEmpty) {
-                      return const UnconstrainedBox(
-                        child: SizedBox(
-                            height: 100,
-                            width: 100,
-                            child: CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.pink),
-                              strokeWidth: 8,
-                            )),
-                      );
-                    }
-                    final itemIndex = properties.index % stack.length;
+        body: pages[currentNavbarIndex]);
+  }
 
-                    return stack[itemIndex];
-                  },
-                  overlayBuilder: (context, swipeProperty) {
-                    Color swipeColor =
-                        swipeProperty.direction == SwipeDirection.right
-                            ? Colors.green
-                            : Colors.red;
-                    return Opacity(
-                        opacity: swipeProperty.swipeProgress.clamp(0, 0.6),
-                        child: Container(
-                            height: MediaQuery.of(context).size.height,
-                            width: MediaQuery.of(context).size.width,
-                            color: swipeColor));
-                  },
-                )),
-          ],
-        ));
+  Column interestSwipe(BuildContext context, List<Card> stack) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+            height: MediaQuery.of(context).size.height * 0.8,
+            width: MediaQuery.of(context).size.width,
+            child: SwipableStack(
+              detectableSwipeDirections: const {
+                SwipeDirection.right,
+                SwipeDirection.left,
+              },
+              controller: _controller,
+              stackClipBehaviour: Clip.none,
+              onSwipeCompleted: (index, direction) {
+                if (direction == SwipeDirection.right) {
+                  writeSelectedInterest(
+                      '4', hobbies[index]['interest_id'].toString());
+                } else if (direction == SwipeDirection.left) {
+                  writeDeclinedInterest(
+                      '1', hobbies[index]['interest_id'].toString());
+                }
+              },
+              horizontalSwipeThreshold: 0.5,
+              verticalSwipeThreshold: 0.8,
+              builder: (context, properties) {
+                if (stack.isEmpty) {
+                  return const UnconstrainedBox(
+                    child: SizedBox(
+                        height: 100,
+                        width: 100,
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.pink),
+                          strokeWidth: 8,
+                        )),
+                  );
+                }
+                final itemIndex = properties.index % stack.length;
+
+                return stack[itemIndex];
+              },
+              overlayBuilder: (context, swipeProperty) {
+                Color swipeColor =
+                    swipeProperty.direction == SwipeDirection.right
+                        ? Colors.green
+                        : Colors.red;
+                return Opacity(
+                    opacity: swipeProperty.swipeProgress.clamp(0, 0.6),
+                    child: Container(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        color: swipeColor));
+              },
+            )),
+      ],
+    );
   }
 }
 
