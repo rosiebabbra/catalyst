@@ -42,14 +42,14 @@ class HobbyScreenState extends State<HobbyScreen> {
   late final SwipableStackController _controller;
   void _listenController() => setState(() {});
 
-  Future<List> serializeInterestsLlist() async {
+  Future<List> serializeInterestsList() async {
     var result = await getInterests();
     var interests = jsonDecode(result);
     return interests;
   }
 
   void populateList() async {
-    hobbies = await serializeInterestsLlist();
+    hobbies = await serializeInterestsList();
     setState(() {});
   }
 
@@ -74,17 +74,32 @@ class HobbyScreenState extends State<HobbyScreen> {
     for (int i = 0; i < hobbies.length; i++) {
       stack.add(
         Card(
-          elevation: 5,
+          elevation: 0,
           color: Colors.white,
-          shadowColor: Colors.grey,
-          child: Center(
-            child: FadeInText(
-              child: Text(hobbies[i]['interest_desc'],
-                  style: GoogleFonts.openSans(
-                    fontSize: 32,
-                    color: Colors.black,
-                  )),
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FadeInText(
+                child: Text(hobbies[i]['interest'],
+                    style: GoogleFonts.openSans(
+                      fontSize: 32,
+                      color: Colors.black,
+                    ),
+                    textAlign: TextAlign.center),
+              ),
+              FadeInText(
+                delayStart: const Duration(seconds: 1),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(hobbies[i]['interest_desc'],
+                      style: GoogleFonts.openSans(
+                        fontSize: 14,
+                        color: Colors.blueGrey,
+                      ),
+                      textAlign: TextAlign.center),
+                ),
+              ),
+            ],
           ),
         ),
       );
@@ -148,12 +163,11 @@ class HobbyScreenState extends State<HobbyScreen> {
                             ? Colors.green
                             : Colors.red;
                     return Opacity(
-                        opacity: swipeProperty.swipeProgress.clamp(0.1, 0.9),
+                        opacity: swipeProperty.swipeProgress.clamp(0, 0.6),
                         child: Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(color: swipeColor, width: 5),
-                              color: Colors.white),
-                        ));
+                            height: MediaQuery.of(context).size.height,
+                            width: MediaQuery.of(context).size.width,
+                            color: swipeColor));
                   },
                 )),
           ],
