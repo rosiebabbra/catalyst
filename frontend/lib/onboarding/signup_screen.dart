@@ -1,11 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../home/home_screen.dart';
 
 class SignupScreen extends StatelessWidget {
-  const SignupScreen({
+  SignupScreen({
     Key? key,
   }) : super(key: key);
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +28,9 @@ class SignupScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 25),
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                controller: emailController,
+                decoration: const InputDecoration(
                   labelText: 'Your email',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(12))),
@@ -35,8 +40,10 @@ class SignupScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 25),
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
                   labelText: 'Your password',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(12))),
@@ -46,6 +53,15 @@ class SignupScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 25),
+              ElevatedButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.createUserWithEmailAndPassword(
+                      email: emailController.text,
+                      password: passwordController.text,
+                    );
+                    Navigator.pushNamed(context, '/hobbies');
+                  },
+                  child: Text('Next'))
             ],
           ),
         ));
