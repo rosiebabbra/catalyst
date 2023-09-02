@@ -54,20 +54,10 @@ class _MatchScreenState extends State<MatchScreen> {
     }
 
     return Scaffold(
-      body: pages[currentNavbarIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: currentNavbarIndex,
-        onTap: onTabTapped,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Explore'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.notifications), label: 'Notifications'),
-          BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
-          BottomNavigationBarItem(icon: Icon(Icons.star), label: 'My Profile'),
-        ],
-      ),
-    );
+        body: MatchProfile(
+            index: currentNavbarIndex,
+            controller: controller,
+            interests: interests));
   }
 }
 
