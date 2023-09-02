@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_app/chat/chat_list.dart';
+import 'package:my_app/matches/match_screen.dart';
+import 'package:my_app/my_profile/my_profile_screen.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -81,6 +84,7 @@ class HobbyScreenState extends State<HobbyScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FadeInText(
+                animationDuration: Duration(milliseconds: 400),
                 child: Text(hobbies[i]['interest'],
                     style: GoogleFonts.openSans(
                       fontSize: 32,
@@ -89,7 +93,6 @@ class HobbyScreenState extends State<HobbyScreen> {
                     textAlign: TextAlign.center),
               ),
               FadeInText(
-                delayStart: const Duration(milliseconds: 500),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(hobbies[i]['interest_desc'],
@@ -114,7 +117,12 @@ class HobbyScreenState extends State<HobbyScreen> {
       });
     }
 
-    final List<Widget> pages = [interestSwipe(context, stack)];
+    final List<Widget> pages = [
+      interestSwipe(context, stack),
+      MatchScreen(userId: 1),
+      ChatList(),
+      MyProfileScreen()
+    ];
 
     return Scaffold(
         bottomNavigationBar: BottomNavigationBar(
