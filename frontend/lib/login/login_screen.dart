@@ -1,10 +1,15 @@
 import 'dart:math' as math;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import '/utils/animated_background.dart';
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isChecked = false;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  String emailErrorMessage = '';
+  String passwordErrorMessage = '';
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 25),
               TextField(
+                controller: emailController,
                 decoration: InputDecoration(
                     labelText: 'Your email',
                     labelStyle: TextStyle(color: Colors.grey[600]),
@@ -58,8 +64,20 @@ class _LoginScreenState extends State<LoginScreen> {
                           BorderSide(width: 2, color: Color(0xff7301E4)),
                     )),
               ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    emailErrorMessage,
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              ),
               const SizedBox(height: 25),
               TextField(
+                controller: passwordController,
+                obscureText: true,
                 decoration: InputDecoration(
                     labelStyle: TextStyle(color: Colors.grey[600]),
                     labelText: 'Your password',
@@ -76,6 +94,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderSide:
                           BorderSide(width: 2, color: Color(0xff7301E4)),
                     )),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    passwordErrorMessage,
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
               ),
               const SizedBox(height: 25),
               Row(
@@ -120,8 +148,40 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: TextButton(
                             child: const Icon(Icons.arrow_forward_ios,
                                 color: Colors.black),
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/matches');
+                            onPressed: () async {
+                              // Sign in w/ email and password
+                              FirebaseAuth auth = FirebaseAuth.instance;
+
+                              Future<void> signInWithEmailPassword(
+                                  String email, String password) async {
+                                try {
+                                  await auth.signInWithEmailAndPassword(
+                                      email: email, password: password);
+                                  Navigator.pushNamed(context, '/hobbies');
+                                } catch (e) {
+                                  if (e is FirebaseAuthException) {
+                                    if (e.code == 'invalid-email') {
+                                      // Handle the 'invalid-email' error
+                                      setState(() {
+                                        emailErrorMessage =
+                                            'Invalid email address format';
+                                      });
+                                    } else if (e.code == 'wrong-password') {
+                                      // Handle the 'wrong-password' error
+                                      setState(() {
+                                        passwordErrorMessage =
+                                            'Invalid password';
+                                      });
+                                    } else if (e.code == 'user-not-found') {
+                                      // TODO: Write code here for unfound users
+                                    }
+                                  }
+                                }
+                              }
+
+                              await signInWithEmailPassword(
+                                  emailController.text,
+                                  passwordController.text);
                             },
                           ),
                         ),
