@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -56,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontSize: 15, color: Colors.white, fontWeight: FontWeight.w500),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
-                Navigator.pushNamed(context, '/hobbies');
+                Navigator.pushNamed(context, '/login');
               },
           ))
         ],
