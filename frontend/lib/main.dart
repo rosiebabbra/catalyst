@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:my_app/onboarding/signup_screen.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/hobbies/main.dart';
@@ -10,6 +12,7 @@ import 'package:my_app/swipes_completed/main.dart';
 import 'package:video_player/video_player.dart';
 import 'home/home_screen.dart';
 import 'login/forgot_password_screen.dart';
+import 'login/login_screen.dart';
 import 'matches/match_screen.dart';
 import 'hobbies/main.dart';
 import 'models/user_data.dart';
@@ -78,7 +81,7 @@ class _BackgroundVideoState extends State<MyApp> {
       ),
       initialRoute: '/',
       routes: {
-        // '/login': (context) => const LoginScreen(),
+        '/login': (context) => const LoginScreen(),
         '/forgot-password': (context) => ForgotPasswordScreen(),
         '/password-reset': (context) => const PasswordResetScreen(),
         '/matches': (context) => const MatchScreen(
@@ -89,11 +92,9 @@ class _BackgroundVideoState extends State<MyApp> {
         '/onboarding-name': (context) => const NameEntryScreen(),
         '/onboarding-dob': (context) => const DOBEntryScreen(),
         '/onboarding-gender': (context) => const GenderIDEntryScreen(),
-        '/onboarding-ethnicity': (context) => const EthnicityIDEntryScreen(),
         '/onboarding-interested': (context) => const InterestedInScreen(),
+        '/onboarding-signup': (context) => SignupScreen(),
         '/location-disclaimer': (context) => const LocationDisclaimerScreen(),
-        '/onboarding-ideal-date': (context) => const IdealDateScreen(),
-        '/onboarding-ideal-match': (context) => const IdealMatchScreen(),
         '/onboarding-interests': (context) => InterestsScreen(),
         '/generating-matches': (context) => GeneratingMatchesScreen(),
         '/verification-screen': (context) => VerificationScreen(),
