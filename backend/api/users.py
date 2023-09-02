@@ -24,26 +24,21 @@ def generate_uuid() -> str:
 
 
 def generate_user_id(db: firestore.client) -> str:
-    """Generate a unique user ID by repeatedly generating random IDs until 
+    """Generate a unique user ID by repeatedly generating random IDs until
     one is found that doesn't already exist in the database."""
-    
+
     while True:
         user_id = generate_uuid()
         query = db.collection("users").where("user_id", "==", user_id)
         docs = query.get()
         if not unpack_query_results(docs):
             return user_id
-        
 
-def check_user_existence(db: firestore.client, 
-                         exit_code: str, 
-                         phone_number: str):
+
+def check_user_existence(db: firestore.client, exit_code: str, phone_number: str):
     """Check if a user's inputted phone numbers already exists."""
 
-    phone_number = format_phone_number(
-        phone_number=phone_number,
-        exit_code=exit_code
-    )
+    phone_number = format_phone_number(phone_number=phone_number, exit_code=exit_code)
 
     query = db.collection("users").where("phone_number", "==", phone_number)
     docs = query.stream()
@@ -54,16 +49,12 @@ def check_user_existence(db: firestore.client,
         return False
 
 
-def create_new_user(db: firestore.client, 
-                    exit_code: str, 
-                    phone_number: str, 
-                    role_id: int) -> Any: 
+def create_new_user(
+    db: firestore.client, exit_code: str, phone_number: str, role_id: int
+) -> Any:
     """Create a new user"""
 
-    phone_number = format_phone_number(
-        phone_number=phone_number,
-        exit_code=exit_code
-    )
+    phone_number = format_phone_number(phone_number=phone_number, exit_code=exit_code)
 
     user_id = generate_user_id(db)
 
@@ -87,32 +78,26 @@ def create_new_user(db: firestore.client,
     # )
 
     users_cf = db.collection("users")
-    users_cf.add({
-        'user_id' : user_id,
-        'phone_number' : phone_number,
-        'created_at' : datetime.now(),
-        'role_id' : int(role_id)
-    })
+    users_cf.add(
+        {
+            "user_id": user_id,
+            "phone_number": phone_number,
+            "created_at": datetime.now(),
+            "role_id": int(role_id),
+        }
+    )
 
     selected_interests_cf = db.collection("selected_interests")
-    selected_interests_cf.add({
-        'user_id' : user_id
-    })
+    selected_interests_cf.add({"user_id": user_id})
 
     declined_interests_cf = db.collection("declined_interests")
-    declined_interests_cf.add({
-        'user_id' : user_id
-    })
+    declined_interests_cf.add({"user_id": user_id})
 
 
-
-
-def update_user_info(db: firestore.client, 
-                     phone_number: str, 
-                     data: str) -> None:
+def update_user_info(db: firestore.client, phone_number: str, data: str) -> None:
     """After user is created with their phone number, update the record with their first name"""
 
-    query = db.collection("users").where('phone_number', '==', phone_number)
+    query = db.collection("users").where("phone_number", "==", phone_number)
     docs = query.get()
 
     if len(docs) > 0:
@@ -152,7 +137,6 @@ def get_user_info(db: firestore.client, user_id: int) -> list:
 
 
 def update_user_role(db: firestore.client, user_id: int, role_id: int) -> Any:
-
     users = db.collection("users")
     query = users.where("user_id", "==", user_id)
-    query.update({'role_id' : role_id})
+    query.update({"role_id": role_id})
