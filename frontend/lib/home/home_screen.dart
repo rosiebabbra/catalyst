@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
             height: MediaQuery.of(context).size.height / 3.5,
           ),
           AnimatedButton(
-              landingPage: '/onboarding',
+              landingPage: '/onboarding-signup',
               width: MediaQuery.of(context).size.width / 1.75,
               height: MediaQuery.of(context).size.height / 20,
               buttonText: 'Create account',
