@@ -250,7 +250,7 @@ class _EthnicityIDEntryScreenState extends State<EthnicityIDEntryScreen> {
                             onPressed: () {
                               sendData();
                               Navigator.pushNamed(
-                                  context, '/onboarding-interests');
+                                  context, '/location-disclaimer');
                             },
                           ),
                         ),

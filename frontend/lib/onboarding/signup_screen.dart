@@ -3,13 +3,24 @@ import 'package:flutter/material.dart';
 
 import '../home/home_screen.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
   SignupScreen({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  var unMatchingPasswordsErrorMsg = '';
+  var passwordFormatErrorMsg = '';
+
   TextEditingController emailController = TextEditingController();
+
   TextEditingController passwordController = TextEditingController();
+
+  TextEditingController passwordReEntryController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +42,9 @@ class SignupScreen extends StatelessWidget {
               TextField(
                 controller: emailController,
                 decoration: const InputDecoration(
-                  labelText: 'Your email',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12))),
-                  hintText: 'Your email',
-                  // suffixIcon:
-                  //     Container(height: 5, width: 5, color: Colors.pink)
-                ),
+                    labelText: 'Your email',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)))),
               ),
               const SizedBox(height: 25),
               TextField(
@@ -47,21 +54,59 @@ class SignupScreen extends StatelessWidget {
                   labelText: 'Your password',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(12))),
-                  hintText: 'Your password',
-                  // suffixIcon:
-                  //     Container(height: 5, width: 5, color: Colors.pink)
+                ),
+              ),
+              const SizedBox(height: 25),
+              TextField(
+                controller: passwordReEntryController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Re-enter your password',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12))),
+                ),
+              ),
+              const SizedBox(height: 25),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  passwordFormatErrorMsg,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  unMatchingPasswordsErrorMsg,
+                  style: const TextStyle(color: Colors.red),
                 ),
               ),
               const SizedBox(height: 25),
               ElevatedButton(
                   onPressed: () {
-                    FirebaseAuth.instance.createUserWithEmailAndPassword(
-                      email: emailController.text,
-                      password: passwordController.text,
-                    );
-                    Navigator.pushNamed(context, '/hobbies');
+                    if (passwordController.text.length <= 8) {
+                      setState(() {
+                        passwordFormatErrorMsg =
+                            'Your password must be at least 8 characters';
+                      });
+                    }
+
+                    if (passwordReEntryController.text ==
+                        passwordController.text) {
+                      FirebaseAuth.instance.createUserWithEmailAndPassword(
+                        email: emailController.text,
+                        password: passwordController.text,
+                      );
+                      Navigator.pushNamed(context, '/onboarding-name');
+                    } else {
+                      setState(() {
+                        unMatchingPasswordsErrorMsg =
+                            "The passwords entered do not match!";
+                      });
+                    }
                   },
-                  child: Text('Next'))
+                  child: const Text('Next'))
             ],
           ),
         ));

@@ -11,7 +11,7 @@ class _GeneratingMatchesScreenState extends State<GeneratingMatchesScreen> {
   void initState() {
     super.initState();
     new Future.delayed(const Duration(seconds: 1),
-        () => Navigator.pushNamed(context, '/matches'));
+        () => Navigator.pushNamed(context, '/hobbies'));
   }
 
   @override
@@ -28,7 +28,7 @@ class _GeneratingMatchesScreenState extends State<GeneratingMatchesScreen> {
             style: TextStyle(fontSize: 28),
           ),
           const Text(
-            'Generating matches...',
+            'Generating hobbies...',
             style: TextStyle(fontSize: 28),
           ),
           const SizedBox(height: 25),

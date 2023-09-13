@@ -17,7 +17,7 @@ class LocationDisclaimerScreen extends StatelessWidget {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text(
-              'Allow "2nite" to access your location?',
+              'Allow "hatched" to access your location?',
               textAlign: TextAlign.center,
             ),
             actions: <Widget>[
@@ -44,25 +44,24 @@ class LocationDisclaimerScreen extends StatelessWidget {
           elevation: 0,
         ),
         body: Padding(
-          padding: const EdgeInsets.all(45.0),
+          padding: const EdgeInsets.all(25.0),
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             const Text(
-              'In order to use 2nite, we need access to your location.',
+              'In order to use hatched, we need access to your location.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 26),
+              style: TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 35),
             const Text(
               'Your exact location will never be shared with potential matches.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.1,
             ),
             const StandardButton(
-                destination: '/generating-matches',
-                buttonText: 'Find me a date!')
+                destination: '/generating-matches', buttonText: "Allow access")
           ]),
         ));
   }
