@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:my_app/utils/format_phone_number.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/user_data.dart';
 import '../onboarding/phone_number_screen.dart';
@@ -14,9 +16,15 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController controller = TextEditingController();
+  TextEditingController controller = TextEditingController();
   PhoneNumber number =
       PhoneNumber(isoCode: 'US', dialCode: '+1', phoneNumber: '');
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  Future<void> _resetPassword(String email) async {
+    await auth.sendPasswordResetEmail(email: email);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,52 +76,23 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             children: const [
               Flexible(
                 child: Text(
-                    'No problem. Enter your phone number to receive a six digit number verification code.'),
+                    'No problem. Enter your email to receive a six digit number verification code.'),
               )
             ],
           ),
           const SizedBox(height: 25),
-          InternationalPhoneNumberInput(
-              selectorTextStyle:
-                  const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              inputDecoration: const InputDecoration(
-                border: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.grey,
-                    width: 1.0,
-                  ),
-                ),
-              ),
-              onInputChanged: (PhoneNumber number) {
-                print(controller.text);
-                controller.selection =
-                    TextSelection.collapsed(offset: controller.text.length);
-              },
-              onInputValidated: (value) => {setState(() {})},
-              autoFocus: true,
-              selectorConfig: const SelectorConfig(
-                  trailingSpace: false,
-                  selectorType: PhoneInputSelectorType.DIALOG),
-              ignoreBlank: false,
-              textStyle:
-                  const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              autoValidateMode: AutovalidateMode.onUserInteraction,
-              initialValue: number,
-              textFieldController: controller,
-              formatInput: true,
-              keyboardType: const TextInputType.numberWithOptions(
-                  signed: false, decimal: false),
-              onSaved: (PhoneNumber number) {
-                print('On Saved: $number');
-              },
-              spaceBetweenSelectorAndTextField: 0),
-          const SizedBox(height: 35),
-          PhoneVerification(
-            exitCode: number.dialCode ?? '+1',
-            phoneNumber: controller.text,
-            verificationCode: '042195',
-            forgotPassword: true,
+          TextField(
+            controller: controller,
           ),
+          const SizedBox(height: 35),
+          ElevatedButton(
+              onPressed: () {
+                // TODO: Commenting out since we know this works - set a flag to
+                // not call `_resetPassword` in debug/dev mode, but to call in prod
+                // _resetPassword(controller.text);
+                Navigator.pushNamed(context, '/password-reset-landing-page');
+              },
+              child: Text('Reset password'))
         ],
       ),
     ));
