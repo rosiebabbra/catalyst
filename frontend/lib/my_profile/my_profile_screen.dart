@@ -47,7 +47,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: const [
-                  Icon(Icons.settings, size: 30),
+                  Icon(Icons.settings, size: 30, color: Colors.transparent),
                 ],
               ),
             ),
@@ -72,24 +72,24 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             Text(first_name,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
             const SizedBox(height: 10),
-            SizedBox(
-              height: 30,
-              child: TextButton(
-                  onPressed: () {
-                    getData();
-                  },
-                  style: ButtonStyle(
-                      foregroundColor:
-                          MaterialStateProperty.all<Color>(Colors.grey[600]!),
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.grey[100]!),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(45),
-                      ))),
-                  child: const Text('Complete my profile',
-                      style: TextStyle(fontSize: 12))),
-            ),
+            // SizedBox(
+            //   height: 30,
+            //   child: TextButton(
+            //       onPressed: () {
+            //         getData();
+            //       },
+            //       style: ButtonStyle(
+            //           foregroundColor:
+            //               MaterialStateProperty.all<Color>(Colors.grey[600]!),
+            //           backgroundColor:
+            //               MaterialStateProperty.all<Color>(Colors.grey[100]!),
+            //           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            //               RoundedRectangleBorder(
+            //             borderRadius: BorderRadius.circular(45),
+            //           ))),
+            //       child: const Text('Complete my profile',
+            //           style: TextStyle(fontSize: 12))),
+            // ),
             const SizedBox(height: 25),
             Container(
                 width: MediaQuery.of(context).size.width * 0.95,
@@ -182,17 +182,17 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w600)),
                     Icon(Icons.check, color: Color(0xff33D15F)),
-                    Icon(Icons.check, color: Colors.grey),
+                    Icon(Icons.check, color: Colors.transparent),
                     Text('Advanced filters',
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w600)),
                     Icon(Icons.check, color: Color(0xff33D15F)),
-                    Icon(Icons.check, color: Colors.grey),
+                    Icon(Icons.check, color: Colors.transparent),
                     Text('Incognito mode',
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w600)),
                     Icon(Icons.check, color: Color(0xff33D15F)),
-                    Icon(Icons.check, color: Colors.grey),
+                    Icon(Icons.check, color: Colors.transparent),
                     Text('Travel mode',
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w600)),
