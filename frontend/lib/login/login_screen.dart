@@ -13,22 +13,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Color getColor(Set<MaterialState> states) {
-      const Set<MaterialState> interactiveStates = <MaterialState>{
-        MaterialState.pressed,
-        MaterialState.hovered,
-        MaterialState.focused,
-      };
-      if (states.any(interactiveStates.contains)) {
-        return Color(0xff0E8BFF);
-      }
-      return Color(0xff0E8BFF);
-    }
+    final _formKey = GlobalKey<FormState>();
 
     return Scaffold(
         body: Stack(
       children: [
-        StarryBackgroundWidget(),
         Padding(
           padding: const EdgeInsets.all(45.0),
           child: Column(
@@ -48,21 +37,13 @@ class _LoginScreenState extends State<LoginScreen> {
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
-                    labelText: 'Your email',
-                    labelStyle: TextStyle(color: Colors.grey[600]),
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12))),
-                    hintText: 'Your email',
-                    filled: true,
-                    fillColor: Colors.white,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(width: 2, color: Colors.grey[700]!),
-                    ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide:
-                          BorderSide(width: 2, color: Color(0xff7301E4)),
-                    )),
+                  labelText: 'Your email',
+                  labelStyle: TextStyle(color: Colors.grey[600]),
+                  border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12))),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
@@ -70,30 +51,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     emailErrorMessage,
-                    style: TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.red),
                   ),
                 ),
               ),
               const SizedBox(height: 25),
-              TextField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
+              Form(
+                key: _formKey,
+                child: TextFormField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
                     labelStyle: TextStyle(color: Colors.grey[600]),
                     labelText: 'Your password',
                     border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12))),
-                    hintText: 'Your password',
                     filled: true,
                     fillColor: Colors.white,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(width: 2, color: Colors.grey[700]!),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(width: 2, color: Color(0xff7301E4)),
-                    )),
+                  ),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
@@ -101,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     passwordErrorMessage,
-                    style: TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.red),
                   ),
                 ),
               ),
@@ -125,67 +101,41 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  SizedBox(
-                      height: 75,
-                      width: 75,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                width: 3.5, color: Colors.transparent),
-                            gradient: const LinearGradient(
-                              transform: GradientRotation(math.pi / 4),
-                              colors: [
-                                Color(0xff7301E4),
-                                Color(0xff0E8BFF),
-                                Color(0xff09CBC8),
-                                Color(0xff33D15F),
-                              ],
-                            )),
-                        child: Container(
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle, color: Colors.white),
-                          child: TextButton(
-                            child: const Icon(Icons.arrow_forward_ios,
-                                color: Colors.black),
-                            onPressed: () async {
-                              // Sign in w/ email and password
-                              FirebaseAuth auth = FirebaseAuth.instance;
+                  TextButton(
+                    key: GlobalKey(debugLabel: 'loginKey'),
+                    child: const Text('Login'),
+                    onPressed: () async {
+                      // Sign in w/ email and password
+                      FirebaseAuth auth = FirebaseAuth.instance;
 
-                              Future<void> signInWithEmailPassword(
-                                  String email, String password) async {
-                                try {
-                                  await auth.signInWithEmailAndPassword(
-                                      email: email, password: password);
-                                  Navigator.pushNamed(context, '/hobbies');
-                                } catch (e) {
-                                  if (e is FirebaseAuthException) {
-                                    if (e.code == 'invalid-email') {
-                                      // Handle the 'invalid-email' error
-                                      setState(() {
-                                        emailErrorMessage =
-                                            'Invalid email address format';
-                                      });
-                                    } else if (e.code == 'wrong-password') {
-                                      // Handle the 'wrong-password' error
-                                      setState(() {
-                                        passwordErrorMessage =
-                                            'Invalid password';
-                                      });
-                                    } else if (e.code == 'user-not-found') {
-                                      // TODO: Write code here for unfound users
-                                    }
-                                  }
-                                }
-                              }
-
-                              await signInWithEmailPassword(
-                                  emailController.text,
-                                  passwordController.text);
-                            },
-                          ),
-                        ),
-                      )),
+                      try {
+                        await auth.signInWithEmailAndPassword(
+                            email: emailController.text,
+                            password: passwordController.text);
+                        Navigator.pushNamed(context, '/hobbies');
+                      } catch (e) {
+                        if (e is FirebaseAuthException) {
+                          if (e.code == 'invalid-email') {
+                            // Handle the 'invalid-email' error
+                            setState(() {
+                              emailErrorMessage =
+                                  'Invalid email address format';
+                            });
+                          } else if (e.code == 'wrong-password') {
+                            // Handle the 'wrong-password' error
+                            setState(() {
+                              passwordErrorMessage = 'Invalid password';
+                            });
+                          } else if (e.code == 'user-not-found') {
+                            setState(() {
+                              passwordErrorMessage =
+                                  "You haven't registered yet!";
+                            });
+                          }
+                        }
+                      }
+                    },
+                  ),
                 ],
               ),
               const SizedBox(height: 35),
@@ -213,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(fontSize: 14)),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/onboarding');
+                      Navigator.pushNamed(context, '/onboarding-signup');
                     },
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.all(0),
