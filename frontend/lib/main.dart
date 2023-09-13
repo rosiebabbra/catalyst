@@ -13,6 +13,7 @@ import 'package:video_player/video_player.dart';
 import 'home/home_screen.dart';
 import 'login/forgot_password_screen.dart';
 import 'login/login_screen.dart';
+import 'login/password_reset_landing_screen.dart';
 import 'matches/match_screen.dart';
 import 'hobbies/main.dart';
 import 'models/user_data.dart';
@@ -84,6 +85,8 @@ class _BackgroundVideoState extends State<MyApp> {
         '/login': (context) => const LoginScreen(),
         '/forgot-password': (context) => ForgotPasswordScreen(),
         '/password-reset': (context) => const PasswordResetScreen(),
+        '/password-reset-landing-page': (context) =>
+            PasswordResetLandingScreen(),
         '/matches': (context) => const MatchScreen(
               userId: 555,
             ),
@@ -92,10 +95,9 @@ class _BackgroundVideoState extends State<MyApp> {
         '/onboarding-name': (context) => const NameEntryScreen(),
         '/onboarding-dob': (context) => const DOBEntryScreen(),
         '/onboarding-gender': (context) => const GenderIDEntryScreen(),
-        '/onboarding-interested': (context) => const InterestedInScreen(),
+        '/onboarding-ethnicity': (context) => const EthnicityIDEntryScreen(),
         '/onboarding-signup': (context) => SignupScreen(),
         '/location-disclaimer': (context) => const LocationDisclaimerScreen(),
-        '/onboarding-interests': (context) => InterestsScreen(),
         '/generating-matches': (context) => GeneratingMatchesScreen(),
         '/verification-screen': (context) => VerificationScreen(),
         '/swipes-completed': (context) => SwipesCompletedScreen(),
