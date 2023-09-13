@@ -31,11 +31,11 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final phoneNumberProvider = Provider.of<PhoneNumberProvider>(context);
-    final exitCode = phoneNumberProvider.phoneNumber.exitCode;
-    final userPhoneNumber = phoneNumberProvider.phoneNumber.phoneNumber;
+    // final phoneNumberProvider = Provider.of<PhoneNumberProvider>(context);
+    // final exitCode = phoneNumberProvider.phoneNumber.exitCode;
+    // final userPhoneNumber = phoneNumberProvider.phoneNumber.phoneNumber;
 
-    final phoneNumber = formatPhoneNumber(exitCode, userPhoneNumber, false);
+    // final phoneNumber = formatPhoneNumber(exitCode, userPhoneNumber, false);
 
     return Scaffold(
         // TODO: Remove appbar for user, keep for admin/dev
@@ -48,13 +48,13 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
         body: Padding(
           padding: const EdgeInsets.fromLTRB(35, 0, 35, 0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text("What's your first name?",
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
               const SizedBox(
-                height: 25,
+                height: 35,
               ),
               TextField(
                 autofocus: true,
@@ -76,7 +76,7 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                     fontWeight: FontWeight.bold, color: Colors.grey[800]),
               ),
               const SizedBox(
-                height: 45,
+                height: 75,
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 32.0, 0),
@@ -109,8 +109,9 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                               onPressed: () {
                                 // Add some condition here that requires
                                 // controller.text to not be an empty string
-                                print(controller.text);
-                                updateUserInfo(controller.text, phoneNumber);
+                                // TODO: Update the `updateUserInfo` function in order to
+                                // pass in a user ID instead of phone number
+                                updateUserInfo(controller.text, '2');
                                 Navigator.pushNamed(context, '/onboarding-dob');
                               },
                             ),

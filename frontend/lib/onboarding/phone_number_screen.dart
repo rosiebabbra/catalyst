@@ -94,22 +94,7 @@ class _PhoneVerificationState extends State<PhoneVerification> {
               // CHECKED! This condition occurs when a user already exists but has forgetten their password
               else {
                 _isElevated = !_isElevated;
-                // Comment out while developing, uncomment before deploying
-                verifyUserPhoneNumber(
-                    formatPhoneNumber(
-                        widget.exitCode, widget.phoneNumber, true),
-                    widget.verificationCode);
-
-                // Instead of 'resetting the password' since we're not actually using
-                // email password login, just go to the matches page after verifying...
-
-                // Future.delayed(const Duration(seconds: 6), () {
-                //   Navigator.pushNamed(context, '/password-reset');
-                // });
-
-                Future.delayed(const Duration(seconds: 6), () {
-                  Navigator.pushNamed(context, '/verification-screen');
-                });
+                // TODO: Rewrite the logic here
               }
             } else {
               // CHECKED! This condition occurs when a user does not exist and is attempting to reset their password

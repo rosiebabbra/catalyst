@@ -59,7 +59,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
         body: Padding(
           padding: const EdgeInsets.fromLTRB(35, 0, 35, 0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text("Your birthday?",
@@ -73,6 +73,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                   SizedBox(
                       width: MediaQuery.of(context).size.width / 10,
                       child: TextFormField(
+                        showCursor: false,
                         controller: m1Controller,
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.number,
@@ -102,6 +103,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                   SizedBox(
                       width: MediaQuery.of(context).size.width / 10,
                       child: TextFormField(
+                          showCursor: false,
                           controller: m2Controller,
                           onChanged: (value) {
                             setState(() {
@@ -130,6 +132,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                   SizedBox(
                       width: MediaQuery.of(context).size.width / 10,
                       child: TextFormField(
+                          showCursor: false,
                           controller: d1Controller,
                           textAlign: TextAlign.center,
                           keyboardType: TextInputType.number,
@@ -155,6 +158,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                   SizedBox(
                       width: MediaQuery.of(context).size.width / 10,
                       child: TextFormField(
+                          showCursor: false,
                           controller: d2Controller,
                           textAlign: TextAlign.center,
                           keyboardType: TextInputType.number,
@@ -182,6 +186,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                   SizedBox(
                       width: MediaQuery.of(context).size.width / 10,
                       child: TextFormField(
+                          showCursor: false,
                           controller: y1Controller,
                           keyboardType: TextInputType.number,
                           maxLength: 1,
@@ -207,6 +212,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                   SizedBox(
                       width: MediaQuery.of(context).size.width / 10,
                       child: TextFormField(
+                          showCursor: false,
                           controller: y2Controller,
                           keyboardType: TextInputType.number,
                           onChanged: (value) {
@@ -269,9 +275,8 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                               onPressed: () {
                                 var birthDate =
                                     '$y1Val$y2Val$m1Val$m2Val$d1Val$d2Val';
-                                var phoneNumber = formatPhoneNumber(
-                                    exitCode, userPhoneNumber, false);
-                                updateUserInfo(birthDate, phoneNumber);
+                                //TODO: Update `updateUserInfo` to take in user ID
+                                updateUserInfo(birthDate, '2');
                                 Navigator.pushNamed(
                                     context, '/onboarding-gender');
                               },
