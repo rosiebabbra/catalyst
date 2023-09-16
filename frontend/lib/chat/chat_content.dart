@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ColorConstants {
   static const themeColor = Color(0xfff5a623);
@@ -98,6 +100,9 @@ class ChatContentState extends State<ChatContent> {
               return ListView.builder(
                 itemCount: data.length,
                 itemBuilder: (context, index) {
+                  FirebaseAuth auth = FirebaseAuth.instance;
+                  final User? currentUser = auth.currentUser;
+                  final currentUserId = currentUser?.uid;
                   return Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(
@@ -106,17 +111,17 @@ class ChatContentState extends State<ChatContent> {
                     elevation: 5, // Adjust the elevation for shadow
                     margin: EdgeInsets.all(10.0), // Adjust the margin as needed
                     child: ListTile(
-                      tileColor: data[index]['receiverId'] == '5'
+                      tileColor: data[index]['receiverId'] == currentUserId
                           ? Colors.red
                           : Colors.blue,
                       subtitle: Padding(
-                        padding: data[index]['receiverId'] == '5'
+                        padding: data[index]['receiverId'] == currentUserId
                             ? const EdgeInsets.fromLTRB(200, 0, 0, 0)
                             : const EdgeInsets.fromLTRB(15, 0, 0, 0),
                         child: Text(data[index]['timestamp'] ?? ''),
                       ),
                       title: Padding(
-                        padding: data[index]['receiverId'] == '5'
+                        padding: data[index]['receiverId'] == currentUserId
                             ? const EdgeInsets.fromLTRB(200, 0, 0, 0)
                             : const EdgeInsets.fromLTRB(15, 0, 0, 0),
                         child: Text(data[index]['content'] ?? 'No content'),
