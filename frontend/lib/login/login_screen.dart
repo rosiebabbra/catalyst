@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:my_app/onboarding/interests_screen.dart';
 import 'package:video_player/video_player.dart';
 import '/utils/animated_background.dart';
 
@@ -14,6 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
+    final shakeKey = GlobalKey<ShakeWidgetState>();
 
     return Scaffold(
         body: Stack(
@@ -75,9 +77,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(
-                    passwordErrorMessage,
-                    style: const TextStyle(color: Colors.red),
+                  child: ShakeWidget(
+                    shakeCount: 3,
+                    shakeOffset: 10,
+                    shakeDuration: Duration(milliseconds: 500),
+                    key: shakeKey,
+                    child: Text(
+                      passwordErrorMessage,
+                      style: const TextStyle(color: Colors.red),
+                    ),
                   ),
                 ),
               ),
@@ -109,6 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       FirebaseAuth auth = FirebaseAuth.instance;
 
                       try {
+                        // TODO: Enable for prod
                         await auth.signInWithEmailAndPassword(
                             email: emailController.text,
                             password: passwordController.text);
