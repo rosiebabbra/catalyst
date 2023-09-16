@@ -87,6 +87,12 @@ class _FadeInTextState extends State<FadeInText>
   }
 
   @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return firstRun
         ? FadeTransition(
