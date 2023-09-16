@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:my_app/onboarding/signup_screen.dart';
+import 'chat/chat_content.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/hobbies/main.dart';
@@ -101,7 +102,8 @@ class _BackgroundVideoState extends State<MyApp> {
         '/generating-matches': (context) => GeneratingMatchesScreen(),
         '/verification-screen': (context) => VerificationScreen(),
         '/swipes-completed': (context) => SwipesCompletedScreen(),
-        '/subscription-page': (context) => MyProfileScreen()
+        '/subscription-page': (context) => MyProfileScreen(),
+        '/chat-content': (context) => ChatContent()
       },
       home: Stack(
         children: <Widget>[
