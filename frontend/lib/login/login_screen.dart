@@ -118,9 +118,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       try {
                         // TODO: Enable for prod
-                        await auth.signInWithEmailAndPassword(
-                            email: emailController.text,
-                            password: passwordController.text);
+                        // await auth.signInWithEmailAndPassword(
+                        //     email: emailController.text,
+                        //     password: passwordController.text);
                         Navigator.pushNamed(context, '/hobbies');
                       } catch (e) {
                         if (e is FirebaseAuthException) {
