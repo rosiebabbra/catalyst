@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ColorConstants {
@@ -120,6 +118,9 @@ class ChatContentState extends State<ChatContent> {
                   'timestamp': Timestamp.now(),
                   'receiver_id': '4',
                   'sender_id': 'a3IXF0jBT0SkVW53hCIksmfsqAh2'
+                });
+                setState(() {
+                  messageController.text = '';
                 });
               },
               child: Text('Send'))
