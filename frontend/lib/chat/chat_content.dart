@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
 class ColorConstants {
   static const themeColor = Color(0xfff5a623);
@@ -33,42 +34,6 @@ class ChatContent extends StatefulWidget {
 }
 
 class ChatContentState extends State<ChatContent> {
-  Future<List<Map<String, String>>> fetchMessages() async {
-    try {
-      Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshot =
-          FirebaseFirestore.instance.collection('messages').snapshots();
-
-      List<Map<String, String>> messages = [];
-
-      // for (QueryDocumentSnapshot document in querySnapshot.docs) {
-      //   // Access the "content" field in each document
-      //   Map<String, dynamic>? data = document.data() as Map<String, dynamic>?;
-
-      //   if (data != null) {
-      //     String? content = data['content'] as String?;
-      //     String senderId = data['sender_id'].toString();
-      //     String receiverId = data['receiver_id'].toString();
-      //     Timestamp timestamp = data['timestamp'] as Timestamp;
-
-      //     messages.add({
-      //       'content': content ?? '',
-      //       'senderId': senderId,
-      //       'receiverId': receiverId,
-      //       'timestamp': timestamp.toDate().toString(),
-      //     });
-      //   }
-      // }
-
-      return messages;
-    } catch (e) {
-      // Handle exceptions here, e.g., log the error or return an empty list.
-      print('Error fetching messages: $e');
-      return [];
-    }
-  }
-
-  final int _limit = 20;
-
   // TODO: Query for the name associated with the senderId; hardcoding until it's build
   // getSenderName() {}
   String senderName = 'Jack';
@@ -93,15 +58,24 @@ class ChatContentState extends State<ChatContent> {
                   return Text("Loading");
                 }
 
+                convertTimestampToDateTime(timestamp) {
+                  var dt = timestamp.toDate();
+                  return dt;
+                }
+
                 final FirebaseAuth auth = FirebaseAuth.instance;
                 final User? user = auth.currentUser;
                 final currentUserId = user?.uid;
+                var msgList = snapshot.data!.docs.toList();
+                msgList.sort((a, b) {
+                  return a["timestamp"].compareTo(b["timestamp"]);
+                });
 
                 return SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.7,
+                  height: MediaQuery.of(context).size.height * 0.65,
+                  width: MediaQuery.of(context).size.width * 0.95,
                   child: ListView(
-                      children:
-                          snapshot.data!.docs.map((DocumentSnapshot document) {
+                      children: msgList.map((DocumentSnapshot document) {
                     Map<String, dynamic> data =
                         document.data()! as Map<String, dynamic>;
                     return Padding(
@@ -123,22 +97,21 @@ class ChatContentState extends State<ChatContent> {
                               padding: data['receiver_id'] == currentUserId
                                   ? const EdgeInsets.fromLTRB(200, 0, 0, 0)
                                   : const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                              child: Text(data['timestamp'].toString()),
+                              child: Text(
+                                  convertTimestampToDateTime(data['timestamp'])
+                                      .toString()),
                             )),
                       ),
                     );
                   }).toList()),
                 );
               }),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.1,
-            child: TextFormField(
-              controller: messageController,
-              maxLines: null,
-              maxLength: 1000, // Set the maximum number of characters here
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-              ),
+          TextFormField(
+            controller: messageController,
+            maxLines: null,
+            maxLength: 1000, // Set the maximum number of characters here
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
             ),
           ),
           ElevatedButton(
@@ -150,7 +123,7 @@ class ChatContentState extends State<ChatContent> {
                   'sender_id': 'a3IXF0jBT0SkVW53hCIksmfsqAh2'
                 });
               },
-              child: Text('Next'))
+              child: Text('Send'))
         ]));
   }
 }
