@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'chat_content.dart';
@@ -11,7 +12,14 @@ class ChatList extends StatefulWidget {
 
 class ChatListState extends State<ChatList> {
   @override
+
+  // TODO: Sort the list by latest message recency
+  // TODO: Render the most recently sent message by either party in the
+  // respective chat in the Message widget
   Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    Stream<QuerySnapshot<Object?>> querySnapshot = users.snapshots();
+
     return Scaffold(
         body: Column(
       children: [
@@ -24,42 +32,44 @@ class ChatListState extends State<ChatList> {
           style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
         )),
         Flexible(
-          child: ListView(
-              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-              children: const [
-                Message(
-                  senderId: 2,
-                  receiverId: 5,
-                ),
-                Message(
-                  senderId: 3,
-                  receiverId: 8,
-                ),
-                Message(
-                  senderId: 4,
-                  receiverId: 9,
-                ),
-                Message(
-                  senderId: 5,
-                  receiverId: 3,
-                ),
-                Message(
-                  senderId: 6,
-                  receiverId: 37,
-                ),
-                Message(
-                  senderId: 7,
-                  receiverId: 48,
-                ),
-                Message(
-                  senderId: 8,
-                  receiverId: 87,
-                ),
-                Message(
-                  senderId: 9,
-                  receiverId: 784,
-                )
-              ]),
+          child: StreamBuilder(
+              stream: querySnapshot,
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                var inboxList = snapshot.data!.docs.toList();
+                return ListView(
+                    children: inboxList.map((DocumentSnapshot document) {
+                  var query = users.where('receiver_id',
+                      isEqualTo: 'a3IXF0jBT0SkVW53hCIksmfsqAh2');
+
+                  Map<String, dynamic> data =
+                      document.data()! as Map<String, dynamic>;
+
+                  getMessagePreviewByReceiverId(String receiverId) {
+                    Stream<QuerySnapshot<Map<String, dynamic>>>
+                        messagePreviews = FirebaseFirestore.instance
+                            .collection('messages')
+                            .where('receiver_id', isEqualTo: receiverId)
+                            .snapshots();
+                    return messagePreviews;
+                  }
+
+                  return StreamBuilder(
+                    stream: getMessagePreviewByReceiverId(
+                        'a3IXF0jBT0SkVW53hCIksmfsqAh2'),
+                    builder: (context, childSnapshot) {
+                      return ListTile(
+                          title: Message(
+                              senderId: 3,
+                              receiverId: 4,
+                              msgPreview: childSnapshot.data?.docs[0]
+                                      ['content'] ??
+                                  'test',
+                              name: data['first_name'].toString()));
+                    },
+                  );
+                }).toList());
+              }),
         ),
       ],
     ));
@@ -69,8 +79,15 @@ class ChatListState extends State<ChatList> {
 class Message extends StatelessWidget {
   final int senderId;
   final int receiverId;
+  final String name;
+  final String msgPreview;
 
-  const Message({super.key, required this.senderId, required this.receiverId});
+  const Message(
+      {super.key,
+      required this.senderId,
+      required this.receiverId,
+      required this.name,
+      required this.msgPreview});
 
   // Get senderId's image and their messages from the db
 
@@ -97,8 +114,8 @@ class Message extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                width: 100.0,
-                height: 100.0,
+                width: 80.0,
+                height: 80.0,
                 decoration: BoxDecoration(
                   color: const Color(0xff7c94b6),
                   image: const DecorationImage(
@@ -116,12 +133,18 @@ class Message extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text('Erin',
-                        style: TextStyle(
+                  children: [
+                    Text(name,
+                        style: const TextStyle(
                             fontSize: 25, fontWeight: FontWeight.w700)),
-                    Text("Hey! How's it going?",
-                        style: TextStyle(fontSize: 18)),
+                    SizedBox(
+                      width: 250,
+                      child: Text(msgPreview,
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                          style: const TextStyle(fontSize: 18)),
+                    ),
                   ],
                 ),
               )
