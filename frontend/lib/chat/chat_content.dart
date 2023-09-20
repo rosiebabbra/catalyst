@@ -38,7 +38,10 @@ class ChatContentState extends State<ChatContent> {
   @override
   Widget build(BuildContext context) {
     Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshot =
-        FirebaseFirestore.instance.collection('messages').snapshots();
+        FirebaseFirestore.instance
+            .collection('messages')
+            .orderBy('timestamp', descending: false)
+            .snapshots();
     TextEditingController messageController = TextEditingController();
     return Scaffold(
         appBar: AppBar(title: Text(senderName)),
@@ -64,9 +67,6 @@ class ChatContentState extends State<ChatContent> {
                 final User? user = auth.currentUser;
                 final currentUserId = user?.uid;
                 var msgList = snapshot.data!.docs.toList();
-                msgList.sort((a, b) {
-                  return a["timestamp"].compareTo(b["timestamp"]);
-                });
 
                 return SizedBox(
                   height: MediaQuery.of(context).size.height * 0.65,
