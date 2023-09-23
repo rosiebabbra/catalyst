@@ -39,35 +39,131 @@ class ChatListState extends State<ChatList> {
                 var inboxList = snapshot.data!.docs.toList();
                 return ListView(
                     children: inboxList.map((DocumentSnapshot document) {
-                  var query = users.where('receiver_id',
-                      isEqualTo: 'a3IXF0jBT0SkVW53hCIksmfsqAh2');
+                  // 1. first get all the senderIds of people who messaged current user
+                  // 2. loop through all senderIds and find the most recent
+                  // message sent between the two users and surface as the preview
 
-                  Map<String, dynamic> data =
-                      document.data()! as Map<String, dynamic>;
+                  Future<Object> getAllSenderIds(String receiverId) async {
+                    //get all sender ids where reeiever id is current user
+                    QuerySnapshot senderIds = await FirebaseFirestore.instance
+                        .collection('messages')
+                        .where('receiver_id', isEqualTo: receiverId)
+                        .get();
 
-                  getMessagePreviewByReceiverId(String receiverId) {
-                    Stream<QuerySnapshot<Map<String, dynamic>>>
-                        messagePreviews = FirebaseFirestore.instance
-                            .collection('messages')
-                            .where('receiver_id', isEqualTo: receiverId)
-                            .snapshots();
-                    return messagePreviews;
+                    var allSenderIds = [];
+
+                    if (senderIds.docs.isNotEmpty) {
+                      // Iterate through the documents and access data from a specific column
+                      for (QueryDocumentSnapshot document in senderIds.docs) {
+                        var columnData = document
+                            .get('sender_id'); // Replace with your column name
+                        print('Column Data: $columnData');
+                        allSenderIds.add(columnData.toString());
+                      }
+                      return allSenderIds.toSet().toList();
+                    } else {
+                      print('No documents found matching the filter.');
+                    }
+
+                    return senderIds;
                   }
 
-                  return StreamBuilder(
-                    stream: getMessagePreviewByReceiverId(
-                        'a3IXF0jBT0SkVW53hCIksmfsqAh2'),
-                    builder: (context, childSnapshot) {
-                      return ListTile(
-                          title: Message(
-                              senderId: 3,
-                              receiverId: 4,
-                              msgPreview: childSnapshot.data?.docs[0]
-                                      ['content'] ??
-                                  'test',
-                              name: data['first_name'].toString()));
-                    },
-                  );
+                  Future<String> getMessagePreview(
+                      String receiverId, String senderId) async {
+                    // need to be able to differentiate by sender_id
+                    QuerySnapshot messagePreviews = await FirebaseFirestore
+                        .instance
+                        .collection('messages')
+                        .where('receiver_id', isEqualTo: receiverId)
+                        .where('sender_id', isEqualTo: senderId)
+                        .orderBy('timestamp', descending: true)
+                        .get();
+
+                    var msgPreview = messagePreviews.docs.first['content'];
+                    return msgPreview;
+                  }
+
+                  var senderIds =
+                      getAllSenderIds('a3IXF0jBT0SkVW53hCIksmfsqAh2');
+
+                  return FutureBuilder<Object>(
+                      future: senderIds,
+                      builder: (BuildContext context,
+                          AsyncSnapshot senderIdSnapshot) {
+                        if (senderIdSnapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator(); // Loading indicator
+                        }
+                        if (senderIdSnapshot.hasError) {
+                          return Text('Error: ${senderIdSnapshot.error}');
+                        }
+                        if (!senderIdSnapshot.hasData) {
+                          return Text('No sender IDs available.');
+                        }
+
+                        return SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.75,
+                          child: ListView.builder(
+                            itemCount: senderIdSnapshot.data.length,
+                            itemBuilder: (BuildContext context, index) {
+                              var messagePreview = getMessagePreview(
+                                  'a3IXF0jBT0SkVW53hCIksmfsqAh2',
+                                  senderIdSnapshot.data[index]);
+                              return FutureBuilder(
+                                future: messagePreview,
+                                builder: (BuildContext context,
+                                    AsyncSnapshot msgPreviewSnapshot) {
+                                  if (msgPreviewSnapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return CircularProgressIndicator(); // Loading indicator
+                                  }
+                                  if (msgPreviewSnapshot.hasError) {
+                                    return Text(
+                                        'Error: ${msgPreviewSnapshot.error}');
+                                  }
+                                  if (!msgPreviewSnapshot.hasData) {
+                                    return const Text(
+                                        'No sender IDs available.');
+                                  }
+
+                                  getUserName(String sender_id) async {
+                                    QuerySnapshot querySnapshot =
+                                        await FirebaseFirestore.instance
+                                            .collection(
+                                                'users') // Replace with your collection name
+                                            .where('user_id',
+                                                isEqualTo: sender_id)
+                                            .get();
+
+                                    if (querySnapshot.docs.isNotEmpty) {
+                                      // Iterate through the documents (there may be multiple matching records)
+                                      for (QueryDocumentSnapshot document
+                                          in querySnapshot.docs) {
+                                        var recordData = document.data()
+                                            as Map<String, dynamic>;
+                                        return recordData['first_name'];
+                                      }
+                                    } else {
+                                      return 'Error rendering user name';
+                                    }
+                                  }
+
+                                  return FutureBuilder(
+                                    future: getUserName(
+                                        senderIdSnapshot.data[index]),
+                                    builder:
+                                        (BuildContext context, nameSnapshot) {
+                                      return Message(
+                                          msgPreview: msgPreviewSnapshot.data,
+                                          name: nameSnapshot.data);
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        );
+                      });
                 }).toList());
               }),
         ),
@@ -77,15 +173,15 @@ class ChatListState extends State<ChatList> {
 }
 
 class Message extends StatelessWidget {
-  final int senderId;
-  final int receiverId;
+  // final int senderId;
+  // final int receiverId;
   final String name;
   final String msgPreview;
 
   const Message(
       {super.key,
-      required this.senderId,
-      required this.receiverId,
+      // required this.senderId,
+      // required this.receiverId,
       required this.name,
       required this.msgPreview});
 
@@ -134,9 +230,15 @@ class Message extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(name,
-                        style: const TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.w700)),
+                    SizedBox(
+                      width: 250,
+                      child: Text(name,
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                          style: const TextStyle(
+                              fontSize: 25, fontWeight: FontWeight.w700)),
+                    ),
                     SizedBox(
                       width: 250,
                       child: Text(msgPreview,
