@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/chat/chat_list.dart';
 import 'dart:math' as math;
@@ -142,6 +143,23 @@ class _MatchProfileState extends State<MatchProfile> {
 
   @override
   Widget build(BuildContext context) {
+    getUserName(String senderId) async {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('users') // Replace with your collection name
+          .where('user_id', isEqualTo: senderId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // Iterate through the documents (there may be multiple matching records)
+        for (QueryDocumentSnapshot document in querySnapshot.docs) {
+          var recordData = document.data() as Map<String, dynamic>;
+          return recordData['first_name'];
+        }
+      } else {
+        return 'Error rendering user name';
+      }
+    }
+
     return Offstage(
       offstage: widget.index != 0,
       child: TickerMode(
@@ -156,16 +174,36 @@ class _MatchProfileState extends State<MatchProfile> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.fromLTRB(35.0, 70, 0, 0),
-                    child: Row(
-                      children: const [
-                        Text(
-                          'Alice',
-                          style: TextStyle(
-                              fontSize: 35,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        ),
-                      ],
+                    child: SizedBox(
+                      width: 150,
+                      height: 100,
+                      child: Row(
+                        children: [
+                          FutureBuilder(
+                            future: getUserName('a3IXF0jBT0SkVW53hCIksmfsqAh2'),
+                            builder: (context, snapshot) {
+                              var data = snapshot.data;
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return CircularProgressIndicator(); // Loading indicator
+                              }
+                              if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              }
+                              if (!snapshot.hasData) {
+                                return Text('No sender IDs available.');
+                              }
+                              return Text(
+                                data,
+                                style: const TextStyle(
+                                    fontSize: 35,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Stack(
