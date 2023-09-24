@@ -380,68 +380,16 @@ class _MatchProfileState extends State<MatchProfile> {
                                     const Icon(Icons.person_outline),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: Text('Woman',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.grey[900])),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                            child: Container(
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                      right: BorderSide(
-                                          width: 0.5,
-                                          color: Colors.grey[300]!))),
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.favorite_outline),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text('Straight',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.grey[900])),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                            child: Container(
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                      right: BorderSide(
-                                          width: 0.5,
-                                          color: Colors.grey[300]!))),
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                child: Row(
-                                  children: [
-                                    Transform.rotate(
-                                      angle: 90 * math.pi / 180,
-                                      child: const Icon(
-                                        Icons.straighten,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        "5'7",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.grey[900]),
+                                      child: FutureBuilder(
+                                        future: getUserData(
+                                            'a3IXF0jBT0SkVW53hCIksmfsqAh2'),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot snapshot) {
+                                          return Text(snapshot.data['gender'],
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.grey[900]));
+                                        },
                                       ),
                                     ),
                                   ],
@@ -449,6 +397,65 @@ class _MatchProfileState extends State<MatchProfile> {
                               ),
                             ),
                           ),
+                          // Padding(
+                          //   padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          //   child: Container(
+                          //     alignment: Alignment.center,
+                          //     decoration: BoxDecoration(
+                          //         border: Border(
+                          //             right: BorderSide(
+                          //                 width: 0.5,
+                          //                 color: Colors.grey[300]!))),
+                          //     child: Padding(
+                          //       padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          //       child: Row(
+                          //         children: [
+                          //           const Icon(Icons.favorite_outline),
+                          //           Padding(
+                          //             padding: const EdgeInsets.all(8.0),
+                          //             child: Text('Straight',
+                          //                 style: TextStyle(
+                          //                     fontWeight: FontWeight.w500,
+                          //                     color: Colors.grey[900])),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+                          // Padding(
+                          //   padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          //   child: Container(
+                          //     alignment: Alignment.center,
+                          //     decoration: BoxDecoration(
+                          //         border: Border(
+                          //             right: BorderSide(
+                          //                 width: 0.5,
+                          //                 color: Colors.grey[300]!))),
+                          //     child: Padding(
+                          //       padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          //       child: Row(
+                          //         children: [
+                          //           Transform.rotate(
+                          //             angle: 90 * math.pi / 180,
+                          //             child: const Icon(
+                          //               Icons.straighten,
+                          //             ),
+                          //           ),
+                          //           Padding(
+                          //             padding: const EdgeInsets.all(8.0),
+                          //             child: Text(
+                          //               "5'7",
+                          //               style: TextStyle(
+                          //                   fontWeight: FontWeight.w500,
+                          //                   color: Colors.grey[900]),
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                             child: Container(
@@ -477,27 +484,27 @@ class _MatchProfileState extends State<MatchProfile> {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                            child: Container(
-                              alignment: Alignment.center,
-                              child: Row(
-                                children: [
-                                  const Icon(Icons.local_bar_outlined,
-                                      size: 20),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: Text(
-                                      'Socially',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.grey[900]),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          // Padding(
+                          //   padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          //   child: Container(
+                          //     alignment: Alignment.center,
+                          //     child: Row(
+                          //       children: [
+                          //         const Icon(Icons.local_bar_outlined,
+                          //             size: 20),
+                          //         Padding(
+                          //           padding: const EdgeInsets.all(8),
+                          //           child: Text(
+                          //             'Socially',
+                          //             style: TextStyle(
+                          //                 fontWeight: FontWeight.w500,
+                          //                 color: Colors.grey[900]),
+                          //           ),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
