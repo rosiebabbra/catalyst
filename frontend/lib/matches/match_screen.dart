@@ -143,7 +143,7 @@ class _MatchProfileState extends State<MatchProfile> {
 
   @override
   Widget build(BuildContext context) {
-    getUserName(String senderId) async {
+    getUserData(String senderId) async {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('users') // Replace with your collection name
           .where('user_id', isEqualTo: senderId)
@@ -153,7 +153,7 @@ class _MatchProfileState extends State<MatchProfile> {
         // Iterate through the documents (there may be multiple matching records)
         for (QueryDocumentSnapshot document in querySnapshot.docs) {
           var recordData = document.data() as Map<String, dynamic>;
-          return recordData['first_name'];
+          return recordData;
         }
       } else {
         return 'Error rendering user name';
@@ -177,9 +177,9 @@ class _MatchProfileState extends State<MatchProfile> {
                     child: Row(
                       children: [
                         FutureBuilder(
-                          future: getUserName('a3IXF0jBT0SkVW53hCIksmfsqAh2'),
-                          builder: (context, snapshot) {
-                            var data = snapshot.data;
+                          future: getUserData('a3IXF0jBT0SkVW53hCIksmfsqAh2'),
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
                               return CircularProgressIndicator(); // Loading indicator
@@ -190,8 +190,9 @@ class _MatchProfileState extends State<MatchProfile> {
                             if (!snapshot.hasData) {
                               return Text('No sender IDs available.');
                             }
+
                             return Text(
-                              data.toString(),
+                              snapshot.data['first_name'],
                               style: const TextStyle(
                                   fontSize: 35,
                                   fontWeight: FontWeight.bold,
@@ -308,10 +309,55 @@ class _MatchProfileState extends State<MatchProfile> {
                                     const Icon(Icons.cake_outlined),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: Text('24',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.grey[900])),
+                                      child: FutureBuilder(
+                                        future: getUserData(
+                                            'a3IXF0jBT0SkVW53hCIksmfsqAh2'),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return CircularProgressIndicator(); // Loading indicator
+                                          }
+                                          if (snapshot.hasError) {
+                                            return Text(
+                                                'Error: ${snapshot.error}');
+                                          }
+                                          if (!snapshot.hasData) {
+                                            return const Text(
+                                                'No sender IDs available.');
+                                          }
+
+                                          String calculateAge(
+                                              Timestamp timestamp) {
+                                            DateTime currentDate =
+                                                DateTime.now();
+                                            DateTime birthDate = DateTime
+                                                .fromMillisecondsSinceEpoch(
+                                                    timestamp
+                                                        .millisecondsSinceEpoch);
+                                            int age = currentDate.year -
+                                                birthDate.year;
+
+                                            if (currentDate.month <
+                                                    birthDate.month ||
+                                                (currentDate.month ==
+                                                        birthDate.month &&
+                                                    currentDate.day <
+                                                        birthDate.day)) {
+                                              age--;
+                                            }
+
+                                            return age.toString();
+                                          }
+
+                                          return Text(
+                                              calculateAge(
+                                                  snapshot.data['birthdate']),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.grey[900]));
+                                        },
+                                      ),
                                     ),
                                   ],
                                 ),
