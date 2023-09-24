@@ -36,13 +36,20 @@ class ChatListState extends State<ChatList> {
               stream: querySnapshot,
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // While waiting for data, show a loading indicator
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  // If an error occurs, display an error message
+                  return Text('Error: ${snapshot.error}');
+                } else if (!snapshot.hasData) {
+                  // If there's no data, show a message indicating an empty state
+                  return Text('No data available.');
+                }
+
                 var inboxList = snapshot.data!.docs.toList();
                 return ListView(
                     children: inboxList.map((DocumentSnapshot document) {
-                  // 1. first get all the senderIds of people who messaged current user
-                  // 2. loop through all senderIds and find the most recent
-                  // message sent between the two users and surface as the preview
-
                   Future<Object> getAllSenderIds(String receiverId) async {
                     //get all sender ids where reeiever id is current user
                     QuerySnapshot senderIds = await FirebaseFirestore.instance
@@ -57,7 +64,6 @@ class ChatListState extends State<ChatList> {
                       for (QueryDocumentSnapshot document in senderIds.docs) {
                         var columnData = document
                             .get('sender_id'); // Replace with your column name
-                        print('Column Data: $columnData');
                         allSenderIds.add(columnData.toString());
                       }
                       return allSenderIds.toSet().toList();
@@ -153,6 +159,17 @@ class ChatListState extends State<ChatList> {
                                         senderIdSnapshot.data[index]),
                                     builder:
                                         (BuildContext context, nameSnapshot) {
+                                      if (nameSnapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return CircularProgressIndicator(); // Loading indicator
+                                      }
+                                      if (nameSnapshot.hasError) {
+                                        return Text(
+                                            'Error: ${nameSnapshot.error}');
+                                      }
+                                      if (!nameSnapshot.hasData) {
+                                        return Text('No sender IDs available.');
+                                      }
                                       return Message(
                                           msgPreview: msgPreviewSnapshot.data,
                                           name: nameSnapshot.data);

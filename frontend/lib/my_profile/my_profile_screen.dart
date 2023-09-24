@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -10,33 +12,34 @@ class MyProfileScreen extends StatefulWidget {
 }
 
 class _MyProfileScreenState extends State<MyProfileScreen> {
-  String first_name = 'Loading...';
-
   @override
   void initState() {
     super.initState();
-    getData();
   }
 
-  Future<void> getData() async {
-    final response = await http
-        .post(Uri.parse('http://127.0.0.1:8080/users'), body: {'user_id': '1'});
-    if (response.statusCode == 200) {
-      // Handle successful response
-      final data = response.body;
-      List<dynamic> jsonList = jsonDecode(data);
-      print(data);
+  getCurrentUserName(String userId) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users') // Replace with your collection name
+        .where('user_id', isEqualTo: userId)
+        .get();
 
-      setState(() {
-        first_name = jsonList[0]['first_name'];
-      });
+    if (querySnapshot.docs.isNotEmpty) {
+      // Iterate through the documents (there may be multiple matching records)
+      for (QueryDocumentSnapshot document in querySnapshot.docs) {
+        var recordData = document.data() as Map<String, dynamic>;
+        return recordData['first_name'];
+      }
     } else {
-      throw Exception('Failed to load data from backend');
+      return 'Error rendering user name';
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+    final currentUserId = user?.uid;
+
     return Scaffold(
         backgroundColor: Colors.white,
         body: Column(
@@ -69,8 +72,14 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               ]),
             ),
             const SizedBox(height: 10),
-            Text(first_name,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+            FutureBuilder(
+              future: getCurrentUserName(currentUserId ?? ''),
+              builder: (BuildContext context, snapshot) {
+                return Text(snapshot.data.toString(),
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.w700));
+              },
+            ),
             const SizedBox(height: 10),
             // SizedBox(
             //   height: 30,

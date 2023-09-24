@@ -173,37 +173,33 @@ class _MatchProfileState extends State<MatchProfile> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(35.0, 70, 0, 0),
-                    child: SizedBox(
-                      width: 150,
-                      height: 100,
-                      child: Row(
-                        children: [
-                          FutureBuilder(
-                            future: getUserName('a3IXF0jBT0SkVW53hCIksmfsqAh2'),
-                            builder: (context, snapshot) {
-                              var data = snapshot.data;
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return CircularProgressIndicator(); // Loading indicator
-                              }
-                              if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              }
-                              if (!snapshot.hasData) {
-                                return Text('No sender IDs available.');
-                              }
-                              return Text(
-                                data,
-                                style: const TextStyle(
-                                    fontSize: 35,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
+                    padding: const EdgeInsets.fromLTRB(35.0, 80, 0, 25),
+                    child: Row(
+                      children: [
+                        FutureBuilder(
+                          future: getUserName('a3IXF0jBT0SkVW53hCIksmfsqAh2'),
+                          builder: (context, snapshot) {
+                            var data = snapshot.data;
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator(); // Loading indicator
+                            }
+                            if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            }
+                            if (!snapshot.hasData) {
+                              return Text('No sender IDs available.');
+                            }
+                            return Text(
+                              data.toString(),
+                              style: const TextStyle(
+                                  fontSize: 35,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ),
                   Stack(
