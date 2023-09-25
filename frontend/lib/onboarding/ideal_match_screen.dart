@@ -54,17 +54,17 @@ class _IdealMatchScreenState extends State<IdealMatchScreen> {
               ),
               MultiSelectDialogField(
                 items: _items,
-                title: Text("Animals"),
-                selectedColor: Color(0xff7301E4),
+                title: const Text("Animals"),
+                selectedColor: const Color(0xff7301E4),
                 decoration: BoxDecoration(
-                  color: Color(0xff7301E4).withOpacity(0.1),
-                  borderRadius: BorderRadius.all(Radius.circular(40)),
+                  color: const Color(0xff7301E4).withOpacity(0.1),
+                  borderRadius: const BorderRadius.all(Radius.circular(40)),
                   border: Border.all(
-                    color: Color(0xff7301E4),
+                    color: const Color(0xff7301E4),
                     width: 2,
                   ),
                 ),
-                buttonText: Text(
+                buttonText: const Text(
                   "Select an industry",
                   style: TextStyle(
                     color: Color(0xff7301E4),
@@ -76,9 +76,9 @@ class _IdealMatchScreenState extends State<IdealMatchScreen> {
                 },
               ),
               TextButton(
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: const [
+                  children: [
                     Text('>> '),
                     Text('Next'),
                   ],

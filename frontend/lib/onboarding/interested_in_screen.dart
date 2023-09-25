@@ -9,7 +9,7 @@ bool _isDatingBorderColorEnabled = false;
 bool _isFriendsBorderColorEnabled = false;
 bool _isNetworkingBorderColorEnabled = false;
 
-Color _selectedBorderColor = Color(0xff7301E4);
+Color _selectedBorderColor = const Color(0xff7301E4);
 Color _defaultBorderColor = Colors.grey[400]!;
 
 class InterestedInScreen extends StatefulWidget {
@@ -22,7 +22,7 @@ class InterestedInScreen extends StatefulWidget {
 }
 
 class _InterestedInScreenState extends State<InterestedInScreen> {
-  ExperienceType _experienceType = ExperienceType.dating;
+  final ExperienceType _experienceType = ExperienceType.dating;
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +33,11 @@ class _InterestedInScreenState extends State<InterestedInScreen> {
             const SizedBox(
               height: 25,
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(25, 5, 0, 0),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(25, 5, 0, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
+                children: [
                   Flexible(
                     child: Text("Right now I'm interested in...",
                         style: TextStyle(
@@ -66,7 +66,7 @@ class _InterestedInScreenState extends State<InterestedInScreen> {
                   style: ButtonStyle(
                       side: MaterialStateProperty.all(BorderSide(
                         color: _isDatingBorderColorEnabled
-                            ? Color(0xff7301E4)
+                            ? const Color(0xff7301E4)
                             : _defaultBorderColor,
                         width: 2.0,
                       )),
@@ -83,7 +83,7 @@ class _InterestedInScreenState extends State<InterestedInScreen> {
                   child: Row(
                     children: [
                       Checkbox(
-                        activeColor: Color(0xff7301E4),
+                        activeColor: const Color(0xff7301E4),
                         value: _isDatingBorderColorEnabled,
                         onChanged: (bool? value) {},
                       ),
@@ -102,7 +102,7 @@ class _InterestedInScreenState extends State<InterestedInScreen> {
                   style: ButtonStyle(
                       side: MaterialStateProperty.all(BorderSide(
                         color: _isFriendsBorderColorEnabled
-                            ? Color(0xff0E8BFF)
+                            ? const Color(0xff0E8BFF)
                             : _defaultBorderColor,
                         width: 2.0,
                       )),
@@ -119,7 +119,7 @@ class _InterestedInScreenState extends State<InterestedInScreen> {
                   child: Row(
                     children: [
                       Checkbox(
-                        activeColor: Color(0xff0E8BFF),
+                        activeColor: const Color(0xff0E8BFF),
                         value: _isFriendsBorderColorEnabled,
                         onChanged: (bool? value) {},
                       ),
@@ -138,7 +138,7 @@ class _InterestedInScreenState extends State<InterestedInScreen> {
                   style: ButtonStyle(
                       side: MaterialStateProperty.all(BorderSide(
                         color: _isNetworkingBorderColorEnabled
-                            ? Color(0xff09CBC8)
+                            ? const Color(0xff09CBC8)
                             : _defaultBorderColor,
                         width: 2.0,
                       )),
@@ -155,7 +155,7 @@ class _InterestedInScreenState extends State<InterestedInScreen> {
                   child: Row(
                     children: [
                       Checkbox(
-                        activeColor: Color(0xff09CBC8),
+                        activeColor: const Color(0xff09CBC8),
                         value: _isNetworkingBorderColorEnabled,
                         onChanged: (bool? value) {},
                       ),

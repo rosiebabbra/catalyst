@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:my_app/onboarding/interests_screen.dart';
 
-import 'package:permission_handler/permission_handler.dart';
 
-import '../home/home_screen.dart';
-import '../widgets/button.dart';
 
 class LocationDisclaimerScreen extends StatefulWidget {
   const LocationDisclaimerScreen({super.key});
@@ -117,7 +114,7 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
                     });
                   }
                 },
-                child: Text("Allow access"))
+                child: const Text("Allow access"))
           ]),
         ));
   }

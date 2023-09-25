@@ -121,7 +121,7 @@ class StandardButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         width: MediaQuery.of(context).size.width / 1.75,
         height: MediaQuery.of(context).size.height / 20,
         child: CupertinoButton(

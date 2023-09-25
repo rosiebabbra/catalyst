@@ -1,5 +1,4 @@
 import '../../models/user_model.dart';
-import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 abstract class BaseDatabaseRepository {
   Stream<User> getUser(String userId);

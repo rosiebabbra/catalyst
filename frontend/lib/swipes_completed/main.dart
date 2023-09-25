@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../home/home_screen.dart';
-import '../utils/animated_background.dart';
 import '../utils/text_fade.dart';
 import '../widgets/button.dart';
 
@@ -43,7 +41,7 @@ class SwipesCompletedScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: GoogleFonts.openSans(
                       fontSize: 14,
-                      color: Color.fromARGB(255, 99, 95, 95),
+                      color: const Color.fromARGB(255, 99, 95, 95),
                     )),
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.3),

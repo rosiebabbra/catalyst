@@ -6,8 +6,8 @@ class FadeOnScroll extends StatefulWidget {
   final double fullOpacityOffset;
   final Widget child;
 
-  FadeOnScroll(
-      {Key? key,
+  const FadeOnScroll(
+      {super.key, Key? key,
       required this.scrollController,
       required this.child,
       this.zeroOpacityOffset = 0,
@@ -40,22 +40,22 @@ class _FadeOnScrollState extends State<FadeOnScroll> {
   }
 
   double _calculateOpacity() {
-    if (widget.fullOpacityOffset == widget.zeroOpacityOffset)
+    if (widget.fullOpacityOffset == widget.zeroOpacityOffset) {
       return 1;
-    else if (widget.fullOpacityOffset > widget.zeroOpacityOffset) {
+    } else if (widget.fullOpacityOffset > widget.zeroOpacityOffset) {
       // fading in
-      if (_offset <= widget.zeroOpacityOffset)
+      if (_offset <= widget.zeroOpacityOffset) {
         return 0;
-      else if (_offset >= widget.fullOpacityOffset)
+      } else if (_offset >= widget.fullOpacityOffset)
         return 1;
       else
         return (_offset - widget.zeroOpacityOffset) /
             (widget.fullOpacityOffset - widget.zeroOpacityOffset);
     } else {
       // fading out
-      if (_offset <= widget.fullOpacityOffset)
+      if (_offset <= widget.fullOpacityOffset) {
         return 1;
-      else if (_offset >= widget.zeroOpacityOffset)
+      } else if (_offset >= widget.zeroOpacityOffset)
         return 0;
       else
         return (_offset - widget.fullOpacityOffset) /

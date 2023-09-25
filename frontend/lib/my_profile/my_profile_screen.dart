@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({Key? key}) : super(key: key);
@@ -45,11 +43,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         body: Column(
           children: [
             const SizedBox(height: 50),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 10, 20, 0),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(0, 10, 20, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: const [
+                children: [
                   Icon(Icons.settings, size: 30, color: Colors.transparent),
                 ],
               ),
@@ -77,7 +75,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               builder: (BuildContext context, snapshot) {
                 return Text(snapshot.data.toString(),
                     style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.w700));
+                        const TextStyle(fontSize: 18, fontWeight: FontWeight.w700));
               },
             ),
             const SizedBox(height: 10),
@@ -116,19 +114,19 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
+                      const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Text('Premium',
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.w600)),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(15.0, 10, 15, 15),
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(15.0, 10, 15, 15),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Flexible(
                               child: Text(
                                   'Unlock all of our features and get more matches',

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../onboarding/phone_number_screen.dart';
 
 class PasswordResetScreen extends StatefulWidget {
   const PasswordResetScreen({super.key});
@@ -15,7 +14,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
         body: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [Text('Reset your password'), TextField()],

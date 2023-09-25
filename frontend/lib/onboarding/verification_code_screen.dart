@@ -58,7 +58,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 25),
+              const SizedBox(height: 25),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -81,8 +81,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 ],
               ),
               const SizedBox(height: 20),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Flexible(
                     child: Text(
                       'Enter verification code',

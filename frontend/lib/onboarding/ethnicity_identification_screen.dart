@@ -68,11 +68,11 @@ class _EthnicityIDEntryScreenState extends State<EthnicityIDEntryScreen> {
             const SizedBox(
               height: 25,
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(30, 5, 0, 0),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(30, 5, 0, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
+                children: [
                   Flexible(
                     child: Text("Which category best describes you?",
                         style: TextStyle(
@@ -103,7 +103,7 @@ class _EthnicityIDEntryScreenState extends State<EthnicityIDEntryScreen> {
                       });
                     },
                   ),
-                  Text('American Indian or Alaska Native',
+                  const Text('American Indian or Alaska Native',
                       style: TextStyle(fontSize: 16))
                 ]),
                 Row(
@@ -116,7 +116,7 @@ class _EthnicityIDEntryScreenState extends State<EthnicityIDEntryScreen> {
                         });
                       },
                     ),
-                    Text('Asian', style: TextStyle(fontSize: 16))
+                    const Text('Asian', style: TextStyle(fontSize: 16))
                   ],
                 ),
                 Row(
@@ -129,7 +129,7 @@ class _EthnicityIDEntryScreenState extends State<EthnicityIDEntryScreen> {
                         });
                       },
                     ),
-                    Text('Black or African American',
+                    const Text('Black or African American',
                         style: TextStyle(fontSize: 16))
                   ],
                 ),
@@ -143,7 +143,7 @@ class _EthnicityIDEntryScreenState extends State<EthnicityIDEntryScreen> {
                         });
                       },
                     ),
-                    Text('Middle Eastern or North African',
+                    const Text('Middle Eastern or North African',
                         style: TextStyle(fontSize: 16))
                   ],
                 ),
@@ -157,7 +157,7 @@ class _EthnicityIDEntryScreenState extends State<EthnicityIDEntryScreen> {
                         });
                       },
                     ),
-                    Text('Native Hawaiian or other Pacific Islander',
+                    const Text('Native Hawaiian or other Pacific Islander',
                         style: TextStyle(fontSize: 16))
                   ],
                 ),
@@ -171,7 +171,7 @@ class _EthnicityIDEntryScreenState extends State<EthnicityIDEntryScreen> {
                         });
                       },
                     ),
-                    Text('Non-white Hispanic, Latino or Spanish',
+                    const Text('Non-white Hispanic, Latino or Spanish',
                         style: TextStyle(fontSize: 16))
                   ],
                 ),
@@ -185,7 +185,7 @@ class _EthnicityIDEntryScreenState extends State<EthnicityIDEntryScreen> {
                         });
                       },
                     ),
-                    Text('White (Hispanic, Latino, or Spanish)',
+                    const Text('White (Hispanic, Latino, or Spanish)',
                         style: TextStyle(fontSize: 16))
                   ],
                 ),
@@ -199,7 +199,7 @@ class _EthnicityIDEntryScreenState extends State<EthnicityIDEntryScreen> {
                         });
                       },
                     ),
-                    Text('White (Not Hispanic, Latino or Spanish)',
+                    const Text('White (Not Hispanic, Latino or Spanish)',
                         style: TextStyle(fontSize: 16))
                   ],
                 ),
@@ -213,7 +213,7 @@ class _EthnicityIDEntryScreenState extends State<EthnicityIDEntryScreen> {
                         });
                       },
                     ),
-                    Text('Prefer not to disclose',
+                    const Text('Prefer not to disclose',
                         style: TextStyle(fontSize: 16))
                   ],
                 ),

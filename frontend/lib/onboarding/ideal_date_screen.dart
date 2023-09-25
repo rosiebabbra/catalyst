@@ -30,9 +30,9 @@ class _IdealDateScreenState extends State<IdealDateScreen> {
         MaterialState.focused,
       };
       if (states.any(interactiveStates.contains)) {
-        return Color(0xffEC1649);
+        return const Color(0xffEC1649);
       }
-      return Color(0xffEC1649);
+      return const Color(0xffEC1649);
     }
 
     return Scaffold(
@@ -163,9 +163,9 @@ class _IdealDateScreenState extends State<IdealDateScreen> {
                 ],
               ),
               TextButton(
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: const [
+                  children: [
                     Text('>> '),
                     Text('Next'),
                   ],

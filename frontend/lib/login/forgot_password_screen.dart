@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:my_app/utils/format_phone_number.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/user_data.dart';
-import '../onboarding/phone_number_screen.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -61,9 +58,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ],
           ),
           const SizedBox(height: 20),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: const [
+            children: [
               Flexible(
                 child: Text("Forgot your password?",
                     style:
@@ -72,8 +69,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ],
           ),
           const SizedBox(height: 10),
-          Row(
-            children: const [
+          const Row(
+            children: [
               Flexible(
                 child: Text(
                     'No problem. Enter your email to receive a six digit number verification code.'),
@@ -92,7 +89,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 // _resetPassword(controller.text);
                 Navigator.pushNamed(context, '/password-reset-landing-page');
               },
-              child: Text('Reset password'))
+              child: const Text('Reset password'))
         ],
       ),
     ));

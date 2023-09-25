@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:multiple_search_selection/helpers/create_options.dart';
 import 'package:multiple_search_selection/multiple_search_selection.dart';
 import 'dart:math' as math;
 
@@ -41,11 +40,11 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
             const SizedBox(
               height: 25,
             ),
-            Padding(
-              padding: const EdgeInsets.all(25),
+            const Padding(
+              padding: EdgeInsets.all(25),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
+                children: [
                   Flexible(
                     child: Text("Which of the following best describes you?",
                         style: TextStyle(
@@ -135,7 +134,7 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
                   ),
                   if (otherChecked == true)
                     MultipleSearchSelection(
-                      noResultsWidget: Text('No results'),
+                      noResultsWidget: const Text('No results'),
                       showClearAllButton: false,
                       items: otherGenderIdentifications,
                       pickedItemBuilder: (genderIdentification) {
