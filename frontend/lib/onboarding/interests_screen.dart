@@ -19,7 +19,7 @@ class InterestsScreen extends StatefulWidget {
 bool _isSelected = false;
 
 class _InterestsScreenState extends State<InterestsScreen> {
-  final Set<int> _selectedItems = Set<int>();
+  final Set<int> _selectedItems = <int>{};
   bool _warningText = false;
   bool _showVisibilityWidget = false;
   final shakeKey = GlobalKey<ShakeWidgetState>();
@@ -98,11 +98,11 @@ class _InterestsScreenState extends State<InterestsScreen> {
         appBar: AppBar(),
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(25, 25, 0, 0),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(25, 25, 0, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
+                children: [
                   Text('What are you into?',
                       style:
                           TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
@@ -170,11 +170,11 @@ class _InterestsScreenState extends State<InterestsScreen> {
                     child: ShakeWidget(
                       shakeCount: 3,
                       shakeOffset: 10,
-                      shakeDuration: Duration(milliseconds: 500),
+                      shakeDuration: const Duration(milliseconds: 500),
                       key: shakeKey,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child: const Text(
+                      child: const Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                        child: Text(
                           'Please select at least 5 items to continue.',
                           style: TextStyle(
                               fontSize: 12,

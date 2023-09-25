@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ImageCarousel extends StatefulWidget {
   final List<String> images;
 
-  ImageCarousel({required this.images});
+  const ImageCarousel({super.key, required this.images});
 
   @override
   _ImageCarouselState createState() => _ImageCarouselState();

@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/chat/chat_list.dart';
-import 'dart:math' as math;
 import 'package:my_app/likes/like_screen.dart';
 import 'package:my_app/my_profile/my_profile_screen.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../utils/image_carousel.dart';
 
 class Interests {
   final String interest;
@@ -41,11 +39,11 @@ class _MatchScreenState extends State<MatchScreen> {
           index: currentNavbarIndex,
           controller: controller,
           interests: interests),
-      LikeScreen(
+      const LikeScreen(
         userId: 1,
       ),
-      ChatList(),
-      MyProfileScreen()
+      const ChatList(),
+      const MyProfileScreen()
     ];
 
     void onTabTapped(int index) {
@@ -182,13 +180,13 @@ class _MatchProfileState extends State<MatchProfile> {
                               (BuildContext context, AsyncSnapshot snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return CircularProgressIndicator(); // Loading indicator
+                              return const CircularProgressIndicator(); // Loading indicator
                             }
                             if (snapshot.hasError) {
                               return Text('Error: ${snapshot.error}');
                             }
                             if (!snapshot.hasData) {
-                              return Text('No sender IDs available.');
+                              return const Text('No sender IDs available.');
                             }
 
                             return Text(
@@ -266,7 +264,7 @@ class _MatchProfileState extends State<MatchProfile> {
                                   for (int i = 0; i < images.length; i++)
                                     Icon(Icons.circle,
                                         color: _currentPage == i
-                                            ? Color(0xff7301E4)
+                                            ? const Color(0xff7301E4)
                                             : Colors.white,
                                         size: 8),
                                 ]),
@@ -316,7 +314,7 @@ class _MatchProfileState extends State<MatchProfile> {
                                             AsyncSnapshot snapshot) {
                                           if (snapshot.connectionState ==
                                               ConnectionState.waiting) {
-                                            return CircularProgressIndicator(); // Loading indicator
+                                            return const CircularProgressIndicator(); // Loading indicator
                                           }
                                           if (snapshot.hasError) {
                                             return Text(
@@ -519,13 +517,13 @@ class _MatchProfileState extends State<MatchProfile> {
                       ),
                       border: Border.all(width: 0.5, color: Colors.grey[300]!),
                     ),
-                    child: Column(
+                    child: const Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
+                            children: [
                               Padding(
                                 padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
                                 child: Icon(Icons.work_outline),
@@ -541,10 +539,10 @@ class _MatchProfileState extends State<MatchProfile> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
+                            children: [
                               Padding(
                                 padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
                                 child: Icon(Icons.school_outlined),
@@ -560,10 +558,10 @@ class _MatchProfileState extends State<MatchProfile> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
+                            children: [
                               Padding(
                                 padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
                                 child: Icon(Icons.home_outlined),
@@ -579,10 +577,10 @@ class _MatchProfileState extends State<MatchProfile> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
+                            children: [
                               Padding(
                                 padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
                                 child: Icon(Icons.auto_awesome_outlined),
@@ -598,10 +596,10 @@ class _MatchProfileState extends State<MatchProfile> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(15.0, 0, 0, 15),
+                          padding: EdgeInsets.fromLTRB(15.0, 0, 0, 15),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
+                            children: [
                               Padding(
                                 padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
                                 child: Icon(Icons.ballot_outlined),
@@ -619,10 +617,10 @@ class _MatchProfileState extends State<MatchProfile> {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(35.0, 25, 0, 15),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(35.0, 25, 0, 15),
                     child: Row(
-                      children: const [
+                      children: [
                         Text("Alice's interests",
                             style: TextStyle(
                                 fontSize: 20,
@@ -632,10 +630,10 @@ class _MatchProfileState extends State<MatchProfile> {
                     ),
                   ),
                   InterestsWidget(interests: widget.interests),
-                  Padding(
-                    padding: const EdgeInsets.all(30.0),
+                  const Padding(
+                    padding: EdgeInsets.all(30.0),
                     child: Row(
-                      children: const [
+                      children: [
                         PassButton(),
                       ],
                     ),

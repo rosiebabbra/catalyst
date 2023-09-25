@@ -1,9 +1,6 @@
-import 'dart:math' as math;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/onboarding/interests_screen.dart';
-import 'package:video_player/video_player.dart';
-import '/utils/animated_background.dart';
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isChecked = false;
@@ -14,7 +11,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
     final shakeKey = GlobalKey<ShakeWidgetState>();
 
     return Scaffold(
@@ -59,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 25),
               Form(
-                key: _formKey,
+                key: formKey,
                 child: TextFormField(
                   controller: passwordController,
                   obscureText: true,
@@ -80,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: ShakeWidget(
                     shakeCount: 3,
                     shakeOffset: 10,
-                    shakeDuration: Duration(milliseconds: 500),
+                    shakeDuration: const Duration(milliseconds: 500),
                     key: shakeKey,
                     child: Text(
                       passwordErrorMessage,

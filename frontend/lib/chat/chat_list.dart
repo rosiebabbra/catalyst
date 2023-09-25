@@ -38,13 +38,13 @@ class ChatListState extends State<ChatList> {
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   // While waiting for data, show a loading indicator
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   // If an error occurs, display an error message
                   return Text('Error: ${snapshot.error}');
                 } else if (!snapshot.hasData) {
                   // If there's no data, show a message indicating an empty state
-                  return Text('No data available.');
+                  return const Text('No data available.');
                 }
 
                 var inboxList = snapshot.data!.docs.toList();
@@ -98,13 +98,13 @@ class ChatListState extends State<ChatList> {
                           AsyncSnapshot senderIdSnapshot) {
                         if (senderIdSnapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return CircularProgressIndicator(); // Loading indicator
+                          return const CircularProgressIndicator(); // Loading indicator
                         }
                         if (senderIdSnapshot.hasError) {
                           return Text('Error: ${senderIdSnapshot.error}');
                         }
                         if (!senderIdSnapshot.hasData) {
-                          return Text('No sender IDs available.');
+                          return const Text('No sender IDs available.');
                         }
 
                         return SizedBox(
@@ -121,7 +121,7 @@ class ChatListState extends State<ChatList> {
                                     AsyncSnapshot msgPreviewSnapshot) {
                                   if (msgPreviewSnapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return CircularProgressIndicator(); // Loading indicator
+                                    return const CircularProgressIndicator(); // Loading indicator
                                   }
                                   if (msgPreviewSnapshot.hasError) {
                                     return Text(
@@ -132,13 +132,13 @@ class ChatListState extends State<ChatList> {
                                         'No sender IDs available.');
                                   }
 
-                                  getUserName(String sender_id) async {
+                                  getUserName(String senderId) async {
                                     QuerySnapshot querySnapshot =
                                         await FirebaseFirestore.instance
                                             .collection(
                                                 'users') // Replace with your collection name
                                             .where('user_id',
-                                                isEqualTo: sender_id)
+                                                isEqualTo: senderId)
                                             .get();
 
                                     if (querySnapshot.docs.isNotEmpty) {
@@ -161,14 +161,14 @@ class ChatListState extends State<ChatList> {
                                         (BuildContext context, nameSnapshot) {
                                       if (nameSnapshot.connectionState ==
                                           ConnectionState.waiting) {
-                                        return CircularProgressIndicator(); // Loading indicator
+                                        return const CircularProgressIndicator(); // Loading indicator
                                       }
                                       if (nameSnapshot.hasError) {
                                         return Text(
                                             'Error: ${nameSnapshot.error}');
                                       }
                                       if (!nameSnapshot.hasData) {
-                                        return Text('No sender IDs available.');
+                                        return const Text('No sender IDs available.');
                                       }
                                       return Message(
                                           msgPreview: msgPreviewSnapshot.data,
@@ -213,7 +213,7 @@ class Message extends StatelessWidget {
         // Navigator.pushNamed(context, '/chat-content-$senderId-to-$receiverId');
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ChatContent()),
+          MaterialPageRoute(builder: (context) => const ChatContent()),
         );
       },
       child: Container(

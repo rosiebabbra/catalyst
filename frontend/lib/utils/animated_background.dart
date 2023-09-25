@@ -3,7 +3,7 @@ import 'dart:math' as math;
 // import 'package:animated_background/animated_background.dart';
 
 class StarryBackgroundWidget extends StatefulWidget {
-  StarryBackgroundWidget({Key? key}) : super(key: key);
+  const StarryBackgroundWidget({Key? key}) : super(key: key);
 
   @override
   _StarryBackgroundWidgetState createState() => _StarryBackgroundWidgetState();

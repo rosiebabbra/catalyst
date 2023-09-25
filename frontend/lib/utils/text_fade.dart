@@ -30,7 +30,7 @@ class FadeInText extends StatefulWidget {
   ///The total duration in which the animation completes. Defaults to 800 milliseconds
   final Duration animationDuration;
 
-  FadeInText({
+  const FadeInText({super.key, 
     required this.child,
     this.offset = 0.2,
     this.curve = Curves.easeIn,

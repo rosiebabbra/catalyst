@@ -84,7 +84,7 @@ class HobbyScreenState extends State<HobbyScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FadeInText(
-                animationDuration: Duration(milliseconds: 400),
+                animationDuration: const Duration(milliseconds: 400),
                 child: Text(hobbies[i]['interest'],
                     style: GoogleFonts.openSans(
                       fontSize: 32,
@@ -119,9 +119,9 @@ class HobbyScreenState extends State<HobbyScreen> {
 
     final List<Widget> pages = [
       interestSwipe(context, stack),
-      MatchScreen(userId: 1),
-      ChatList(),
-      MyProfileScreen()
+      const MatchScreen(userId: 1),
+      const ChatList(),
+      const MyProfileScreen()
     ];
 
     return Scaffold(

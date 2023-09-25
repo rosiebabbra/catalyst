@@ -2,10 +2,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:my_app/utils/format_phone_number.dart';
-import 'package:provider/provider.dart';
 
-import '../models/user_data.dart';
 
 class NameEntryScreen extends StatefulWidget {
   const NameEntryScreen({

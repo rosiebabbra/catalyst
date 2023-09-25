@@ -75,10 +75,10 @@ class MatchProfile extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(35.0, 70, 0, 0),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(35.0, 70, 0, 0),
                     child: Row(
-                      children: const [
+                      children: [
                         Text(
                           'Lauren',
                           style: TextStyle(
@@ -293,13 +293,13 @@ class MatchProfile extends StatelessWidget {
                       ),
                       border: Border.all(width: 0.5, color: Colors.grey[300]!),
                     ),
-                    child: Column(
+                    child: const Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
+                            children: [
                               Padding(
                                 padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
                                 child: Icon(Icons.work_outline),
@@ -315,10 +315,10 @@ class MatchProfile extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
+                            children: [
                               Padding(
                                 padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
                                 child: Icon(Icons.school_outlined),
@@ -334,10 +334,10 @@ class MatchProfile extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
+                            children: [
                               Padding(
                                 padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
                                 child: Icon(Icons.home_outlined),
@@ -353,10 +353,10 @@ class MatchProfile extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
+                            children: [
                               Padding(
                                 padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
                                 child: Icon(Icons.auto_awesome_outlined),
@@ -372,10 +372,10 @@ class MatchProfile extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(15.0, 0, 0, 15),
+                          padding: EdgeInsets.fromLTRB(15.0, 0, 0, 15),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
+                            children: [
                               Padding(
                                 padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
                                 child: Icon(Icons.ballot_outlined),
@@ -393,10 +393,10 @@ class MatchProfile extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(35.0, 25, 0, 15),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(35.0, 25, 0, 15),
                     child: Row(
-                      children: const [
+                      children: [
                         Text("Alice's interests",
                             style: TextStyle(
                                 fontSize: 20,
@@ -406,10 +406,10 @@ class MatchProfile extends StatelessWidget {
                     ),
                   ),
                   InterestsWidget(interests: interests),
-                  Padding(
-                    padding: const EdgeInsets.all(30.0),
+                  const Padding(
+                    padding: EdgeInsets.all(30.0),
                     child: Row(
-                      children: const [
+                      children: [
                         PassButton(),
                       ],
                     ),

@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:my_app/onboarding/signup_screen.dart';
 import 'chat/chat_content.dart';
@@ -6,9 +5,6 @@ import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/hobbies/main.dart';
 import 'package:my_app/login/password_reset_screen.dart';
-import 'package:my_app/onboarding/ideal_date_screen.dart';
-import 'package:my_app/onboarding/ideal_match_screen.dart';
-import 'package:my_app/onboarding/interests_screen.dart';
 import 'package:my_app/swipes_completed/main.dart';
 import 'package:video_player/video_player.dart';
 import 'home/home_screen.dart';
@@ -16,14 +12,12 @@ import 'login/forgot_password_screen.dart';
 import 'login/login_screen.dart';
 import 'login/password_reset_landing_screen.dart';
 import 'matches/match_screen.dart';
-import 'hobbies/main.dart';
 import 'models/user_data.dart';
 import 'my_profile/my_profile_screen.dart';
 import 'onboarding/dob_screen.dart';
 import 'onboarding/gender_identification_screen.dart';
 import 'onboarding/ethnicity_identification_screen.dart';
 import 'onboarding/generating_matches_screen.dart';
-import 'onboarding/interested_in_screen.dart';
 import 'onboarding/location_disclaimer_screen.dart';
 import 'onboarding/name_screen.dart';
 import 'onboarding/phone_number_screen.dart';
@@ -36,10 +30,12 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(ChangeNotifierProvider(
-      create: (context) => PhoneNumberProvider(), child: MyApp()));
+      create: (context) => PhoneNumberProvider(), child: const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   _BackgroundVideoState createState() => _BackgroundVideoState();
 }
@@ -62,16 +58,16 @@ class _BackgroundVideoState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     Map<int, Color> color = {
-      50: Color.fromRGBO(115, 1, 228, .1),
-      100: Color.fromRGBO(115, 1, 228, .2),
-      200: Color.fromRGBO(115, 1, 228, .3),
-      300: Color.fromRGBO(115, 1, 228, .4),
-      400: Color.fromRGBO(115, 1, 228, .5),
-      500: Color.fromRGBO(115, 1, 228, .6),
-      600: Color.fromRGBO(115, 1, 228, .7),
-      700: Color.fromRGBO(115, 1, 228, .8),
-      800: Color.fromRGBO(115, 1, 228, .9),
-      900: Color.fromRGBO(115, 1, 228, 1),
+      50: const Color.fromRGBO(115, 1, 228, .1),
+      100: const Color.fromRGBO(115, 1, 228, .2),
+      200: const Color.fromRGBO(115, 1, 228, .3),
+      300: const Color.fromRGBO(115, 1, 228, .4),
+      400: const Color.fromRGBO(115, 1, 228, .5),
+      500: const Color.fromRGBO(115, 1, 228, .6),
+      600: const Color.fromRGBO(115, 1, 228, .7),
+      700: const Color.fromRGBO(115, 1, 228, .8),
+      800: const Color.fromRGBO(115, 1, 228, .9),
+      900: const Color.fromRGBO(115, 1, 228, 1),
     };
 
     MaterialColor colorCustom = MaterialColor(0xFF4f4f4f, color);
@@ -84,10 +80,10 @@ class _BackgroundVideoState extends State<MyApp> {
       initialRoute: '/',
       routes: {
         '/login': (context) => const LoginScreen(),
-        '/forgot-password': (context) => ForgotPasswordScreen(),
+        '/forgot-password': (context) => const ForgotPasswordScreen(),
         '/password-reset': (context) => const PasswordResetScreen(),
         '/password-reset-landing-page': (context) =>
-            PasswordResetLandingScreen(),
+            const PasswordResetLandingScreen(),
         '/matches': (context) => const MatchScreen(
               userId: 555,
             ),
@@ -97,13 +93,13 @@ class _BackgroundVideoState extends State<MyApp> {
         '/onboarding-dob': (context) => const DOBEntryScreen(),
         '/onboarding-gender': (context) => const GenderIDEntryScreen(),
         '/onboarding-ethnicity': (context) => const EthnicityIDEntryScreen(),
-        '/onboarding-signup': (context) => SignupScreen(),
+        '/onboarding-signup': (context) => const SignupScreen(),
         '/location-disclaimer': (context) => const LocationDisclaimerScreen(),
-        '/generating-matches': (context) => GeneratingMatchesScreen(),
-        '/verification-screen': (context) => VerificationScreen(),
-        '/swipes-completed': (context) => SwipesCompletedScreen(),
-        '/subscription-page': (context) => MyProfileScreen(),
-        '/chat-content': (context) => ChatContent()
+        '/generating-matches': (context) => const GeneratingMatchesScreen(),
+        '/verification-screen': (context) => const VerificationScreen(),
+        '/swipes-completed': (context) => const SwipesCompletedScreen(),
+        '/subscription-page': (context) => const MyProfileScreen(),
+        '/chat-content': (context) => const ChatContent()
       },
       home: Stack(
         children: <Widget>[

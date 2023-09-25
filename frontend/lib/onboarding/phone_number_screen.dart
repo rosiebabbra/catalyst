@@ -4,11 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
-import '../home/home_screen.dart';
-import '../utils/format_phone_number.dart';
 import '../models/user_data.dart';
 import '../utils/text_fade.dart';
-import '../widgets/button.dart';
 import 'package:http/http.dart' as http;
 
 class PhoneVerification extends StatefulWidget {
@@ -56,7 +53,7 @@ class _PhoneVerificationState extends State<PhoneVerification> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ElevatedButton(
-          child: Text('Next'),
+          child: const Text('Next'),
           onPressed: () async {
             print('pressed');
             PhoneNumberProvider provider =
@@ -72,8 +69,8 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                 // Show a SnackBar with a message and redirect to login page
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   duration: const Duration(seconds: 5),
-                  content: Column(
-                    children: const [
+                  content: const Column(
+                    children: [
                       Text(
                         "Hey, we've seen you here before!",
                         style: TextStyle(fontSize: 22),
@@ -102,8 +99,8 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                 // Show a SnackBar with a message and redirect to login page
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   duration: const Duration(seconds: 5),
-                  content: Column(
-                    children: const [
+                  content: const Column(
+                    children: [
                       Text(
                         "Looks like you're new here!",
                         style: TextStyle(fontSize: 22),
@@ -223,14 +220,14 @@ class _PhoneNumberEntryScreenState extends State<PhoneNumberEntryScreen> {
                 //     alignment: Alignment.centerLeft,
                 //     child: Icon(Icons.phone_iphone, size: 45)),
                 // const SizedBox(height: 20),
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Flexible(
                       child: FadeInText(
-                        animationDuration: const Duration(milliseconds: 400),
+                        animationDuration: Duration(milliseconds: 400),
                         offset: 2,
-                        child: const Text("What's your phone number?",
+                        child: Text("What's your phone number?",
                             style: TextStyle(
                                 fontSize: 30, fontWeight: FontWeight.bold)),
                       ),
@@ -238,13 +235,13 @@ class _PhoneNumberEntryScreenState extends State<PhoneNumberEntryScreen> {
                   ],
                 ),
                 const SizedBox(height: 15),
-                Row(
+                const Row(
                   children: [
                     Flexible(
                       child: FadeInText(
-                        animationDuration: const Duration(milliseconds: 1200),
+                        animationDuration: Duration(milliseconds: 1200),
                         offset: 2,
-                        child: const Text(
+                        child: Text(
                             'You will be sent a six digit code to verify your identity.'),
                       ),
                     )
