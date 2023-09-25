@@ -109,12 +109,12 @@ class AnimatedButtonState extends State<AnimatedButton>
 
 class StandardButton extends StatelessWidget {
   final double borderRadius;
-  final String destination;
   final String buttonText;
+  final VoidCallback onButtonPressed;
 
   const StandardButton({
     Key? key,
-    required this.destination,
+    required this.onButtonPressed,
     required this.buttonText,
     this.borderRadius = 15,
   }) : super(key: key);
@@ -128,7 +128,8 @@ class StandardButton extends StatelessWidget {
           color: Colors.white,
           padding: EdgeInsets.zero,
           onPressed: () {
-            Navigator.pushNamed(context, destination);
+            // Navigator.pushNamed(context, destination);
+            onButtonPressed();
           },
           borderRadius: const BorderRadius.all(
             Radius.circular(25),
