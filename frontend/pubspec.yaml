@@ -48,6 +48,8 @@ dependencies:
   multiple_search_selection: ^2.5.0
   flutter_firebase_chat_core: 1.6.4
   intl: ^0.18.1
+  geolocator: ^8.2.0
+  geocoding: ^2.0.4
 
 
   # The following adds the Cupertino Icons font to your application.
