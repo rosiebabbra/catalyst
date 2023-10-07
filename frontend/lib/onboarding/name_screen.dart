@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
-
 class NameEntryScreen extends StatefulWidget {
   const NameEntryScreen({
     Key? key,
@@ -48,10 +47,24 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Icon(Icons.question_answer, size: 50),
+              const SizedBox(
+                height: 15,
+              ),
               const Text("What's your first name?",
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
               const SizedBox(
-                height: 35,
+                height: 15,
+              ),
+              Text('This is how your name will appear on your profile.',
+                  style: TextStyle(fontSize: 15, color: Colors.grey[600])),
+              Text(
+                "You can't change it later.",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.grey[800]),
+              ),
+              const SizedBox(
+                height: 25,
               ),
               TextField(
                 autofocus: true,
@@ -61,16 +74,6 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                   hintText: 'Enter first name',
                 ),
                 textCapitalization: TextCapitalization.sentences,
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              Text('This is how your name will appear on your profile.',
-                  style: TextStyle(fontSize: 15, color: Colors.grey[600])),
-              Text(
-                "You can't change it later.",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.grey[800]),
               ),
               const SizedBox(
                 height: 75,

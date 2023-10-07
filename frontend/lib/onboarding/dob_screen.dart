@@ -54,10 +54,19 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Your birthday?",
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+              Icon(Icons.question_answer, size: 50),
               const SizedBox(
-                height: 25,
+                height: 15,
+              ),
+              const Text("Your birthday?",
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+              const SizedBox(
+                height: 15,
+              ),
+              Text('Your profile shows your age, not your date of birth.',
+                  style: TextStyle(fontSize: 15, color: Colors.grey[700])),
+              const SizedBox(
+                height: 35,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -119,7 +128,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                                 borderSide: BorderSide(color: Colors.black),
                               )))),
                   const SizedBox(width: 10),
-                  Text('—', style: TextStyle(color: Colors.grey[500])),
+                  Text('—', style: TextStyle(color: Colors.grey[400])),
                   const SizedBox(width: 10),
                   SizedBox(
                       width: MediaQuery.of(context).size.width / 10,
@@ -173,7 +182,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                                 borderSide: BorderSide(color: Colors.black),
                               )))),
                   const SizedBox(width: 10),
-                  Text('—', style: TextStyle(color: Colors.grey[500])),
+                  Text('—', style: TextStyle(color: Colors.grey[400])),
                   const SizedBox(width: 10),
                   SizedBox(
                       width: MediaQuery.of(context).size.width / 10,
@@ -229,12 +238,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                 ],
               ),
               const SizedBox(
-                height: 25,
-              ),
-              Text('Your profile shows your age, not your date of birth.',
-                  style: TextStyle(fontSize: 15, color: Colors.grey[700])),
-              const SizedBox(
-                height: 45,
+                height: 75,
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 32.0, 0),

@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/onboarding/interests_screen.dart';
@@ -54,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 25),
+              const SizedBox(height: 15),
               Form(
                 key: formKey,
                 child: TextFormField(
@@ -106,43 +107,65 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(
-                    key: GlobalKey(debugLabel: 'loginKey'),
-                    child: const Text('Login'),
-                    onPressed: () async {
-                      try {
-                        // TODO: Enable for prod
-                        // await auth.signInWithEmailAndPassword(
-                        //     email: emailController.text,
-                        //     password: passwordController.text);
-                        if (widget.versionId == 'beta') {
-                          Navigator.pushNamed(context, '/coming-soon');
-                        } else {
-                          Navigator.pushNamed(context, '/hobbies');
-                        }
-                      } catch (e) {
-                        if (e is FirebaseAuthException) {
-                          if (e.code == 'invalid-email') {
-                            // Handle the 'invalid-email' error
-                            setState(() {
-                              emailErrorMessage =
-                                  'Invalid email address format';
-                            });
-                          } else if (e.code == 'wrong-password') {
-                            // Handle the 'wrong-password' error
-                            setState(() {
-                              passwordErrorMessage = 'Invalid password';
-                            });
-                          } else if (e.code == 'user-not-found') {
-                            setState(() {
-                              passwordErrorMessage =
-                                  "You haven't registered yet!";
-                            });
-                          }
-                        }
-                      }
-                    },
-                  ),
+                  SizedBox(
+                      height: 75,
+                      width: 75,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                width: 3.5, color: Colors.transparent),
+                            gradient: const LinearGradient(
+                              transform: GradientRotation(math.pi / 4),
+                              colors: [
+                                Color(0xff7301E4),
+                                Color(0xff0E8BFF),
+                                Color(0xff09CBC8),
+                                Color(0xff33D15F),
+                              ],
+                            )),
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              shape: BoxShape.circle, color: Colors.white),
+                          child: TextButton(
+                            child: const Icon(Icons.arrow_forward_ios,
+                                color: Colors.black),
+                            onPressed: () async {
+                              try {
+                                // TODO: Enable for prod
+                                // await auth.signInWithEmailAndPassword(
+                                //     email: emailController.text,
+                                //     password: passwordController.text);
+                                if (widget.versionId == 'beta') {
+                                  Navigator.pushNamed(context, '/coming-soon');
+                                } else {
+                                  Navigator.pushNamed(context, '/hobbies');
+                                }
+                              } catch (e) {
+                                if (e is FirebaseAuthException) {
+                                  if (e.code == 'invalid-email') {
+                                    // Handle the 'invalid-email' error
+                                    setState(() {
+                                      emailErrorMessage =
+                                          'Invalid email address format';
+                                    });
+                                  } else if (e.code == 'wrong-password') {
+                                    // Handle the 'wrong-password' error
+                                    setState(() {
+                                      passwordErrorMessage = 'Invalid password';
+                                    });
+                                  } else if (e.code == 'user-not-found') {
+                                    setState(() {
+                                      passwordErrorMessage =
+                                          "You haven't registered yet!";
+                                    });
+                                  }
+                                }
+                              }
+                            },
+                          ),
+                        ),
+                      )),
                 ],
               ),
               const SizedBox(height: 35),
