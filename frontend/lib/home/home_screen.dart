@@ -21,19 +21,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Text(
                   'hatched',
                   style: GoogleFonts.openSans(
-                      fontSize: 70,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 72,
                       color: Colors.white,
                       shadows: const [
                         Shadow(
-                          color: Colors.black45,
-                          blurRadius: 10.0,
-                          offset: Offset(5, 5),
+                          color: Colors.black,
+                          blurRadius: 10,
+                          offset: Offset(1, 1),
                         ),
                       ]),
                 )),
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height / 3.5,
+            height: MediaQuery.of(context).size.height / 3.75,
           ),
           AnimatedButton(
               landingPage: '/onboarding-signup',

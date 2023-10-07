@@ -137,11 +137,15 @@ class _BackgroundVideoState extends State<MyApp> {
         children: <Widget>[
           VideoPlayer(_controller),
           Container(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                   gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.white, Colors.transparent],
+            colors: [
+              Color(0xffffffff).withOpacity(0.4),
+              Colors.transparent,
+              Color(0xffffffff).withOpacity(0.2)
+            ],
           ))),
           const HomeScreen()
         ],
