@@ -33,21 +33,61 @@ class _SignupScreenState extends State<SignupScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(height: 100),
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
-            child: Text(
-              'Welcome to hatched',
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 26),
+            child: Row(
+              children: [
+                const Text('Welcome to ',
+                    style:
+                        TextStyle(fontSize: 34, fontWeight: FontWeight.bold)),
+                ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return const LinearGradient(
+                      colors: [
+                        Color(0xff7301E4),
+                        Color(0xff0E8BFF),
+                        Color(0xff09CBC8),
+                        Color(0xff33D15F),
+                      ],
+                      stops: [0.0, 0.25, 0.5, 0.75],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ).createShader(bounds);
+                  },
+                  child: const Text(
+                    'hatched',
+                    style: TextStyle(
+                      fontSize: 34.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const Text('.',
+                    style: TextStyle(
+                      fontSize: 28.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ))
+              ],
             ),
           ),
-          const SizedBox(height: 35),
+          const SizedBox(height: 10),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "We're so glad you're here.",
+              style: TextStyle(color: Colors.grey[800], fontSize: 16),
+            ),
+          ),
+          const SizedBox(height: 45),
           TextField(
             controller: emailController,
             decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.email),
                 labelText: 'Your email',
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)))),
+                    borderRadius: BorderRadius.all(Radius.circular(15)))),
           ),
           const SizedBox(height: 25),
           TextField(
@@ -57,7 +97,7 @@ class _SignupScreenState extends State<SignupScreen> {
               prefixIcon: Icon(Icons.password_sharp),
               labelText: 'Your password',
               border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(12))),
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
             ),
           ),
           const SizedBox(height: 25),
@@ -68,7 +108,7 @@ class _SignupScreenState extends State<SignupScreen> {
               prefixIcon: Icon(Icons.password_sharp),
               labelText: 'Re-enter your password',
               border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(12))),
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
             ),
           ),
           const SizedBox(height: 25),
@@ -89,7 +129,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   color: Colors.red, fontWeight: FontWeight.bold),
             ),
           ),
-          const SizedBox(height: 75),
+          const SizedBox(height: 35),
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 32.0, 0),
             child: Row(

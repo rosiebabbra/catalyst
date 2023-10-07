@@ -56,7 +56,7 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
               Flexible(
                 child: Text("Which of the following best describes you?",
                     style:
-                        TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -64,11 +64,11 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
         Padding(
           padding: const EdgeInsets.fromLTRB(25, 5, 25, 25),
           child: Text(
-              'This will appear on your profile. You will have the option to change it later.',
+              'This will appear on your profile. You will have the option to change it later if you wish.',
               style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.grey[600],
-                  fontWeight: FontWeight.bold)),
+                fontSize: 15,
+                color: Colors.grey[600],
+              )),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
