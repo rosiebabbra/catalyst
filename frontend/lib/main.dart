@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:my_app/beta/coming_soon_screen.dart';
 import 'package:my_app/onboarding/signup_screen.dart';
 import 'chat/chat_content.dart';
 import 'firebase_options.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/hobbies/main.dart';
 import 'package:my_app/login/password_reset_screen.dart';
@@ -16,7 +18,6 @@ import 'models/user_data.dart';
 import 'my_profile/my_profile_screen.dart';
 import 'onboarding/dob_screen.dart';
 import 'onboarding/gender_identification_screen.dart';
-import 'onboarding/ethnicity_identification_screen.dart';
 import 'onboarding/generating_matches_screen.dart';
 import 'onboarding/location_disclaimer_screen.dart';
 import 'onboarding/name_screen.dart';
@@ -29,12 +30,21 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print('Received a message: ${message.notification?.title}');
+  });
+
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    print('User tapped on the notification');
+  });
   runApp(ChangeNotifierProvider(
-      create: (context) => PhoneNumberProvider(), child: const MyApp()));
+      create: (context) => PhoneNumberProvider(),
+      child: const MyApp(versionId: 'beta')));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final String versionId;
+  const MyApp({super.key, required this.versionId});
 
   @override
   _BackgroundVideoState createState() => _BackgroundVideoState();
@@ -72,14 +82,26 @@ class _BackgroundVideoState extends State<MyApp> {
 
     MaterialColor colorCustom = MaterialColor(0xFF4f4f4f, color);
 
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: colorCustom,
-      ),
-      initialRoute: '/',
-      routes: {
-        '/login': (context) => const LoginScreen(),
+    var routes = {
+      'beta': {
+        '/login': (context) => const LoginScreen(versionId: 'beta'),
+        '/location-disclaimer': (context) => LocationDisclaimerScreen(
+              versionId: 'beta',
+            ),
+        '/coming-soon': (context) => const ComingSoonScreen(),
+        '/forgot-password': (context) => const ForgotPasswordScreen(),
+        '/password-reset': (context) => const PasswordResetScreen(),
+        '/password-reset-landing-page': (context) =>
+            const PasswordResetLandingScreen(),
+        '/verification-screen': (context) => const VerificationScreen(),
+        '/onboarding': (context) => const PhoneNumberEntryScreen(),
+        '/onboarding-name': (context) => const NameEntryScreen(),
+        '/onboarding-dob': (context) => const DOBEntryScreen(),
+        '/onboarding-gender': (context) => const GenderIDEntryScreen(),
+        '/onboarding-signup': (context) => const SignupScreen(),
+      },
+      '1.0.0': {
+        '/login': (context) => const LoginScreen(versionId: '1.0.0'),
         '/forgot-password': (context) => const ForgotPasswordScreen(),
         '/password-reset': (context) => const PasswordResetScreen(),
         '/password-reset-landing-page': (context) =>
@@ -92,15 +114,25 @@ class _BackgroundVideoState extends State<MyApp> {
         '/onboarding-name': (context) => const NameEntryScreen(),
         '/onboarding-dob': (context) => const DOBEntryScreen(),
         '/onboarding-gender': (context) => const GenderIDEntryScreen(),
-        '/onboarding-ethnicity': (context) => const EthnicityIDEntryScreen(),
         '/onboarding-signup': (context) => const SignupScreen(),
-        '/location-disclaimer': (context) => const LocationDisclaimerScreen(),
+        '/location-disclaimer': (context) =>
+            LocationDisclaimerScreen(versionId: '1.0.0'),
         '/generating-matches': (context) => const GeneratingMatchesScreen(),
         '/verification-screen': (context) => const VerificationScreen(),
         '/swipes-completed': (context) => const SwipesCompletedScreen(),
         '/subscription-page': (context) => const MyProfileScreen(),
         '/chat-content': (context) => const ChatContent()
-      },
+      }
+    };
+
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: colorCustom,
+      ),
+      initialRoute: '/',
+      routes: routes[widget.versionId]
+          as Map<String, Widget Function(BuildContext)>,
       home: Stack(
         children: <Widget>[
           VideoPlayer(_controller),

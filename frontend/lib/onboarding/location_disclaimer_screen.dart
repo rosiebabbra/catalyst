@@ -1,11 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:my_app/onboarding/interests_screen.dart';
-
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LocationDisclaimerScreen extends StatefulWidget {
-  const LocationDisclaimerScreen({super.key});
+  final versionId;
+  LocationDisclaimerScreen({super.key, required this.versionId});
 
   @override
   State<LocationDisclaimerScreen> createState() =>
@@ -13,109 +15,150 @@ class LocationDisclaimerScreen extends StatefulWidget {
 }
 
 class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
+  var errorMsg = '';
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var errorMsg = '';
-    Future<void> showMyDialog() async {
-      return showDialog<void>(
-        context: context,
-        barrierDismissible: false, // user must tap button!
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text(
-              'Allow "hatched" to access your location?',
-              textAlign: TextAlign.center,
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text(
-                  'Approve',
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+    double latitude = 0;
+    double longitude = 0;
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+    Future<void> getLocation() async {
+      try {
+        Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high,
+        );
+
+        setState(() {
+          latitude += position.latitude;
+          longitude += position.longitude;
+        });
+      } catch (e) {
+        print("Error getting location: $e");
+      }
     }
 
-    Future<bool> handleLocationPermission() async {
-      bool serviceEnabled;
-      LocationPermission permission;
+    Future<void> writeData(
+      String collection,
+      String fieldToFilter,
+      String valueToFilter,
+      String columnToWrite,
+      dynamic valueToWrite,
+    ) async {
+      try {
+        QuerySnapshot querySnapshot = await _firestore
+            .collection(collection)
+            .where(fieldToFilter, isEqualTo: valueToFilter)
+            .get();
 
-      serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        print('Location services are enabled');
-
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text(
-                'Location services are disabled. Please enable the services')));
-        return false;
-      }
-      permission = await Geolocator.checkPermission();
-      print(permission);
-      if (permission == LocationPermission.denied) {
-        print('Location services permissions are denied');
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Location permissions are denied')));
-          return false;
+        if (querySnapshot.docs.isNotEmpty) {
+          // If the document with the specified field and value exists, update the column
+          DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+          await documentSnapshot.reference
+              .update({columnToWrite: valueToWrite});
+          print('Column updated successfully!');
         }
+      } catch (e) {
+        print('Error writing to Firestore: $e');
       }
-      if (permission == LocationPermission.deniedForever) {
-        print('Location services permissions are denied permanently');
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text(
-                'Location permissions are permanently denied, we cannot request permissions.')));
-        return false;
-      }
-      return true;
     }
 
     return Scaffold(
-        // TODO: Remove appbar for user, keep for admin/dev
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.black,
-          elevation: 0,
-        ),
         body: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            const Text(
-              'In order to use hatched, we need access to your location.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 35),
-            const Text(
-              'Your exact location will never be shared with potential matches.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.1,
-            ),
-            ShakeWidget(
-                shakeOffset: 3.0,
-                child:
-                    Text(errorMsg, style: const TextStyle(color: Colors.red))),
-            ElevatedButton(
-                onPressed: () {
-                  var permissionGranted = handleLocationPermission();
-                  if (permissionGranted == true) {
-                    Navigator.pushNamed(context, '/generating-matches');
-                  } else {
+      padding: const EdgeInsets.all(25.0),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text(
+          errorMsg,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 24),
+        ),
+        Icon(Icons.location_on, size: 50),
+        const SizedBox(height: 25),
+        const Text(
+          'hatched needs location access to provide you the best experience.',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 28),
+        ),
+        const SizedBox(height: 15),
+        Text(
+          'Your precise location will never be shared with others.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[700],
+              fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 50),
+        Container(
+          width: 300,
+          height: 60,
+          decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(30)),
+              shape: BoxShape.rectangle,
+              border: Border.all(width: 3.5, color: Colors.transparent),
+              gradient: const LinearGradient(
+                transform: GradientRotation(math.pi / 4),
+                colors: [
+                  Color(0xff7301E4),
+                  Color(0xff0E8BFF),
+                  Color(0xff09CBC8),
+                  Color(0xff33D15F),
+                ],
+              )),
+          child: Container(
+            decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                shape: BoxShape.rectangle,
+                color: Colors.white),
+            child: CupertinoButton(
+                onPressed: () async {
+                  var status = await Geolocator.requestPermission();
+                  if (status != LocationPermission.whileInUse) {
                     setState(() {
-                      errorMsg = 'We need location access to continue!';
+                      errorMsg = 'Please select "Allow While Using App"!';
                     });
+                  } else {
+                    await getLocation();
+
+                    final FirebaseAuth auth = FirebaseAuth.instance;
+                    final User? user = auth.currentUser;
+                    final currentUserId = user?.uid;
+
+                    writeData('users', 'user_id', currentUserId.toString(),
+                        'location', GeoPoint(latitude, longitude));
+
+                    if (widget.versionId == 'beta') {
+                      Navigator.pushNamed(context, '/coming-soon');
+                    } else {
+                      Navigator.pushNamed(context, '/generating-matches');
+                    }
                   }
                 },
-                child: const Text("Allow access"))
-          ]),
-        ));
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 8.0, 4),
+                      child: Transform.rotate(
+                          angle: 0.6,
+                          child:
+                              Icon(Icons.navigation, color: Colors.grey[700])),
+                    ),
+                    const Text(
+                      'Enable location services',
+                      style: TextStyle(color: Colors.black),
+                    )
+                  ],
+                )),
+          ),
+        )
+      ]),
+    ));
   }
 }

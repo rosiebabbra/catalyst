@@ -23,6 +23,7 @@ Widget animatedButtonStyle(
   );
 }
 
+// ignore: must_be_immutable
 class AnimatedButton extends StatefulWidget {
   double width;
   double height;

@@ -110,15 +110,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     key: GlobalKey(debugLabel: 'loginKey'),
                     child: const Text('Login'),
                     onPressed: () async {
-                      // Sign in w/ email and password
-                      FirebaseAuth auth = FirebaseAuth.instance;
-
                       try {
                         // TODO: Enable for prod
                         // await auth.signInWithEmailAndPassword(
                         //     email: emailController.text,
                         //     password: passwordController.text);
-                        Navigator.pushNamed(context, '/hobbies');
+                        if (widget.versionId == 'beta') {
+                          Navigator.pushNamed(context, '/coming-soon');
+                        } else {
+                          Navigator.pushNamed(context, '/hobbies');
+                        }
                       } catch (e) {
                         if (e is FirebaseAuthException) {
                           if (e.code == 'invalid-email') {
@@ -190,7 +191,8 @@ class _LoginScreenState extends State<LoginScreen> {
 }
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final String versionId;
+  const LoginScreen({super.key, required this.versionId});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();

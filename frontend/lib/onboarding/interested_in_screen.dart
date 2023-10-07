@@ -22,8 +22,6 @@ class InterestedInScreen extends StatefulWidget {
 }
 
 class _InterestedInScreenState extends State<InterestedInScreen> {
-  final ExperienceType _experienceType = ExperienceType.dating;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

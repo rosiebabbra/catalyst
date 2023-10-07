@@ -20,7 +20,6 @@ bool _isSelected = false;
 
 class _InterestsScreenState extends State<InterestsScreen> {
   final Set<int> _selectedItems = <int>{};
-  bool _warningText = false;
   bool _showVisibilityWidget = false;
   final shakeKey = GlobalKey<ShakeWidgetState>();
 
@@ -31,14 +30,12 @@ class _InterestsScreenState extends State<InterestsScreen> {
       } else {
         _selectedItems.add(index);
       }
-      _warningText = _selectedItems.length < 5;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _warningText = _selectedItems.length < 5;
   }
 
   // TODO: Remove duplicates
@@ -299,7 +296,7 @@ class ShakeWidgetState extends AnimationControllerState<ShakeWidget> {
             .sin(widget.shakeCount * 2 * math.pi * animationController.value);
         return Transform.translate(
           // 4. apply a translation as a function of the animation value
-          offset: Offset(sineValue * widget.shakeOffset, 0),
+          offset: Offset(sineValue.clamp(5, 10) * widget.shakeOffset, 0),
           // 5. use the child widget
           child: child,
         );
