@@ -3,9 +3,6 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../models/user_data.dart';
 
 class DOBEntryScreen extends StatefulWidget {
   const DOBEntryScreen({
@@ -36,10 +33,6 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final myProvider = Provider.of<PhoneNumberProvider>(context);
-    final exitCode = myProvider.phoneNumber.exitCode;
-    final userPhoneNumber = myProvider.phoneNumber.phoneNumber;
-
     TextEditingController m1Controller = TextEditingController();
     TextEditingController m2Controller = TextEditingController();
     TextEditingController d1Controller = TextEditingController();
@@ -126,7 +119,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                                 borderSide: BorderSide(color: Colors.black),
                               )))),
                   const SizedBox(width: 10),
-                  Text('/', style: TextStyle(color: Colors.grey[500])),
+                  Text('—', style: TextStyle(color: Colors.grey[500])),
                   const SizedBox(width: 10),
                   SizedBox(
                       width: MediaQuery.of(context).size.width / 10,
@@ -180,7 +173,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                                 borderSide: BorderSide(color: Colors.black),
                               )))),
                   const SizedBox(width: 10),
-                  Text('/', style: TextStyle(color: Colors.grey[500])),
+                  Text('—', style: TextStyle(color: Colors.grey[500])),
                   const SizedBox(width: 10),
                   SizedBox(
                       width: MediaQuery.of(context).size.width / 10,
@@ -239,7 +232,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                 height: 25,
               ),
               Text('Your profile shows your age, not your date of birth.',
-                  style: TextStyle(fontSize: 15, color: Colors.grey[600])),
+                  style: TextStyle(fontSize: 15, color: Colors.grey[700])),
               const SizedBox(
                 height: 45,
               ),

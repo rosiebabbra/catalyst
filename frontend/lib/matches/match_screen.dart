@@ -1,10 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/chat/chat_list.dart';
-import 'package:my_app/likes/like_screen.dart';
-import 'package:my_app/my_profile/my_profile_screen.dart';
 import 'package:rxdart/rxdart.dart';
-
 
 class Interests {
   final String interest;
@@ -34,17 +30,17 @@ class _MatchScreenState extends State<MatchScreen> {
   @override
   Widget build(BuildContext context) {
     final PageController controller = PageController();
-    final List<Widget> pages = [
-      MatchProfile(
-          index: currentNavbarIndex,
-          controller: controller,
-          interests: interests),
-      const LikeScreen(
-        userId: 1,
-      ),
-      const ChatList(),
-      const MyProfileScreen()
-    ];
+    // final List<Widget> pages = [
+    //   MatchProfile(
+    //       index: currentNavbarIndex,
+    //       controller: controller,
+    //       interests: interests),
+    //   const LikeScreen(
+    //     userId: 1,
+    //   ),
+    //   const ChatList(),
+    //   const MyProfileScreen()
+    // ];
 
     void onTabTapped(int index) {
       setState(() {
@@ -470,11 +466,18 @@ class _MatchProfileState extends State<MatchProfile> {
                                     const Icon(Icons.location_pin, size: 20),
                                     Padding(
                                       padding: const EdgeInsets.all(8),
-                                      child: Text(
-                                        'San Francisco Bay Area',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.grey[900]),
+                                      child: FutureBuilder(
+                                        future: getUserData(
+                                            'a3IXF0jBT0SkVW53hCIksmfsqAh2'),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot snapshot) {
+                                          return Text(
+                                              snapshot.data['location'].latitude
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.grey[900]));
+                                        },
                                       ),
                                     ),
                                   ],

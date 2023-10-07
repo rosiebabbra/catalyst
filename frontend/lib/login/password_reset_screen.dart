@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class PasswordResetScreen extends StatefulWidget {
   const PasswordResetScreen({super.key});
 
@@ -9,9 +8,6 @@ class PasswordResetScreen extends StatefulWidget {
 }
 
 class _PasswordResetScreenState extends State<PasswordResetScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return const Scaffold(

@@ -6,10 +6,10 @@ class ImageCarousel extends StatefulWidget {
   const ImageCarousel({super.key, required this.images});
 
   @override
-  _ImageCarouselState createState() => _ImageCarouselState();
+  ImageCarouselState createState() => ImageCarouselState();
 }
 
-class _ImageCarouselState extends State<ImageCarousel> {
+class ImageCarouselState extends State<ImageCarousel> {
   double _xOffset = 0;
 
   @override

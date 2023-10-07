@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import '../models/user_data.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -25,11 +22,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final myProvider = Provider.of<PhoneNumberProvider>(context);
-    final exitCode = myProvider.phoneNumber.exitCode;
-    final userPhoneNumber = myProvider.phoneNumber.phoneNumber;
-    PhoneNumber number =
-        PhoneNumber(isoCode: 'US', dialCode: '+1', phoneNumber: '');
     return Scaffold(
         body: Padding(
       padding: const EdgeInsets.fromLTRB(45.0, 0, 65.0, 0),

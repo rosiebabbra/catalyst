@@ -45,12 +45,13 @@ dependencies:
   flutter_cache_manager: ^3.3.0
   font_awesome_flutter:
   firebase_core:
+  firebase_messaging: ^14.6.9
   multiple_search_selection: ^2.5.0
   flutter_firebase_chat_core: 1.6.4
   intl: ^0.18.1
   geolocator: ^8.2.0
   geocoding: ^2.0.4
-
+  location: ^5.0.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

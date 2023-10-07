@@ -30,7 +30,8 @@ class FadeInText extends StatefulWidget {
   ///The total duration in which the animation completes. Defaults to 800 milliseconds
   final Duration animationDuration;
 
-  const FadeInText({super.key, 
+  const FadeInText({
+    super.key,
     required this.child,
     this.offset = 0.2,
     this.curve = Curves.easeIn,
@@ -44,7 +45,7 @@ class FadeInText extends StatefulWidget {
 
 class _FadeInTextState extends State<FadeInText>
     with SingleTickerProviderStateMixin {
-  late Animation<Offset> _animationSlide;
+  // late Animation<Offset> _animationSlide;
 
   late AnimationController _animationController;
 
@@ -59,21 +60,21 @@ class _FadeInTextState extends State<FadeInText>
     );
 
     //configure the animation controller as per the direction
-    if (widget.direction == Direction.vertical) {
-      _animationSlide = Tween<Offset>(
-              begin: Offset(0, widget.offset), end: const Offset(0, 0))
-          .animate(CurvedAnimation(
-        curve: widget.curve,
-        parent: _animationController,
-      ));
-    } else {
-      _animationSlide = Tween<Offset>(
-              begin: Offset(widget.offset, 0), end: const Offset(0, 0))
-          .animate(CurvedAnimation(
-        curve: widget.curve,
-        parent: _animationController,
-      ));
-    }
+    // if (widget.direction == Direction.vertical) {
+    //   _animationSlide = Tween<Offset>(
+    //           begin: Offset(0, widget.offset), end: const Offset(0, 0))
+    //       .animate(CurvedAnimation(
+    //     curve: widget.curve,
+    //     parent: _animationController,
+    //   ));
+    // } else {
+    //   _animationSlide = Tween<Offset>(
+    //           begin: Offset(widget.offset, 0), end: const Offset(0, 0))
+    //       .animate(CurvedAnimation(
+    //     curve: widget.curve,
+    //     parent: _animationController,
+    //   ));
+    // }
 
     _animationFade =
         Tween<double>(begin: -1.0, end: 1.0).animate(CurvedAnimation(
