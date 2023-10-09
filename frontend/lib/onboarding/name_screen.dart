@@ -34,12 +34,6 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
     // final phoneNumber = formatPhoneNumber(exitCode, userPhoneNumber, false);
 
     return Scaffold(
-        // TODO: Remove appbar for user, keep for admin/dev
-        appBar: AppBar(
-          elevation: 0,
-          foregroundColor: Colors.black,
-          backgroundColor: Colors.white,
-        ),
         backgroundColor: Colors.white,
         body: Padding(
           padding: const EdgeInsets.fromLTRB(35, 0, 35, 0),
@@ -47,21 +41,23 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.question_answer, size: 50),
+              const Icon(Icons.question_answer, size: 50),
               const SizedBox(
                 height: 15,
               ),
               const Text("What's your first name?",
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
               const SizedBox(
-                height: 15,
+                height: 20,
               ),
               Text('This is how your name will appear on your profile.',
                   style: TextStyle(fontSize: 15, color: Colors.grey[600])),
               Text(
                 "You can't change it later.",
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.grey[800]),
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[800]),
               ),
               const SizedBox(
                 height: 25,
