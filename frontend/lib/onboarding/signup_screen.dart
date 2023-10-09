@@ -119,11 +119,14 @@ class _SignupScreenState extends State<SignupScreen> {
                     });
                   },
                 ),
-                Text('Show password?')
+                Text(
+                  'Show password?',
+                  style: TextStyle(fontSize: 16),
+                )
               ],
             ),
           ),
-          const SizedBox(height: 25),
+          const SizedBox(height: 10),
           Align(
             alignment: Alignment.centerLeft,
             child: Row(
@@ -171,7 +174,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 55),
+          const SizedBox(height: 25),
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 32.0, 0),
             child: Row(
