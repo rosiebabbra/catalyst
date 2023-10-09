@@ -18,6 +18,7 @@ class _SignupScreenState extends State<SignupScreen> {
   var validEmailErrorMsg = '';
   final formatShakeKey = GlobalKey<ShakeWidgetState>();
   final matchShakeKey = GlobalKey<ShakeWidgetState>();
+  var obscureTextChecked = true;
 
   TextEditingController emailController = TextEditingController();
 
@@ -86,7 +87,7 @@ class _SignupScreenState extends State<SignupScreen> {
           const SizedBox(height: 25),
           TextField(
             controller: passwordController,
-            obscureText: true,
+            obscureText: obscureTextChecked,
             decoration: const InputDecoration(
               prefixIcon: Icon(Icons.password_sharp),
               labelText: 'Your password',
@@ -97,7 +98,7 @@ class _SignupScreenState extends State<SignupScreen> {
           const SizedBox(height: 25),
           TextField(
             controller: passwordReEntryController,
-            obscureText: true,
+            obscureText: obscureTextChecked,
             decoration: const InputDecoration(
               prefixIcon: Icon(Icons.password_sharp),
               labelText: 'Re-enter your password',
@@ -110,8 +111,26 @@ class _SignupScreenState extends State<SignupScreen> {
             alignment: Alignment.centerLeft,
             child: Row(
               children: [
-                const Icon(Icons.info_outline, size: 20, color: Colors.red),
-                const Text(' '),
+                Checkbox(
+                  value: !obscureTextChecked,
+                  onChanged: (value) {
+                    setState(() {
+                      obscureTextChecked = !obscureTextChecked;
+                    });
+                  },
+                ),
+                Text('Show password?')
+              ],
+            ),
+          ),
+          const SizedBox(height: 25),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: [
+                if (validEmailErrorMsg.isNotEmpty)
+                  const Icon(Icons.info_outline, size: 20, color: Colors.red),
+                if (validEmailErrorMsg.isNotEmpty) const Text(' '),
                 Text(
                   validEmailErrorMsg,
                   style: const TextStyle(
@@ -125,8 +144,9 @@ class _SignupScreenState extends State<SignupScreen> {
             alignment: Alignment.centerLeft,
             child: Row(
               children: [
-                const Icon(Icons.info_outline, size: 20, color: Colors.red),
-                const Text(' '),
+                if (passwordFormatErrorMsg.isNotEmpty)
+                  const Icon(Icons.info_outline, size: 20, color: Colors.red),
+                if (passwordFormatErrorMsg.isNotEmpty) const Text(' '),
                 Text(
                   passwordFormatErrorMsg,
                   style: const TextStyle(
@@ -140,8 +160,9 @@ class _SignupScreenState extends State<SignupScreen> {
             alignment: Alignment.centerLeft,
             child: Row(
               children: [
-                const Icon(Icons.info_outline, size: 20, color: Colors.red),
-                const Text(' '),
+                if (unMatchingPasswordsErrorMsg.isNotEmpty)
+                  const Icon(Icons.info_outline, size: 20, color: Colors.red),
+                if (unMatchingPasswordsErrorMsg.isNotEmpty) const Text(' '),
                 Text(
                   unMatchingPasswordsErrorMsg,
                   style: const TextStyle(
