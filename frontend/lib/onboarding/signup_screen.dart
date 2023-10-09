@@ -15,6 +15,7 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   var unMatchingPasswordsErrorMsg = '';
   var passwordFormatErrorMsg = '';
+  var validEmailErrorMsg = '';
   final formatShakeKey = GlobalKey<ShakeWidgetState>();
   final matchShakeKey = GlobalKey<ShakeWidgetState>();
 
@@ -32,7 +33,6 @@ class _SignupScreenState extends State<SignupScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(height: 100),
           Align(
             alignment: Alignment.centerLeft,
             child: Row(
@@ -108,22 +108,49 @@ class _SignupScreenState extends State<SignupScreen> {
           const SizedBox(height: 25),
           Align(
             alignment: Alignment.centerLeft,
-            child: Text(
-              passwordFormatErrorMsg,
-              style: const TextStyle(
-                  color: Colors.red, fontWeight: FontWeight.bold),
+            child: Row(
+              children: [
+                const Icon(Icons.info_outline, size: 20, color: Colors.red),
+                const Text(' '),
+                Text(
+                  validEmailErrorMsg,
+                  style: const TextStyle(
+                      color: Colors.red, fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 5),
           Align(
             alignment: Alignment.centerLeft,
-            child: Text(
-              unMatchingPasswordsErrorMsg,
-              style: const TextStyle(
-                  color: Colors.red, fontWeight: FontWeight.bold),
+            child: Row(
+              children: [
+                const Icon(Icons.info_outline, size: 20, color: Colors.red),
+                const Text(' '),
+                Text(
+                  passwordFormatErrorMsg,
+                  style: const TextStyle(
+                      color: Colors.red, fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 35),
+          const SizedBox(height: 5),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: [
+                const Icon(Icons.info_outline, size: 20, color: Colors.red),
+                const Text(' '),
+                Text(
+                  unMatchingPasswordsErrorMsg,
+                  style: const TextStyle(
+                      color: Colors.red, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 55),
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 32.0, 0),
             child: Row(
@@ -171,7 +198,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
                             if (isInvalidEmail) {
                               setState(() {
-                                passwordFormatErrorMsg =
+                                validEmailErrorMsg =
                                     'Please enter a valid email address.';
                               });
                             }
