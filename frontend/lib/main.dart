@@ -3,6 +3,7 @@ import 'package:my_app/beta/coming_soon_screen.dart';
 import 'package:my_app/onboarding/signup_screen.dart';
 import 'chat/chat_content.dart';
 import 'firebase_options.dart';
+import 'package:chewie/chewie.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/hobbies/main.dart';
@@ -39,30 +40,54 @@ Future<void> main() async {
   });
   runApp(ChangeNotifierProvider(
       create: (context) => PhoneNumberProvider(),
-      child: const MyApp(versionId: 'beta')));
+      child: MyApp(
+        versionId: 'beta',
+        useVideoAsset: true,
+      )));
 }
 
 class MyApp extends StatefulWidget {
   final String versionId;
-  const MyApp({super.key, required this.versionId});
+  bool useVideoAsset;
+  MyApp({super.key, required this.versionId, required this.useVideoAsset});
 
   @override
   _BackgroundVideoState createState() => _BackgroundVideoState();
 }
 
 class _BackgroundVideoState extends State<MyApp> {
-  late VideoPlayerController _controller;
+  VideoPlayerController? _controller;
+  ChewieController? chewieController;
 
   @override
   void initState() {
+    initVP();
     super.initState();
-    _controller =
-        VideoPlayerController.asset('assets/videos/production_id_4881692.mp4')
-          ..initialize().then((_) {
-            _controller.play();
-            _controller.setLooping(true);
-            setState(() {});
-          });
+  }
+
+  void initVP() async {
+    if (widget.useVideoAsset == true) {
+      _controller = VideoPlayerController.asset(
+          'assets/videos/production_id_4881692.mp4');
+
+      await _controller?.initialize();
+
+      chewieController = ChewieController(
+        videoPlayerController: _controller ??
+            VideoPlayerController.asset(
+                'assets/videos/production_id_4881692.mp4'),
+        autoPlay: true,
+        looping: true,
+      );
+    }
+
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller?.dispose();
   }
 
   @override
@@ -125,6 +150,12 @@ class _BackgroundVideoState extends State<MyApp> {
       }
     };
 
+    bool useVideoBackground(useVideoAsset) {
+      return chewieController != null;
+    }
+
+    var videoBackground = useVideoBackground(widget.useVideoAsset);
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -135,7 +166,7 @@ class _BackgroundVideoState extends State<MyApp> {
           as Map<String, Widget Function(BuildContext)>,
       home: Stack(
         children: <Widget>[
-          VideoPlayer(_controller),
+          if (videoBackground) VideoPlayer(_controller!),
           Container(
               decoration: BoxDecoration(
                   gradient: LinearGradient(
