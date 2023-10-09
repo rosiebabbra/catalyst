@@ -48,8 +48,8 @@ class _FadeInTextState extends State<FadeInText>
   // late Animation<Offset> _animationSlide;
 
   late AnimationController _animationController;
-
   late Animation<double> _animationFade;
+  late Timer _animationTimer;
 
   @override
   void initState() {
@@ -82,7 +82,7 @@ class _FadeInTextState extends State<FadeInText>
       parent: _animationController,
     ));
 
-    Timer(widget.delayStart, () {
+    _animationTimer = Timer(widget.delayStart, () {
       _animationController.forward();
     });
   }
@@ -90,6 +90,7 @@ class _FadeInTextState extends State<FadeInText>
   @override
   void dispose() {
     _animationController.dispose();
+    _animationTimer.cancel();
     super.dispose();
   }
 
