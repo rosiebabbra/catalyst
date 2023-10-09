@@ -101,7 +101,6 @@ class AnimatedButtonState extends State<AnimatedButton>
 
   void _tapUp(TapUpDetails details) {
     _controller.reverse();
-    Timer(const Duration(seconds: 3), () {});
     if (widget.landingPage != null) {
       Navigator.pushNamed(context, widget.landingPage.toString());
     }
