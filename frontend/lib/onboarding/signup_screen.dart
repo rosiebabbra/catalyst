@@ -153,27 +153,54 @@ class _SignupScreenState extends State<SignupScreen> {
                           child: const Icon(Icons.arrow_forward_ios,
                               color: Colors.black),
                           onPressed: () {
-                            if (passwordController.text.length <= 8) {
+                            bool invalidEmailInput(String email) {
+                              final RegExp emailRegex = RegExp(
+                                r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
+                              );
+
+                              return !emailRegex.hasMatch(email);
+                            }
+
+                            var isInvalidEmail =
+                                invalidEmailInput(emailController.text);
+                            var isNotMinPasswordLength =
+                                passwordController.text.length < 8;
+                            var passwordsNonMatching =
+                                passwordController.text !=
+                                    passwordReEntryController.text;
+
+                            if (isInvalidEmail) {
                               setState(() {
                                 passwordFormatErrorMsg =
-                                    'Your password must be at least 8 characters.';
+                                    'Please enter a valid email address.';
                               });
                             }
 
-                            if (passwordReEntryController.text ==
-                                passwordController.text) {
+                            if (isNotMinPasswordLength) {
+                              setState(() {
+                                passwordFormatErrorMsg =
+                                    'Your password must be at least 8 characters long.';
+                              });
+                            }
+
+                            if (passwordsNonMatching) {
+                              setState(() {
+                                unMatchingPasswordsErrorMsg =
+                                    "The entered passwords do not match.";
+                              });
+                            }
+
+                            if (!isInvalidEmail &&
+                                !isNotMinPasswordLength &&
+                                !passwordsNonMatching) {
                               FirebaseAuth.instance
                                   .createUserWithEmailAndPassword(
                                 email: emailController.text,
                                 password: passwordController.text,
                               );
                               Navigator.pushNamed(context, '/onboarding-name');
-                            } else {
-                              setState(() {
-                                unMatchingPasswordsErrorMsg =
-                                    "The passwords entered do not match.";
-                              });
                             }
+
                             formatShakeKey.currentState?.shake();
                             matchShakeKey.currentState?.shake();
                           },
