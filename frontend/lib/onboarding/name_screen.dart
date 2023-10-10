@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'dart:math' as math;
-import 'package:http/http.dart' as http;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class NameEntryScreen extends StatefulWidget {
@@ -15,14 +15,12 @@ class NameEntryScreen extends StatefulWidget {
 class _NameEntryScreenState extends State<NameEntryScreen> {
   TextEditingController controller = TextEditingController();
 
-  Future<int> updateUserInfo(String firstName, String phoneNumber) async {
-    var response = await http
-        .post(Uri.parse('http://127.0.0.1:8080/update_user_info'), body: {
-      'phone_number': phoneNumber,
-      'data': json.encode({'first_name': firstName})
+  updateUserInfo(User? currentUser, String firstName) {
+    FirebaseFirestore.instance.collection('users').add({
+      'first_name': firstName,
+      'timestamp': Timestamp.now(),
+      'user_id': currentUser?.uid
     });
-
-    return response.statusCode;
   }
 
   @override
@@ -97,12 +95,13 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                               child: const Icon(Icons.arrow_forward_ios,
                                   color: Colors.black),
                               onPressed: () {
-                                // Add some condition here that requires
-                                // controller.text to not be an empty string
-                                // TODO: Update the `updateUserInfo` function in order to
-                                // pass in a user ID instead of phone number
-                                updateUserInfo(controller.text, '2');
-                                Navigator.pushNamed(context, '/onboarding-dob');
+                                if (controller.text.isNotEmpty) {
+                                  FirebaseAuth auth = FirebaseAuth.instance;
+                                  User? currentUser = auth.currentUser;
+                                  updateUserInfo(currentUser, controller.text);
+                                  Navigator.pushNamed(
+                                      context, '/onboarding-dob');
+                                }
                               },
                             ),
                           ),
