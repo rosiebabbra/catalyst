@@ -16,6 +16,7 @@ class _SignupScreenState extends State<SignupScreen> {
   var unMatchingPasswordsErrorMsg = '';
   var passwordFormatErrorMsg = '';
   var validEmailErrorMsg = '';
+  var userExistsErrorMsg = '';
   final formatShakeKey = GlobalKey<ShakeWidgetState>();
   final matchShakeKey = GlobalKey<ShakeWidgetState>();
   var obscureTextChecked = true;
@@ -124,6 +125,24 @@ class _SignupScreenState extends State<SignupScreen> {
               ],
             ),
           ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (userExistsErrorMsg.isNotEmpty)
+                  const Icon(Icons.info_outline, size: 20, color: Colors.red),
+                if (userExistsErrorMsg.isNotEmpty) const Text(' '),
+                Expanded(
+                  child: Text(
+                    userExistsErrorMsg,
+                    style: const TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: 10),
           Align(
             alignment: Alignment.centerLeft,
@@ -201,13 +220,34 @@ class _SignupScreenState extends State<SignupScreen> {
                         child: TextButton(
                           child: const Icon(Icons.arrow_forward_ios,
                               color: Colors.black),
-                          onPressed: () {
+                          onPressed: () async {
                             bool invalidEmailInput(String email) {
                               final RegExp emailRegex = RegExp(
                                 r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
                               );
 
                               return !emailRegex.hasMatch(email);
+                            }
+
+                            Future<dynamic> userExists(String email) async {
+                              try {
+                                List<String> signInMethods = await FirebaseAuth
+                                    .instance
+                                    .fetchSignInMethodsForEmail(email);
+
+                                if (signInMethods.isNotEmpty) {
+                                  return true;
+                                  // Email is already registered; signInMethods contains the sign-in methods
+                                } else {
+                                  return false;
+                                  // Email is not registered
+                                }
+                              } catch (e) {
+                                setState(() {
+                                  userExistsErrorMsg =
+                                      "An error occurred. Please check your network settings or try again later.";
+                                });
+                              }
                             }
 
                             var isInvalidEmail =
@@ -217,6 +257,24 @@ class _SignupScreenState extends State<SignupScreen> {
                             var passwordsNonMatching =
                                 passwordController.text !=
                                     passwordReEntryController.text;
+                            var isExistingUser =
+                                await userExists(emailController.text);
+
+                            // Write a function that determines whether
+                            // a user with this email already exists in the db;
+                            // if it does, render an error message that says that
+                            // they have already registered and do not allow
+                            // them to create an account
+                            if (isExistingUser == true) {
+                              setState(() {
+                                userExistsErrorMsg =
+                                    "It looks like you've already registered! Head to the login page to log in to your account.";
+                              });
+                            } else {
+                              setState(() {
+                                userExistsErrorMsg = "";
+                              });
+                            }
 
                             if (isInvalidEmail) {
                               setState(() {
@@ -253,7 +311,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
                             if (!isInvalidEmail &&
                                 !isNotMinPasswordLength &&
-                                !passwordsNonMatching) {
+                                !passwordsNonMatching &&
+                                !isExistingUser) {
                               FirebaseAuth.instance
                                   .createUserWithEmailAndPassword(
                                 email: emailController.text,
