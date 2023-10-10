@@ -21,9 +21,7 @@ class _SignupScreenState extends State<SignupScreen> {
   var obscureTextChecked = true;
 
   TextEditingController emailController = TextEditingController();
-
   TextEditingController passwordController = TextEditingController();
-
   TextEditingController passwordReEntryController = TextEditingController();
 
   @override
@@ -225,6 +223,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                 validEmailErrorMsg =
                                     'Please enter a valid email address.';
                               });
+                            } else {
+                              setState(() {
+                                validEmailErrorMsg = '';
+                              });
                             }
 
                             if (isNotMinPasswordLength) {
@@ -232,12 +234,20 @@ class _SignupScreenState extends State<SignupScreen> {
                                 passwordFormatErrorMsg =
                                     'Your password must be at least 8 characters long.';
                               });
+                            } else {
+                              setState(() {
+                                passwordFormatErrorMsg = '';
+                              });
                             }
 
                             if (passwordsNonMatching) {
                               setState(() {
                                 unMatchingPasswordsErrorMsg =
                                     "The entered passwords do not match.";
+                              });
+                            } else {
+                              setState(() {
+                                unMatchingPasswordsErrorMsg = '';
                               });
                             }
 
