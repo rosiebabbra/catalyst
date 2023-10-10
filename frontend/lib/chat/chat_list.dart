@@ -52,7 +52,7 @@ class ChatListState extends State<ChatList> {
                 return ListView(
                     children: inboxList.map((DocumentSnapshot document) {
                   Future<Object> getAllSenderIds(String receiverId) async {
-                    //get all sender ids where reeiever id is current user
+                    //get all sender ids where receiver id is current user
                     QuerySnapshot senderIds = await FirebaseFirestore.instance
                         .collection('messages')
                         .where('receiver_id', isEqualTo: receiverId)
