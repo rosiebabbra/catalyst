@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
@@ -21,32 +23,40 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
   var y1Val = '';
   var y2Val = '';
 
-  Future<int> updateUserInfo(String birthDate, String phoneNumber) async {
-    var response = await http
-        .post(Uri.parse('http://127.0.0.1:8080/update_user_info'), body: {
-      'phone_number': phoneNumber,
-      'data': json.encode({'birthdate': birthDate})
-    });
+  updateUserInfo(User? user, String birthDate) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('user_id', isEqualTo: user?.uid)
+        .get();
 
-    return response.statusCode;
+    if (querySnapshot.docs.isNotEmpty) {
+      // Assume there's only one matching document (you might need to adjust if multiple documents match)
+      DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+
+      // Get the document reference and update the fields
+      DocumentReference documentReference = FirebaseFirestore.instance
+          .collection('users')
+          .doc(documentSnapshot.id);
+
+      // Update the fields
+      await documentReference.update({
+        'birthdate': birthDate,
+      });
+    } else {
+      print('No matching records found.');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController m1Controller = TextEditingController();
-    TextEditingController m2Controller = TextEditingController();
-    TextEditingController d1Controller = TextEditingController();
-    TextEditingController d2Controller = TextEditingController();
-    TextEditingController y1Controller = TextEditingController();
-    TextEditingController y2Controller = TextEditingController();
+    TextEditingController m1Controller = TextEditingController(text: '');
+    TextEditingController m2Controller = TextEditingController(text: '');
+    TextEditingController d1Controller = TextEditingController(text: '');
+    TextEditingController d2Controller = TextEditingController(text: '');
+    TextEditingController y1Controller = TextEditingController(text: '');
+    TextEditingController y2Controller = TextEditingController(text: '');
 
     return Scaffold(
-        // TODO: Remove appbar for user, keep for admin/dev
-        appBar: AppBar(
-          elevation: 0,
-          foregroundColor: Colors.black,
-          backgroundColor: Colors.white,
-        ),
         backgroundColor: Colors.white,
         body: Padding(
           padding: const EdgeInsets.fromLTRB(35, 0, 35, 0),
@@ -54,7 +64,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.question_answer, size: 50),
+              const Icon(Icons.question_answer, size: 50),
               const SizedBox(
                 height: 15,
               ),
@@ -79,21 +89,20 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.number,
                         onChanged: (value) {
-                          setState(() {
-                            m1Val = m1Controller.text;
-                          });
                           if (value.isNotEmpty) {
                             FocusScope.of(context).nextFocus();
                           }
                         },
                         autofocus: true,
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
                         maxLength: 1,
                         decoration: InputDecoration(
                           counterText: "",
                           hintText: 'M',
-                          hintStyle: TextStyle(color: Colors.grey[500]),
+                          hintStyle: TextStyle(color: Colors.grey[400]),
                           enabledBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.black),
                           ),
@@ -107,9 +116,6 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                           showCursor: false,
                           controller: m2Controller,
                           onChanged: (value) {
-                            setState(() {
-                              m2Val = m2Controller.text;
-                            });
                             if (value.isNotEmpty) {
                               FocusScope.of(context).nextFocus();
                             }
@@ -123,7 +129,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                           decoration: InputDecoration(
                               counterText: "",
                               hintText: 'M',
-                              hintStyle: TextStyle(color: Colors.grey[500]),
+                              hintStyle: TextStyle(color: Colors.grey[400]),
                               enabledBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               )))),
@@ -138,9 +144,6 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                           textAlign: TextAlign.center,
                           keyboardType: TextInputType.number,
                           onChanged: (value) {
-                            setState(() {
-                              d1Val = d1Controller.text;
-                            });
                             if (value.isNotEmpty) {
                               FocusScope.of(context).nextFocus();
                             }
@@ -151,7 +154,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                           decoration: InputDecoration(
                               counterText: "",
                               hintText: 'D',
-                              hintStyle: TextStyle(color: Colors.grey[500]),
+                              hintStyle: TextStyle(color: Colors.grey[400]),
                               enabledBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               )))),
@@ -164,9 +167,6 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                           textAlign: TextAlign.center,
                           keyboardType: TextInputType.number,
                           onChanged: (value) {
-                            setState(() {
-                              d2Val = d2Controller.text;
-                            });
                             if (value.isNotEmpty) {
                               FocusScope.of(context).nextFocus();
                             }
@@ -177,7 +177,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                           decoration: InputDecoration(
                               counterText: "",
                               hintText: 'D',
-                              hintStyle: TextStyle(color: Colors.grey[500]),
+                              hintStyle: TextStyle(color: Colors.grey[400]),
                               enabledBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               )))),
@@ -192,9 +192,6 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                           keyboardType: TextInputType.number,
                           maxLength: 1,
                           onChanged: (value) {
-                            setState(() {
-                              y1Val = y1Controller.text;
-                            });
                             if (value.isNotEmpty) {
                               FocusScope.of(context).nextFocus();
                             }
@@ -205,7 +202,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                           decoration: InputDecoration(
                               counterText: "",
                               hintText: 'Y',
-                              hintStyle: TextStyle(color: Colors.grey[500]),
+                              hintStyle: TextStyle(color: Colors.grey[400]),
                               enabledBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               )))),
@@ -217,9 +214,6 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                           controller: y2Controller,
                           keyboardType: TextInputType.number,
                           onChanged: (value) {
-                            setState(() {
-                              y2Val = y2Controller.text;
-                            });
                             if (value.isNotEmpty) {
                               FocusScope.of(context).nextFocus();
                             }
@@ -270,9 +264,10 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                                   color: Colors.black),
                               onPressed: () {
                                 var birthDate =
-                                    '$y1Val$y2Val$m1Val$m2Val$d1Val$d2Val';
-                                //TODO: Update `updateUserInfo` to take in user ID
-                                updateUserInfo(birthDate, '2');
+                                    '${y1Controller.text}${y2Controller.text}${m1Controller.text}${m2Controller.text}${d1Controller.text}${d2Controller.text}';
+                                FirebaseAuth auth = FirebaseAuth.instance;
+                                User? currentUser = auth.currentUser;
+                                updateUserInfo(currentUser, birthDate);
                                 Navigator.pushNamed(
                                     context, '/onboarding-gender');
                               },
