@@ -61,10 +61,14 @@ dependencies:
   firebase_storage: ^11.1.0
   provider: ^6.0.5
   firebase_database: ^10.2.5
+  firebase_core_platform_interface: ^4.8.0
+  firebase_auth_mocks: ^0.12.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  mockito: ^5.4.2
+  build_runner: ^2.4.6
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
