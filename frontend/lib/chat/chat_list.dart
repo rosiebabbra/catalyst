@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'chat_content.dart';
@@ -89,8 +90,10 @@ class ChatListState extends State<ChatList> {
                     return msgPreview;
                   }
 
-                  var senderIds =
-                      getAllSenderIds('a3IXF0jBT0SkVW53hCIksmfsqAh2');
+                  FirebaseAuth auth = FirebaseAuth.instance;
+                  User? user = auth.currentUser;
+
+                  var senderIds = getAllSenderIds(user.toString());
 
                   return FutureBuilder<Object>(
                       future: senderIds,
@@ -168,7 +171,8 @@ class ChatListState extends State<ChatList> {
                                             'Error: ${nameSnapshot.error}');
                                       }
                                       if (!nameSnapshot.hasData) {
-                                        return const Text('No sender IDs available.');
+                                        return const Text(
+                                            'No sender IDs available.');
                                       }
                                       return Message(
                                           msgPreview: msgPreviewSnapshot.data,
