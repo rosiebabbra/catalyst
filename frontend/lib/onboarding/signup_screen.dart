@@ -117,7 +117,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     });
                   },
                 ),
-                Text(
+                const Text(
                   'Show password?',
                   style: TextStyle(fontSize: 16),
                 )
