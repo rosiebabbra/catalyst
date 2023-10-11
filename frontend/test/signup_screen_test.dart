@@ -76,6 +76,35 @@ void main() {
     expect(find.text('The entered passwords do not match.'), findsOneWidget);
   });
 
+  testWidgets('Expected existing user error',
+      (WidgetTester widgetTester) async {
+    // Mock the Firebase client; it wasn't necessary in
+    // the other tests because since the errors were being
+    // hit, the db write was not happening.
+
+    var testEmail = 'testing@testing.com';
+    const testPassword = 'alright,alright,alright';
+
+    // Render screen
+    await widgetTester
+        .pumpWidget(MaterialApp(home: const SignupScreen(), routes: {
+      '/onboarding-name': (context) => const NameEntryScreen(),
+    }));
+    await widgetTester.pumpAndSettle();
+
+    // Enter email
+    await widgetTester.enterText(find.byType(TextField).first, testEmail);
+    await widgetTester.pumpAndSettle();
+
+    // Enter password
+    await widgetTester.enterText(find.byType(TextField).at(1), testPassword);
+    await widgetTester.pumpAndSettle();
+
+    // Tap next button
+    await widgetTester.tap(find.byType(TextButton).last);
+    await widgetTester.pumpAndSettle();
+  });
+
   testWidgets('Expected navigation on button push',
       (WidgetTester widgetTester) async {
     // Mock the Firebase client; it wasn't necessary in
