@@ -14,7 +14,6 @@ class NameEntryScreen extends StatefulWidget {
 
 class _NameEntryScreenState extends State<NameEntryScreen> {
   var emptyNameErrorMsg = '';
-  var maxLengthExceededErrorMsg = '';
   var incorrectlyFormattedErrorMsg = '';
   TextEditingController controller = TextEditingController();
 
@@ -59,6 +58,7 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
               ),
               TextField(
                 autofocus: true,
+                maxLength: 35,
                 controller: controller,
                 style: const TextStyle(fontSize: 16),
                 decoration: const InputDecoration(
@@ -98,27 +98,6 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                         const Text(' '),
                       Expanded(
                         child: Text(incorrectlyFormattedErrorMsg,
-                            style: const TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                    ]),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Padding(
-                    padding: maxLengthExceededErrorMsg.isNotEmpty
-                        ? const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0)
-                        : const EdgeInsets.all(0),
-                    child: Row(children: [
-                      if (maxLengthExceededErrorMsg.isNotEmpty)
-                        const Icon(Icons.info_outline,
-                            size: 20, color: Colors.red),
-                      if (maxLengthExceededErrorMsg.isNotEmpty) const Text(' '),
-                      Expanded(
-                        child: Text(maxLengthExceededErrorMsg,
                             style: const TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold)),
@@ -196,22 +175,11 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                                   setState(() {
                                     emptyNameErrorMsg = '';
                                   });
-                                  if (formattedName.length >= 50) {
-                                    setState(() {
-                                      maxLengthExceededErrorMsg =
-                                          'You have exceeded the maximum characters allowed.';
-                                    });
-                                  } else {
-                                    setState(() {
-                                      maxLengthExceededErrorMsg = '';
-                                    });
-                                  }
                                   FirebaseAuth auth = FirebaseAuth.instance;
                                   User? currentUser = auth.currentUser;
 
                                   // Comment for debug mode
-                                  if (maxLengthExceededErrorMsg.isEmpty &&
-                                      emptyNameErrorMsg.isEmpty &&
+                                  if (emptyNameErrorMsg.isEmpty &&
                                       incorrectlyFormattedErrorMsg.isEmpty) {
                                     updateUserInfo(
                                         currentUser, controller.text);
