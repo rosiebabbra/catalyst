@@ -13,6 +13,7 @@ class NameEntryScreen extends StatefulWidget {
 }
 
 class _NameEntryScreenState extends State<NameEntryScreen> {
+  var emptyNameErrorMsg = '';
   TextEditingController controller = TextEditingController();
 
   updateUserInfo(User? currentUser, String firstName) {
@@ -64,7 +65,18 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                 textCapitalization: TextCapitalization.sentences,
               ),
               const SizedBox(
-                height: 75,
+                height: 30,
+              ),
+              Row(children: [
+                if (emptyNameErrorMsg.isNotEmpty)
+                  const Icon(Icons.info_outline, size: 20, color: Colors.red),
+                if (emptyNameErrorMsg.isNotEmpty) const Text(' '),
+                Text(emptyNameErrorMsg,
+                    style: const TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.bold)),
+              ]),
+              const SizedBox(
+                height: 30,
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 32.0, 0),
@@ -101,6 +113,11 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                                   updateUserInfo(currentUser, controller.text);
                                   Navigator.pushNamed(
                                       context, '/onboarding-dob');
+                                } else {
+                                  setState(() {
+                                    emptyNameErrorMsg =
+                                        'Please enter a name to continue.';
+                                  });
                                 }
                               },
                             ),
