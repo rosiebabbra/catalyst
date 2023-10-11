@@ -14,6 +14,8 @@ class NameEntryScreen extends StatefulWidget {
 
 class _NameEntryScreenState extends State<NameEntryScreen> {
   var emptyNameErrorMsg = '';
+  var maxLengthExceededErrorMsg = '';
+  var incorrectlyFormattedErrorMsg = '';
   TextEditingController controller = TextEditingController();
 
   updateUserInfo(User? currentUser, String firstName) {
@@ -58,25 +60,72 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
               TextField(
                 autofocus: true,
                 controller: controller,
-                style: const TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 16),
                 decoration: const InputDecoration(
-                  hintText: 'Enter first name',
+                  hintText: 'Enter your first name',
                 ),
                 textCapitalization: TextCapitalization.sentences,
               ),
-              const SizedBox(
-                height: 30,
+              Column(
+                children: [
+                  Padding(
+                    padding: emptyNameErrorMsg.isNotEmpty
+                        ? const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0)
+                        : const EdgeInsets.all(0),
+                    child: Row(children: [
+                      if (emptyNameErrorMsg.isNotEmpty)
+                        const Icon(Icons.info_outline,
+                            size: 20, color: Colors.red),
+                      if (emptyNameErrorMsg.isNotEmpty) const Text(' '),
+                      Text(emptyNameErrorMsg,
+                          style: const TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.bold)),
+                    ]),
+                  ),
+                ],
               ),
-              Row(children: [
-                if (emptyNameErrorMsg.isNotEmpty)
-                  const Icon(Icons.info_outline, size: 20, color: Colors.red),
-                if (emptyNameErrorMsg.isNotEmpty) const Text(' '),
-                Text(emptyNameErrorMsg,
-                    style: const TextStyle(
-                        color: Colors.red, fontWeight: FontWeight.bold)),
-              ]),
-              const SizedBox(
-                height: 30,
+              Column(
+                children: [
+                  Padding(
+                    padding: incorrectlyFormattedErrorMsg.isNotEmpty
+                        ? const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0)
+                        : const EdgeInsets.all(0),
+                    child: Row(children: [
+                      if (incorrectlyFormattedErrorMsg.isNotEmpty)
+                        const Icon(Icons.info_outline,
+                            size: 20, color: Colors.red),
+                      if (incorrectlyFormattedErrorMsg.isNotEmpty)
+                        const Text(' '),
+                      Expanded(
+                        child: Text(incorrectlyFormattedErrorMsg,
+                            style: const TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold)),
+                      ),
+                    ]),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Padding(
+                    padding: maxLengthExceededErrorMsg.isNotEmpty
+                        ? const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0)
+                        : const EdgeInsets.all(0),
+                    child: Row(children: [
+                      if (maxLengthExceededErrorMsg.isNotEmpty)
+                        const Icon(Icons.info_outline,
+                            size: 20, color: Colors.red),
+                      if (maxLengthExceededErrorMsg.isNotEmpty) const Text(' '),
+                      Expanded(
+                        child: Text(maxLengthExceededErrorMsg,
+                            style: const TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold)),
+                      ),
+                    ]),
+                  ),
+                ],
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 32.0, 0),
@@ -107,12 +156,60 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                               child: const Icon(Icons.arrow_forward_ios,
                                   color: Colors.black),
                               onPressed: () {
-                                if (controller.text.isNotEmpty) {
+                                /// Applies formatting to the user inputted string by trimming
+                                /// leading and trailing whitespace, formatting to titlecase
+                                /// capitalization, and ensures that only alphabetic characters
+                                /// are submitted.
+                                formatName(String inputName) {
+                                  try {
+                                    var initiallyFormattedName =
+                                        "${inputName[0].toUpperCase()}${inputName.substring(1).toLowerCase()}"
+                                            .trim();
+
+                                    RegExp regExp = RegExp(r"^[A-Z][a-z'-]+$");
+                                    if (regExp
+                                        .hasMatch(initiallyFormattedName)) {
+                                      setState(() {
+                                        incorrectlyFormattedErrorMsg = '';
+                                      });
+                                      return initiallyFormattedName;
+                                    } else {
+                                      setState(() {
+                                        incorrectlyFormattedErrorMsg =
+                                            'Your name must contain only the following characters: [A-Z][a-z].';
+                                      });
+                                      return null;
+                                    }
+                                  } on RangeError {
+                                    setState(() {
+                                      incorrectlyFormattedErrorMsg = '';
+                                    });
+                                    return null;
+                                  }
+                                }
+
+                                var formattedName = formatName(controller.text);
+
+                                if (formattedName is String) {
+                                  setState(() {
+                                    emptyNameErrorMsg = '';
+                                  });
+                                  if (formattedName.length >= 50) {
+                                    setState(() {
+                                      maxLengthExceededErrorMsg =
+                                          'You have exceeded the maximum characters allowed.';
+                                    });
+                                  } else {
+                                    setState(() {
+                                      maxLengthExceededErrorMsg = '';
+                                    });
+                                  }
                                   FirebaseAuth auth = FirebaseAuth.instance;
                                   User? currentUser = auth.currentUser;
+
                                   updateUserInfo(currentUser, controller.text);
-                                  Navigator.pushNamed(
-                                      context, '/onboarding-dob');
+                                  // Navigator.pushNamed(
+                                  //     context, '/onboarding-dob');
                                 } else {
                                   setState(() {
                                     emptyNameErrorMsg =
