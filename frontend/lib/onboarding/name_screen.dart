@@ -166,20 +166,22 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                                         "${inputName[0].toUpperCase()}${inputName.substring(1).toLowerCase()}"
                                             .trim();
 
-                                    RegExp regExp = RegExp(r"^[A-Z][a-z'-]+$");
-                                    if (regExp
-                                        .hasMatch(initiallyFormattedName)) {
-                                      setState(() {
-                                        incorrectlyFormattedErrorMsg = '';
-                                      });
-                                      return initiallyFormattedName;
-                                    } else {
-                                      setState(() {
-                                        incorrectlyFormattedErrorMsg =
-                                            'Your name must contain only the following characters: [A-Z][a-z].';
-                                      });
-                                      return null;
-                                    }
+                                    // Commenting out input regex restriction to avoid it being
+                                    // a hindrance to people registering
+                                    // RegExp regExp = RegExp(r"^[A-Z][a-z'-]*$");
+                                    // if (regExp
+                                    //     .hasMatch(initiallyFormattedName)) {
+                                    //   setState(() {
+                                    //     incorrectlyFormattedErrorMsg = '';
+                                    //   });
+                                    return initiallyFormattedName;
+                                    // } else {
+                                    //   setState(() {
+                                    //     incorrectlyFormattedErrorMsg =
+                                    //         'Your name must contain only the following characters: [A-Z][a-z].';
+                                    //   });
+                                    //   return null;
+                                    // }
                                   } on RangeError {
                                     setState(() {
                                       incorrectlyFormattedErrorMsg = '';
@@ -207,9 +209,10 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                                   FirebaseAuth auth = FirebaseAuth.instance;
                                   User? currentUser = auth.currentUser;
 
-                                  updateUserInfo(currentUser, controller.text);
-                                  // Navigator.pushNamed(
-                                  //     context, '/onboarding-dob');
+                                  // Comment for debug mode
+                                  // updateUserInfo(currentUser, controller.text);
+                                  Navigator.pushNamed(
+                                      context, '/onboarding-dob');
                                 } else {
                                   setState(() {
                                     emptyNameErrorMsg =
