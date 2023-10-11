@@ -210,9 +210,14 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                                   User? currentUser = auth.currentUser;
 
                                   // Comment for debug mode
-                                  // updateUserInfo(currentUser, controller.text);
-                                  Navigator.pushNamed(
-                                      context, '/onboarding-dob');
+                                  if (maxLengthExceededErrorMsg.isEmpty &&
+                                      emptyNameErrorMsg.isEmpty &&
+                                      incorrectlyFormattedErrorMsg.isEmpty) {
+                                    updateUserInfo(
+                                        currentUser, controller.text);
+                                    Navigator.pushNamed(
+                                        context, '/onboarding-dob');
+                                  }
                                 } else {
                                   setState(() {
                                     emptyNameErrorMsg =
