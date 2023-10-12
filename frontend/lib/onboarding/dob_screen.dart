@@ -20,6 +20,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
   var d2Val = '';
   var y1Val = '';
   var y2Val = '';
+  var errorMsg = '';
 
   updateUserInfo(User? user, String birthDate) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -231,8 +232,22 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                 ],
               ),
               const SizedBox(
-                height: 75,
+                height: 35,
               ),
+              Row(children: [
+                if (errorMsg.isNotEmpty)
+                  const Icon(Icons.info_outline, size: 20, color: Colors.red),
+                if (errorMsg.isNotEmpty) const Text(' '),
+                if (errorMsg.isNotEmpty)
+                  Expanded(
+                      child: Text(errorMsg,
+                          style: const TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.bold))),
+              ]),
+              if (errorMsg.isNotEmpty)
+                const SizedBox(
+                  height: 25,
+                ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 32.0, 0),
                 child: Row(
@@ -269,13 +284,32 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                                   yyPrefix = '19';
                                 }
 
-                                var birthDate =
-                                    '$yyPrefix${y1Controller.text}${y2Controller.text}${m1Controller.text}${m2Controller.text}${d1Controller.text}${d2Controller.text}';
-                                FirebaseAuth auth = FirebaseAuth.instance;
-                                User? currentUser = auth.currentUser;
-                                updateUserInfo(currentUser, birthDate);
-                                Navigator.pushNamed(
-                                    context, '/onboarding-gender');
+                                var dobDigits = [
+                                  y1Controller.text,
+                                  y2Controller.text,
+                                  m1Controller.text,
+                                  m2Controller.text,
+                                  d1Controller.text,
+                                  d2Controller.text
+                                ];
+
+                                bool anyNonDigitChars = dobDigits
+                                    .any((char) => int.tryParse(char) == null);
+
+                                if (!anyNonDigitChars) {
+                                  var birthDate =
+                                      '$yyPrefix${y1Controller.text}${y2Controller.text}${m1Controller.text}${m2Controller.text}${d1Controller.text}${d2Controller.text}';
+                                  FirebaseAuth auth = FirebaseAuth.instance;
+                                  User? currentUser = auth.currentUser;
+                                  updateUserInfo(currentUser, birthDate);
+                                  Navigator.pushNamed(
+                                      context, '/onboarding-gender');
+                                } else {
+                                  setState(() {
+                                    errorMsg =
+                                        'Please enter a date in MM-DD-YY format.';
+                                  });
+                                }
                               },
                             ),
                           ),
