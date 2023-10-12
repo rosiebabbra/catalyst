@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:my_app/beta/coming_soon_screen.dart';
 import 'package:my_app/onboarding/signup_screen.dart';
+import 'beta/see_you_soon.dart';
 import 'chat/chat_content.dart';
 import 'firebase_options.dart';
 import 'package:chewie/chewie.dart';
@@ -113,6 +114,7 @@ class _BackgroundVideoState extends State<MyApp> {
         '/location-disclaimer': (context) => LocationDisclaimerScreen(
               versionId: 'beta',
             ),
+        '/see-you-soon': (context) => const SeeYouSoonScreen(),
         '/coming-soon': (context) => const ComingSoonScreen(),
         '/forgot-password': (context) => const ForgotPasswordScreen(),
         '/password-reset': (context) => const PasswordResetScreen(),

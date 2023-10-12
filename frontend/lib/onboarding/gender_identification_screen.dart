@@ -72,7 +72,11 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
           padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
           child: Align(
               alignment: Alignment.centerLeft,
-              child: Icon(Icons.diversity_1, size: 50)),
+              child: CircleAvatar(
+                  radius: 30,
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
+                  child: Icon(Icons.diversity_1_outlined, size: 30))),
         ),
         const Padding(
           padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
