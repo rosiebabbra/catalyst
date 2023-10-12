@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Text(
                         'Welcome back',
                         style: TextStyle(
-                          fontSize: 34.0,
+                          fontSize: 44.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         "We're glad to see you.",
-                        style: TextStyle(color: Colors.grey[800], fontSize: 16),
+                        style: TextStyle(color: Colors.grey[800], fontSize: 20),
                       )),
                   const SizedBox(height: 25),
                   TextField(
@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -113,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 25),
+                  // const SizedBox(height: 25),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -130,6 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const Text('Remember me?', style: TextStyle(fontSize: 15))
                     ],
                   ),
+                  const SizedBox(height: 25),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -196,9 +197,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           )),
                     ],
                   ),
-                  const SizedBox(height: 35),
+                  const SizedBox(height: 55),
                   SizedBox(
-                    height: 25,
+                    height: 20,
                     child: TextButton(
                       onPressed: () {
                         Navigator.pushNamed(context, '/forgot-password');
@@ -218,7 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text("Don't have an account yet? ",
-                          style: TextStyle(fontSize: 14)),
+                          style: TextStyle(fontSize: 15)),
                       TextButton(
                         onPressed: () {
                           Navigator.pushNamed(context, '/onboarding-signup');
