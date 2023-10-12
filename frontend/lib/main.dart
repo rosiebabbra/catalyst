@@ -26,6 +26,7 @@ import 'onboarding/name_screen.dart';
 import 'onboarding/phone_number_screen.dart';
 import 'onboarding/verification_code_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,6 +64,10 @@ class _BackgroundVideoState extends State<MyApp> {
   @override
   void initState() {
     initVP();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     super.initState();
   }
 
