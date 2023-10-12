@@ -8,8 +8,6 @@ enum ExperienceType { dating, networking, friends }
 bool _isDatingBorderColorEnabled = false;
 bool _isFriendsBorderColorEnabled = false;
 bool _isNetworkingBorderColorEnabled = false;
-
-Color _selectedBorderColor = const Color(0xff7301E4);
 Color _defaultBorderColor = Colors.grey[400]!;
 
 class InterestedInScreen extends StatefulWidget {

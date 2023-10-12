@@ -68,9 +68,7 @@ class ChatListState extends State<ChatList> {
                         allSenderIds.add(columnData.toString());
                       }
                       return allSenderIds.toSet().toList();
-                    } else {
-                      print('No documents found matching the filter.');
-                    }
+                    } else {}
 
                     return senderIds;
                   }

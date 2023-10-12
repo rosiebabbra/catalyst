@@ -54,10 +54,10 @@ class MyApp extends StatefulWidget {
   MyApp({super.key, required this.versionId, required this.useVideoAsset});
 
   @override
-  _BackgroundVideoState createState() => _BackgroundVideoState();
+  BackgroundVideoState createState() => BackgroundVideoState();
 }
 
-class _BackgroundVideoState extends State<MyApp> {
+class BackgroundVideoState extends State<MyApp> {
   VideoPlayerController? _controller;
   ChewieController? chewieController;
 
@@ -116,7 +116,7 @@ class _BackgroundVideoState extends State<MyApp> {
     var routes = {
       'beta': {
         '/login': (context) => const LoginScreen(versionId: 'beta'),
-        '/location-disclaimer': (context) => LocationDisclaimerScreen(
+        '/location-disclaimer': (context) => const LocationDisclaimerScreen(
               versionId: 'beta',
             ),
         '/see-you-soon': (context) => const SeeYouSoonScreen(),
@@ -148,7 +148,7 @@ class _BackgroundVideoState extends State<MyApp> {
         '/onboarding-gender': (context) => const GenderIDEntryScreen(),
         '/onboarding-signup': (context) => const SignupScreen(),
         '/location-disclaimer': (context) =>
-            LocationDisclaimerScreen(versionId: '1.0.0'),
+            const LocationDisclaimerScreen(versionId: '1.0.0'),
         '/generating-matches': (context) => const GeneratingMatchesScreen(),
         '/verification-screen': (context) => const VerificationScreen(),
         '/swipes-completed': (context) => const SwipesCompletedScreen(),
@@ -180,9 +180,9 @@ class _BackgroundVideoState extends State<MyApp> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xffffffff).withOpacity(0.4),
+              const Color(0xffffffff).withOpacity(0.4),
               Colors.transparent,
-              Color(0xffffffff).withOpacity(0.2)
+              const Color(0xffffffff).withOpacity(0.2)
             ],
           ))),
           const HomeScreen()

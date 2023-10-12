@@ -42,12 +42,6 @@ class _MatchScreenState extends State<MatchScreen> {
     //   const MyProfileScreen()
     // ];
 
-    void onTabTapped(int index) {
-      setState(() {
-        currentNavbarIndex = index;
-      });
-    }
-
     return Scaffold(
         body: MatchProfile(
             index: currentNavbarIndex,

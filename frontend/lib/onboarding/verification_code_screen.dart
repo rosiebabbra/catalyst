@@ -9,7 +9,6 @@ import 'phone_number_screen.dart';
 void submitVerificationCode(String verificationCode) async {
   // Create a PhoneAuthCredential with the verification code and ID
   var verificationId;
-  print(verificationCode);
   final PhoneAuthCredential credential = PhoneAuthProvider.credential(
     verificationId: verificationId,
     smsCode: verificationCode,
@@ -19,19 +18,16 @@ void submitVerificationCode(String verificationCode) async {
   final UserCredential userCredential =
       await FirebaseAuth.instance.signInWithCredential(credential);
   final User? user = userCredential.user;
-
-  // Do something with the signed-in user
-  print('User ${user!.uid} signed in');
 }
 
 class VerificationScreen extends StatefulWidget {
   const VerificationScreen({super.key});
 
   @override
-  _VerificationScreenState createState() => _VerificationScreenState();
+  VerificationScreenState createState() => VerificationScreenState();
 }
 
-class _VerificationScreenState extends State<VerificationScreen> {
+class VerificationScreenState extends State<VerificationScreen> {
   var controller = TextEditingController();
 
   @override

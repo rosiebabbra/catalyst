@@ -43,10 +43,10 @@ class ComingSoonScreen extends StatelessWidget {
           ),
         ),
         FadeInText(
-            delayStart: Duration(milliseconds: 2500),
-            animationDuration: Duration(milliseconds: 1200),
+            delayStart: const Duration(milliseconds: 2500),
+            animationDuration: const Duration(milliseconds: 1200),
             child: Padding(
-              padding: EdgeInsets.fromLTRB(25, 0, 25, 0),
+              padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
               child: Text(
                   "Hatched will be available in your region soon. Please enable notifications to receive an alert as soon as it's ready.",
                   textAlign: TextAlign.center,
@@ -54,7 +54,7 @@ class ComingSoonScreen extends StatelessWidget {
             )),
         const SizedBox(height: 45),
         FadeInText(
-          delayStart: Duration(seconds: 4),
+          delayStart: const Duration(seconds: 4),
           child: Container(
             width: 300,
             height: 60,

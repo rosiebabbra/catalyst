@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 import 'package:my_app/utils/text_fade.dart';
 
 class SeeYouSoonScreen extends StatelessWidget {
@@ -13,13 +12,13 @@ class SeeYouSoonScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(height: MediaQuery.of(context).size.height * 0.45),
-          FadeInText(child: const SeeYouSoonMessage()),
-          SizedBox(height: 15),
+          const FadeInText(child: SeeYouSoonMessage()),
+          const SizedBox(height: 15),
           SizedBox(height: MediaQuery.of(context).size.height * 0.3),
           SizedBox(
             height: 25,
             child: FadeInText(
-              delayStart: Duration(seconds: 5),
+              delayStart: const Duration(seconds: 5),
               child: TextButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/');
@@ -55,7 +54,7 @@ class _SeeYouSoonMessageState extends State<SeeYouSoonMessage>
   Widget build(BuildContext context) {
     return ShaderMask(
       shaderCallback: (Rect bounds) {
-        return LinearGradient(
+        return const LinearGradient(
           colors: [
             Color(0xff7301E4),
             Color(0xff0E8BFF),
@@ -67,8 +66,8 @@ class _SeeYouSoonMessageState extends State<SeeYouSoonMessage>
           end: Alignment.centerRight,
         ).createShader(bounds);
       },
-      child: Center(
-        child: const Text(
+      child: const Center(
+        child: Text(
           'hatched',
           style: TextStyle(
             fontSize: 68.0,

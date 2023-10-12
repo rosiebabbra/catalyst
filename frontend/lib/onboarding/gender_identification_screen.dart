@@ -54,9 +54,7 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
       await documentReference.update({
         'gender': genderIdentity,
       });
-    } else {
-      print('No matching records found.');
-    }
+    } else {}
   }
 
   @override

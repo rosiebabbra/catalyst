@@ -40,10 +40,10 @@ class FadeInText extends StatefulWidget {
     this.animationDuration = const Duration(milliseconds: 800),
   });
   @override
-  _FadeInTextState createState() => _FadeInTextState();
+  FadeInTextState createState() => FadeInTextState();
 }
 
-class _FadeInTextState extends State<FadeInText>
+class FadeInTextState extends State<FadeInText>
     with SingleTickerProviderStateMixin {
   // late Animation<Offset> _animationSlide;
 
