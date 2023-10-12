@@ -23,10 +23,10 @@ class PhoneVerification extends StatefulWidget {
   });
 
   @override
-  _PhoneVerificationState createState() => _PhoneVerificationState();
+  PhoneVerificationState createState() => PhoneVerificationState();
 }
 
-class _PhoneVerificationState extends State<PhoneVerification> {
+class PhoneVerificationState extends State<PhoneVerification> {
   bool _isElevated = true;
 
   @override
@@ -55,7 +55,6 @@ class _PhoneVerificationState extends State<PhoneVerification> {
         ElevatedButton(
           child: const Text('Next'),
           onPressed: () async {
-            print('pressed');
             PhoneNumberProvider provider =
                 Provider.of<PhoneNumberProvider>(context, listen: false);
             provider.updateData(UserPhoneNumber(
@@ -137,12 +136,8 @@ Future<void> verifyUserPhoneNumber(
     phoneNumber: phoneNumber, // grab from user input
     verificationCompleted: (PhoneAuthCredential credential) async {
       await auth.signInWithCredential(credential);
-      print('Verification completed');
     },
-    verificationFailed: (FirebaseAuthException e) {
-      print(e.message);
-      print('Verification failed');
-    },
+    verificationFailed: (FirebaseAuthException e) {},
     codeSent: (String verificationId, int? resendToken) async {
       // Update the UI - wait for the user to enter the SMS code
 
@@ -152,11 +147,8 @@ Future<void> verifyUserPhoneNumber(
 
       // Sign the user in (or link) with the credential
       await auth.signInWithCredential(credential);
-      print('Code sent');
     },
-    codeAutoRetrievalTimeout: (String verificationId) {
-      print('Timeout');
-    },
+    codeAutoRetrievalTimeout: (String verificationId) {},
   );
 }
 
@@ -172,7 +164,6 @@ Future<void> createUser(String exitCode, String phoneNumber, String firstName,
   });
   if (response.statusCode == 204) {
     // Handle successful response
-    print('complete');
   } else {
     throw Exception('Failed to create user');
   }

@@ -6,10 +6,10 @@ class StarryBackgroundWidget extends StatefulWidget {
   const StarryBackgroundWidget({Key? key}) : super(key: key);
 
   @override
-  _StarryBackgroundWidgetState createState() => _StarryBackgroundWidgetState();
+  StarryBackgroundWidgetState createState() => StarryBackgroundWidgetState();
 }
 
-class _StarryBackgroundWidgetState extends State<StarryBackgroundWidget>
+class StarryBackgroundWidgetState extends State<StarryBackgroundWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _animation;

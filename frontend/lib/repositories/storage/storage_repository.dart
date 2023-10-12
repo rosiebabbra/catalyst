@@ -23,9 +23,7 @@ class StorageRepository extends BaseStorageRepository {
               image.name,
             ),
           );
-    } catch (err) {
-      print(err);
-    }
+    } catch (err) {}
   }
 
   @override

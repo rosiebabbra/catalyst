@@ -8,7 +8,7 @@ import 'package:my_app/utils/text_fade.dart';
 
 class LocationDisclaimerScreen extends StatefulWidget {
   final versionId;
-  LocationDisclaimerScreen({super.key, required this.versionId});
+  const LocationDisclaimerScreen({super.key, required this.versionId});
 
   @override
   State<LocationDisclaimerScreen> createState() =>
@@ -27,7 +27,7 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
   Widget build(BuildContext context) {
     double latitude = 0;
     double longitude = 0;
-    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     Future<void> getLocation() async {
       try {
@@ -39,9 +39,7 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
           latitude += position.latitude;
           longitude += position.longitude;
         });
-      } catch (e) {
-        print("Error getting location: $e");
-      }
+      } catch (e) {}
     }
 
     Future<void> writeData(
@@ -52,7 +50,7 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
       dynamic valueToWrite,
     ) async {
       try {
-        QuerySnapshot querySnapshot = await _firestore
+        QuerySnapshot querySnapshot = await firestore
             .collection(collection)
             .where(fieldToFilter, isEqualTo: valueToFilter)
             .get();
@@ -62,11 +60,8 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
           DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
           await documentSnapshot.reference
               .update({columnToWrite: valueToWrite});
-          print('Column updated successfully!');
         }
-      } catch (e) {
-        print('Error writing to Firestore: $e');
-      }
+      } catch (e) {}
     }
 
     return Scaffold(

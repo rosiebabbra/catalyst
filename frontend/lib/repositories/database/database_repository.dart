@@ -35,10 +35,7 @@ class DatabaseRepository extends BaseDatabaseRepository {
     return _firebaseFirestore
         .collection('users')
         .doc(user.userId)
-        .update(user.toMap())
-        .then(
-          (value) => print('User document updated.'),
-        );
+        .update(user.toMap());
   }
 
   @override

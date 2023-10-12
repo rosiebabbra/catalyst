@@ -125,7 +125,8 @@ void main() {
     ));
 
     // Render screen
-    await widgetTester.pumpWidget(MaterialApp(home: SignupScreen(), routes: {
+    await widgetTester
+        .pumpWidget(MaterialApp(home: const SignupScreen(), routes: {
       '/onboarding-name': (context) => const NameEntryScreen(),
     }));
     await widgetTester.pumpAndSettle();

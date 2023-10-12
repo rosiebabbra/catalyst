@@ -9,7 +9,7 @@ class PasswordResetLandingScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircleAvatar(
+          const CircleAvatar(
               radius: 30,
               child: Icon(Icons.email_outlined, size: 30),
               foregroundColor: Colors.white,
