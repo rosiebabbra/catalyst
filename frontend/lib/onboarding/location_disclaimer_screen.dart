@@ -79,8 +79,12 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
           style: const TextStyle(fontSize: 24),
         ),
         const FadeInText(
-            child: Icon(Icons.location_on, size: 50, color: Colors.black)),
-        const SizedBox(height: 15),
+            child: CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+                child: Icon(Icons.location_on_outlined, size: 50))),
+        const SizedBox(height: 25),
         const FadeInText(
           delayStart: Duration(milliseconds: 500),
           animationDuration: Duration(seconds: 2),
@@ -107,7 +111,7 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
                     TextSpan(text: 'be shared with other users.'),
                   ],
                 ))),
-        const SizedBox(height: 30),
+        const SizedBox(height: 50),
         FadeInText(
           delayStart: const Duration(seconds: 4),
           animationDuration: const Duration(milliseconds: 1200),

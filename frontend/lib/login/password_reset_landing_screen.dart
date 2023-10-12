@@ -9,10 +9,16 @@ class PasswordResetLandingScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          CircleAvatar(
+              radius: 30,
+              child: Icon(Icons.email_outlined, size: 30),
+              foregroundColor: Colors.white,
+              backgroundColor: Color(0xff7301E4)),
           const Padding(
-            padding: EdgeInsets.all(15.0),
+            padding: EdgeInsets.all(25.0),
             child: Text('Please check your email to reset your password.',
-                style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center),
           ),
           TextButton(
             onPressed: () {

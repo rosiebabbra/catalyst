@@ -36,7 +36,11 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.question_answer, size: 50),
+              CircleAvatar(
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
+                  radius: 30,
+                  child: const Icon(Icons.question_answer_outlined, size: 30)),
               const SizedBox(
                 height: 15,
               ),

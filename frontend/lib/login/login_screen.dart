@@ -16,6 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final shakeKey = GlobalKey<ShakeWidgetState>();
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: Stack(
           children: [
@@ -54,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "We're glad to see you here.",
+                        "We're glad to see you.",
                         style: TextStyle(color: Colors.grey[800], fontSize: 16),
                       )),
                   const SizedBox(height: 25),

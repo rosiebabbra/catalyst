@@ -63,7 +63,12 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.question_answer, size: 50),
+              CircleAvatar(
+                child: const Icon(Icons.cake_outlined, size: 30),
+                radius: 30,
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+              ),
               const SizedBox(
                 height: 15,
               ),
