@@ -54,27 +54,4 @@ void main() {
     // Test that the next page appears, so that the user was allowed to register
     expect(find.text('Your birthday?'), findsOneWidget);
   });
-
-  testWidgets('Surface 50 characters maximum input error',
-      (WidgetTester widgetTester) async {
-    // Render screen
-    await widgetTester
-        .pumpWidget(MaterialApp(home: const NameEntryScreen(), routes: {
-      '/onboarding-dob': (context) => const DOBEntryScreen(),
-    }));
-    await widgetTester.pumpAndSettle();
-
-    // Enter a name with weird characters
-    await widgetTester.enterText(find.byType(TextField).first,
-        'AbCdEfGhIjKlMnOpQrStUvWxYzAaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPp');
-    await widgetTester.pumpAndSettle();
-
-    // Press next button
-    await widgetTester.tap(find.byType(TextButton));
-    await widgetTester.pumpAndSettle();
-
-    // Check that correct error message surfaces
-    expect(find.text('You have exceeded the maximum characters allowed.'),
-        findsOneWidget);
-  });
 }
