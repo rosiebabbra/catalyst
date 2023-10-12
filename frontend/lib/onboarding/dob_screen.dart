@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class DOBEntryScreen extends StatefulWidget {
   const DOBEntryScreen({
@@ -54,6 +55,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
     TextEditingController y2Controller = TextEditingController(text: '');
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: Padding(
           padding: const EdgeInsets.fromLTRB(35, 0, 35, 0),
@@ -210,11 +212,6 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                           showCursor: false,
                           controller: y2Controller,
                           keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            if (value.isNotEmpty) {
-                              FocusScope.of(context).nextFocus();
-                            }
-                          },
                           maxLength: 1,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18),
@@ -260,8 +257,15 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                               child: const Icon(Icons.arrow_forward_ios,
                                   color: Colors.black),
                               onPressed: () {
+                                var yyPrefix = '';
+                                if (y1Controller.text == '0') {
+                                  yyPrefix = '20';
+                                } else {
+                                  yyPrefix = '19';
+                                }
+
                                 var birthDate =
-                                    '${y1Controller.text}${y2Controller.text}${m1Controller.text}${m2Controller.text}${d1Controller.text}${d2Controller.text}';
+                                    '$yyPrefix${y1Controller.text}${y2Controller.text}${m1Controller.text}${m2Controller.text}${d1Controller.text}${d2Controller.text}';
                                 FirebaseAuth auth = FirebaseAuth.instance;
                                 User? currentUser = auth.currentUser;
                                 updateUserInfo(currentUser, birthDate);
