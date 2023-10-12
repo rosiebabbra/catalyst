@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:multiple_search_selection/multiple_search_selection.dart';
 import 'dart:math' as math;
@@ -33,6 +35,30 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
   bool preferNotToSayChecked = false;
   bool otherChecked = false;
 
+  updateUserGender(User? user, List genderIdentity) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('user_id', isEqualTo: user?.uid)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // Assume there's only one matching document (you might need to adjust if multiple documents match)
+      DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+
+      // Get the document reference and update the fields
+      DocumentReference documentReference = FirebaseFirestore.instance
+          .collection('users')
+          .doc(documentSnapshot.id);
+
+      // Update the fields
+      await documentReference.update({
+        'gender': genderIdentity,
+      });
+    } else {
+      print('No matching records found.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +72,7 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
           padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
           child: Align(
               alignment: Alignment.centerLeft,
-              child: Icon(Icons.perm_identity, size: 50)),
+              child: Icon(Icons.diversity_1, size: 50)),
         ),
         const Padding(
           padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
@@ -67,7 +93,7 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
               'This will appear on your profile. You will have the option to change it later if you wish.',
               style: TextStyle(
                 fontSize: 15,
-                color: Colors.grey[600],
+                color: Colors.grey[700],
               )),
         ),
         Padding(
@@ -275,6 +301,29 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
                         child: const Icon(Icons.arrow_forward_ios,
                             color: Colors.black),
                         onPressed: () {
+                          var identityOptions = {
+                            'Male': maleChecked,
+                            'Female': femaleChecked,
+                            'Non-binary': nonBinaryChecked,
+                            'Agender': agenderChecked,
+                            'Gender non-conforming': genderNCChecked,
+                            'Prefer not to say': preferNotToSayChecked,
+                            'Other': otherChecked
+                          };
+
+                          var identities = [];
+                          for (var option in identityOptions.entries) {
+                            if (option.value) {
+                              identities.add(option.key);
+                            }
+                          }
+
+                          // Write identities to db
+                          FirebaseAuth auth = FirebaseAuth.instance;
+                          User? currentUser = auth.currentUser;
+
+                          updateUserGender(currentUser, identities);
+
                           Navigator.pushNamed(context, '/location-disclaimer');
                         },
                       ),
