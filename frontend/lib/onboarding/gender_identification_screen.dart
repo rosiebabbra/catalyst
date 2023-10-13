@@ -34,6 +34,7 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
   bool genderNCChecked = false;
   bool preferNotToSayChecked = false;
   bool otherChecked = false;
+  var errorMsg = '';
 
   updateUserGender(User? user, List genderIdentity) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -63,9 +64,6 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
         body: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(
-          height: 25,
-        ),
         const Padding(
           padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
           child: Align(
@@ -90,7 +88,7 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(25, 5, 25, 25),
+          padding: const EdgeInsets.fromLTRB(25, 5, 25, 10),
           child: Text(
               'This will appear on your profile. You will have the option to change it later if you wish.',
               style: TextStyle(
@@ -275,6 +273,25 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
           height: 10,
         ),
         Padding(
+          padding: const EdgeInsets.fromLTRB(37.5, 0, 0, 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (errorMsg.isNotEmpty)
+                const Icon(
+                  Icons.info_outline,
+                  color: Colors.red,
+                ),
+              if (errorMsg.isNotEmpty) const Text(' '),
+              Expanded(
+                child: Text(errorMsg,
+                    style: const TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.bold)),
+              ),
+            ],
+          ),
+        ),
+        Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 50.0, 0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -324,9 +341,15 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
                           FirebaseAuth auth = FirebaseAuth.instance;
                           User? currentUser = auth.currentUser;
 
-                          updateUserGender(currentUser, identities);
-
-                          Navigator.pushNamed(context, '/location-disclaimer');
+                          if (identities.isNotEmpty) {
+                            updateUserGender(currentUser, identities);
+                            Navigator.pushNamed(
+                                context, '/location-disclaimer');
+                          } else {
+                            setState(() {
+                              errorMsg = 'Please select at least one option.';
+                            });
+                          }
                         },
                       ),
                     ),
