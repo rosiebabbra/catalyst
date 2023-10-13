@@ -104,6 +104,13 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
                 children: [
                   Checkbox(
                     value: femaleChecked,
+                    fillColor: MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.selected)) {
+                        return const Color(0xff33D15F);
+                      }
+                      return Colors.transparent;
+                    }),
                     onChanged: (value) {
                       setState(() {
                         femaleChecked = value!;
@@ -126,6 +133,13 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
                 children: [
                   Checkbox(
                     value: maleChecked,
+                    fillColor: MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.selected)) {
+                        return const Color(0xff33D15F);
+                      }
+                      return Colors.transparent;
+                    }),
                     onChanged: (value) {
                       setState(() {
                         maleChecked = value!;
@@ -148,6 +162,13 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
                 children: [
                   Checkbox(
                     value: nonBinaryChecked,
+                    fillColor: MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.selected)) {
+                        return const Color(0xff33D15F);
+                      }
+                      return Colors.transparent;
+                    }),
                     onChanged: (value) {
                       setState(() {
                         nonBinaryChecked = value!;
@@ -170,6 +191,13 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
                 children: [
                   Checkbox(
                     value: agenderChecked,
+                    fillColor: MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.selected)) {
+                        return const Color(0xff33D15F);
+                      }
+                      return Colors.transparent;
+                    }),
                     onChanged: (value) {
                       setState(() {
                         agenderChecked = value!;
@@ -192,6 +220,13 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
                 children: [
                   Checkbox(
                     value: genderNCChecked,
+                    fillColor: MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.selected)) {
+                        return const Color(0xff33D15F);
+                      }
+                      return Colors.transparent;
+                    }),
                     onChanged: (value) {
                       setState(() {
                         genderNCChecked = value!;
@@ -214,6 +249,13 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
                 children: [
                   Checkbox(
                     value: preferNotToSayChecked,
+                    fillColor: MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.selected)) {
+                        return const Color(0xff33D15F);
+                      }
+                      return Colors.transparent;
+                    }),
                     onChanged: (value) {
                       setState(() {
                         preferNotToSayChecked = value!;
