@@ -118,8 +118,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Checkbox(
+                        side: const BorderSide(
+                            width: 2, color: Color.fromRGBO(97, 97, 97, 1)),
                         checkColor: Colors.white,
-                        // fillColor: MaterialStateProperty.resolveWith(getColor),
+                        fillColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.selected)) {
+                            return const Color(0xff33D15F);
+                          }
+                          return Colors.transparent;
+                        }),
                         value: isChecked,
                         onChanged: (bool? value) {
                           setState(() {
@@ -127,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           });
                         },
                       ),
-                      const Text('Remember me?', style: TextStyle(fontSize: 15))
+                      const Text('Remember me?', style: TextStyle(fontSize: 16))
                     ],
                   ),
                   const SizedBox(height: 25),
