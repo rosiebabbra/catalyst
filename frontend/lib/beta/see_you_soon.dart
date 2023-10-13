@@ -18,7 +18,7 @@ class SeeYouSoonScreen extends StatelessWidget {
           SizedBox(
             height: 25,
             child: FadeInText(
-              delayStart: const Duration(seconds: 5),
+              delayStart: const Duration(seconds: 4),
               child: TextButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/');
@@ -26,9 +26,15 @@ class SeeYouSoonScreen extends StatelessWidget {
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.all(0),
                 ),
-                child: const Text(
-                  "Return to home page",
-                  style: TextStyle(fontSize: 15),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Return to home page ",
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    Icon(Icons.arrow_forward_ios, size: 15),
+                  ],
                 ),
               ),
             ),
