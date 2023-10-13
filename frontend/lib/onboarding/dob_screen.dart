@@ -2,7 +2,6 @@ import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class DOBEntryScreen extends StatefulWidget {
   const DOBEntryScreen({
@@ -41,8 +40,6 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
       await documentReference.update({
         'birthdate': birthDate,
       });
-    } else {
-      print('No matching records found.');
     }
   }
 
