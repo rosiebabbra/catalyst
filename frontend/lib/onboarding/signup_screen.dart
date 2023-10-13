@@ -113,6 +113,13 @@ class _SignupScreenState extends State<SignupScreen> {
                   children: [
                     Checkbox(
                       value: !obscureTextChecked,
+                      fillColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.selected)) {
+                          return const Color(0xff33D15F);
+                        }
+                        return Colors.transparent;
+                      }),
                       onChanged: (value) {
                         setState(() {
                           obscureTextChecked = !obscureTextChecked;
