@@ -28,4 +28,26 @@ void main() {
 
     expect(find.text('Please select at least one option.'), findsOneWidget);
   });
+
+  testWidgets('Navigate to location screen once an option is selected',
+      (WidgetTester widgetTester) async {
+    await widgetTester
+        .pumpWidget(MaterialApp(home: const GenderIDEntryScreen(), routes: {
+      '/location-disclaimer': (context) =>
+          const LocationDisclaimerScreen(versionId: 'beta')
+    }));
+
+    // Click next button without selecting an option
+    await widgetTester.tap(find.byType(Checkbox).first);
+    await widgetTester.pumpAndSettle();
+
+    // Click next button
+    await widgetTester.tap(find.byType(TextButton));
+    await widgetTester.pumpAndSettle();
+
+    expect(
+        find.text(
+            'hatched needs location access to provide you the best experience.'),
+        findsOneWidget);
+  });
 }
