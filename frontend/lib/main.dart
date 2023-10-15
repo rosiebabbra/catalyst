@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:my_app/beta/coming_soon_screen.dart';
+import 'package:my_app/onboarding/location_services_denied_screen.dart';
 import 'package:my_app/onboarding/signup_screen.dart';
 import 'beta/see_you_soon.dart';
 import 'chat/chat_content.dart';
@@ -119,6 +120,8 @@ class BackgroundVideoState extends State<MyApp> {
         '/location-disclaimer': (context) => const LocationDisclaimerScreen(
               versionId: 'beta',
             ),
+        '/location-services-denied': (context) =>
+            const LocationServiceDeniedScreen(versionId: 'beta'),
         '/see-you-soon': (context) => const SeeYouSoonScreen(),
         '/coming-soon': (context) => const ComingSoonScreen(),
         '/forgot-password': (context) => const ForgotPasswordScreen(),
