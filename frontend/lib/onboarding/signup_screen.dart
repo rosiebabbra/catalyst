@@ -329,11 +329,11 @@ class _SignupScreenState extends State<SignupScreen> {
                                 //     !isNotMinPasswordLength &&
                                 //     !passwordsNonMatching &&
                                 //     !isExistingUser) {
-                                // FirebaseAuth.instance
-                                //     .createUserWithEmailAndPassword(
-                                //   email: emailController.text,
-                                //   password: passwordController.text,
-                                // );
+                                FirebaseAuth.instance
+                                    .createUserWithEmailAndPassword(
+                                  email: emailController.text,
+                                  password: passwordController.text,
+                                );
                                 Navigator.pushNamed(
                                     context, '/onboarding-name');
                                 // }
