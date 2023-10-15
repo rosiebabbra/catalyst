@@ -57,7 +57,7 @@ class ComingSoonScreen extends StatelessWidget {
           delayStart: const Duration(seconds: 4),
           child: Container(
             width: 300,
-            height: 55,
+            height: 60,
             decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(30)),
                 shape: BoxShape.rectangle,
