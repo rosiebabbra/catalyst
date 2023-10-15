@@ -4,7 +4,7 @@ import 'package:my_app/utils/text_fade.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class LocationServiceDeniedScreen extends StatefulWidget {
-  final versionId;
+  final String versionId;
   const LocationServiceDeniedScreen({super.key, required this.versionId});
 
   @override
