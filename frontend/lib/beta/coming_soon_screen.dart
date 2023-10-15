@@ -48,16 +48,16 @@ class ComingSoonScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
               child: Text(
-                  "Hatched will be available in your region soon. Please enable notifications to receive an alert as soon as it's ready.",
+                  "hatched will be available in your region soon. Please enable notifications to receive an alert as soon as it's ready.",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, color: Colors.grey[800])),
+                  style: TextStyle(fontSize: 16, color: Colors.grey[800])),
             )),
         const SizedBox(height: 45),
         FadeInText(
           delayStart: const Duration(seconds: 4),
           child: Container(
             width: 300,
-            height: 60,
+            height: 55,
             decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(30)),
                 shape: BoxShape.rectangle,
