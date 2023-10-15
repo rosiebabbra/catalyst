@@ -62,11 +62,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             width: 3.0),
                         borderRadius: BorderRadius.circular(36)),
                     child: const CircleAvatar(
-                      backgroundColor: Colors.transparent,
+                      backgroundColor: Colors.black,
                       radius: 25.0,
                       child: Icon(
-                        Icons.lock,
-                        color: Colors.black,
+                        Icons.lock_outline,
+                        color: Colors.white,
                         size: 36.0,
                       ),
                     ),
@@ -150,7 +150,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             onPressed: () {
                               // TODO: Commenting out since we know this works - set a flag to
                               // not call `_resetPassword` in debug/dev mode, but to call in prod
-                              // _resetPassword(controller.text);
+                              _resetPassword(controller.text);
                               // Make sure entered email exists in firestore
                               Navigator.pushNamed(
                                   context, '/password-reset-landing-page');
