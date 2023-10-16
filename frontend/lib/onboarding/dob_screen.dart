@@ -71,13 +71,14 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
               SizedBox(
                 height: 250,
                 child: CupertinoDatePicker(
+                  key: const Key('dobPicker'),
                   mode: CupertinoDatePickerMode.date,
                   initialDateTime:
-                      DateTime.now().subtract(Duration(days: 18 * 365)),
+                      DateTime.now().subtract(const Duration(days: 18 * 365)),
                   minimumDate:
-                      DateTime.now().subtract(Duration(days: 100 * 365)),
+                      DateTime.now().subtract(const Duration(days: 100 * 365)),
                   maximumDate:
-                      DateTime.now().subtract(Duration(days: 18 * 365)),
+                      DateTime.now().subtract(const Duration(days: 18 * 365)),
                   onDateTimeChanged: (DateTime newDate) {
                     setState(() {
                       selectedDate = newDate;
