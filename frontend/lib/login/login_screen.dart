@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         "We're glad to see you.",
-                        style: TextStyle(color: Colors.grey[800], fontSize: 20),
+                        style: TextStyle(color: Colors.grey[800], fontSize: 16),
                       )),
                   const SizedBox(height: 25),
                   TextField(
