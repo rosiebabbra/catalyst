@@ -46,7 +46,6 @@ class _EthnicityIDEntryScreenState extends State<EthnicityIDEntryScreen> {
       final data = response.body;
       List<dynamic> jsonList = jsonDecode(data);
 
-      print(jsonList);
       setState(() {
         // selectedEthnicities = jsonList;
       });
