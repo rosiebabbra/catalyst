@@ -37,7 +37,7 @@ void main() {
           const LocationDisclaimerScreen(versionId: 'beta')
     }));
 
-    // Click next button without selecting an option
+    // Select first option
     await widgetTester.tap(find.byType(Checkbox).first);
     await widgetTester.pumpAndSettle();
 
@@ -45,9 +45,6 @@ void main() {
     await widgetTester.tap(find.byType(TextButton));
     await widgetTester.pumpAndSettle();
 
-    expect(
-        find.text(
-            'hatched needs location access to provide you the best experience.'),
-        findsOneWidget);
+    expect(find.text('Location access'), findsOneWidget);
   });
 }
