@@ -52,12 +52,12 @@ class ComingSoonScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16, color: Colors.grey[800])),
             )),
-        const SizedBox(height: 45),
+        const SizedBox(height: 40),
         FadeInText(
           delayStart: const Duration(seconds: 4),
           child: Container(
             width: 300,
-            height: 60,
+            height: 55,
             decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(30)),
                 shape: BoxShape.rectangle,
@@ -83,7 +83,7 @@ class ComingSoonScreen extends StatelessWidget {
                     Navigator.pushNamed(context, '/see-you-soon');
                   },
                   child: const Text(
-                    'Enable push notifications',
+                    'Enable notifications',
                     style: TextStyle(color: Colors.black, fontSize: 17),
                   )),
             ),
