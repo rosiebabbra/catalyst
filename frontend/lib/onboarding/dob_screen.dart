@@ -79,7 +79,6 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                   maximumDate:
                       DateTime.now().subtract(Duration(days: 18 * 365)),
                   onDateTimeChanged: (DateTime newDate) {
-                    print(newDate);
                     setState(() {
                       selectedDate = newDate;
                     });
