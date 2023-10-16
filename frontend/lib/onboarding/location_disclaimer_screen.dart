@@ -7,7 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:my_app/utils/text_fade.dart';
 
 class LocationDisclaimerScreen extends StatefulWidget {
-  final versionId;
+  final String versionId;
   const LocationDisclaimerScreen({super.key, required this.versionId});
 
   @override
@@ -17,6 +17,7 @@ class LocationDisclaimerScreen extends StatefulWidget {
 
 class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
   var errorMsg = '';
+  var permission = LocationPermission.always;
 
   @override
   void initState() {
@@ -68,11 +69,6 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
         body: Padding(
       padding: const EdgeInsets.all(25.0),
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text(
-          errorMsg,
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 24),
-        ),
         const FadeInText(
             child: CircleAvatar(
                 radius: 50,
@@ -84,7 +80,7 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
           delayStart: Duration(milliseconds: 500),
           animationDuration: Duration(seconds: 2),
           child: Text(
-            'hatched needs location access to provide you the best experience.',
+            'Location access',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
@@ -94,25 +90,26 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
             delayStart: const Duration(seconds: 3),
             child: RichText(
                 textAlign: TextAlign.center,
-                text: const TextSpan(
-                  text: 'Your precise location will ',
-                  style: TextStyle(fontSize: 18, color: Colors.black),
-                  children: <TextSpan>[
+                text: TextSpan(
+                  text:
+                      'hatched needs location access to provide you the best experience. Your precise location will ',
+                  style: TextStyle(fontSize: 16, color: Colors.grey[800]),
+                  children: const <TextSpan>[
                     TextSpan(
                       text: 'never ',
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     TextSpan(text: 'be shared with other users.'),
                   ],
                 ))),
-        const SizedBox(height: 50),
+        const SizedBox(height: 25),
         FadeInText(
           delayStart: const Duration(seconds: 4),
           animationDuration: const Duration(milliseconds: 1200),
           child: Container(
             width: 300,
-            height: 60,
+            height: 55,
             decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(30)),
                 shape: BoxShape.rectangle,
@@ -134,47 +131,37 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
               child: CupertinoButton(
                   onPressed: () async {
                     var status = await Geolocator.requestPermission();
-                    if (status != LocationPermission.whileInUse) {
-                      setState(() {
-                        errorMsg = 'Please select "Allow While Using App"!';
-                      });
-                    } else {
-                      await getLocation();
+                    if (status == LocationPermission.always ||
+                        status == LocationPermission.whileInUse) {
+                      if (errorMsg.isEmpty) {
+                        await getLocation();
 
-                      final FirebaseAuth auth = FirebaseAuth.instance;
-                      final User? user = auth.currentUser;
-                      final currentUserId = user?.uid;
+                        final FirebaseAuth auth = FirebaseAuth.instance;
+                        final User? user = auth.currentUser;
+                        final currentUserId = user?.uid;
 
-                      writeData('users', 'user_id', currentUserId.toString(),
-                          'location', GeoPoint(latitude, longitude));
+                        writeData('users', 'user_id', currentUserId.toString(),
+                            'location', GeoPoint(latitude, longitude));
 
-                      if (widget.versionId == 'beta') {
-                        Navigator.pushNamed(context, '/coming-soon');
-                      } else {
-                        Navigator.pushNamed(context, '/generating-matches');
+                        if (widget.versionId == 'beta') {
+                          Navigator.pushNamed(context, '/coming-soon');
+                        } else {
+                          Navigator.pushNamed(context, '/generating-matches');
+                        }
                       }
+                    } else {
+                      // TODO: Push to a page that requires the user to
+                      // go to their settings (openAppSettings(); function)
+                      // to set the correct permission setting. Once the page is
+                      // revisited, check that the update has been made and
+                      // proceed user to the '/coming-soon' page.
+                      Navigator.pushNamed(context, '/location-services-denied');
                     }
                   },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 8.0, 4),
-                        child: Transform.rotate(
-                            angle: 0.6,
-                            child: Icon(Icons.navigation,
-                                color: Colors.grey[700])),
-                      ),
-                      const Text(
-                        'Enable location services',
-                        style: TextStyle(color: Colors.black),
-                      )
-                    ],
-                  )),
+                  child: const Text('Enable location access')),
             ),
           ),
-        )
+        ),
       ]),
     ));
   }
