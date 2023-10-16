@@ -103,7 +103,7 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
                     TextSpan(text: 'be shared with other users.'),
                   ],
                 ))),
-        const SizedBox(height: 25),
+        const SizedBox(height: 40),
         FadeInText(
           delayStart: const Duration(seconds: 4),
           animationDuration: const Duration(milliseconds: 1200),
