@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -44,14 +45,17 @@ class _CountdownWidgetState extends State<CountdownWidget> {
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
-      backgroundColor: Color(0xff33D15F),
-      radius: 15,
+      backgroundColor: Colors.grey[800],
+      radius: 13,
       child: CircleAvatar(
-        radius: 13,
+        radius: 11,
         backgroundColor: Colors.white,
         child: Text(
           '$_remainingSeconds',
-          style: const TextStyle(fontSize: 16),
+          style: TextStyle(
+              fontSize: 15,
+              color: Colors.grey[800],
+              fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -112,42 +116,77 @@ class _PasswordResetLandingScreenState
           const SizedBox(height: 10),
           const Text(
             'You will receive a link to reset your password.',
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 16),
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.3),
-          TextButton(
-            onPressed: isButtonClickable ? () => _handleButtonClick() : null,
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.all(0),
-            ),
-            child: const Center(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "Send link again in  ",
-                    style: TextStyle(fontSize: 16),
+          const SizedBox(height: 35),
+          Opacity(
+            opacity: isButtonClickable ? 1.0 : 0.5,
+            child: Container(
+              width: 300,
+              height: 55,
+              decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(30)),
+                  shape: BoxShape.rectangle,
+                  border: Border.all(width: 3.5, color: Colors.transparent),
+                  gradient: const LinearGradient(
+                    transform: GradientRotation(math.pi / 4),
+                    colors: [
+                      Color(0xff7301E4),
+                      Color(0xff0E8BFF),
+                      Color(0xff09CBC8),
+                      Color(0xff33D15F),
+                    ],
+                  )),
+              child: Container(
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                    shape: BoxShape.rectangle,
+                    color: Colors.white),
+                child: TextButton(
+                  onPressed:
+                      isButtonClickable ? () => _handleButtonClick() : null,
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.all(0),
                   ),
-                  CountdownWidget(
-                    seconds: 15,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Resend link ",
+                        style: TextStyle(fontSize: 18, color: Colors.grey[900]),
+                      ),
+                      Visibility(
+                        replacement: Container(),
+                        visible: isButtonClickable ? false : true,
+                        child: const CountdownWidget(
+                          seconds: 15,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.3),
           TextButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/login');
+              Navigator.pushNamed(context, '/');
             },
             style: TextButton.styleFrom(
               padding: const EdgeInsets.all(0),
             ),
             child: const Center(
-              child: Text(
-                "Return to log in",
-                style: TextStyle(fontSize: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Return to home page ",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  Icon(Icons.arrow_forward_ios, size: 15),
+                ],
               ),
             ),
           ),
