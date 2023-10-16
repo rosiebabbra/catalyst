@@ -17,7 +17,7 @@ class LocationServiceDeniedScreenState
   PermissionStatus currentStatus = PermissionStatus.denied;
 
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
