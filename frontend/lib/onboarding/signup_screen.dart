@@ -40,7 +40,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   children: [
                     const Text('Welcome to ',
                         style: TextStyle(
-                            fontSize: 34, fontWeight: FontWeight.bold)),
+                            fontSize: 32, fontWeight: FontWeight.bold)),
                     ShaderMask(
                       shaderCallback: (Rect bounds) {
                         return const LinearGradient(
@@ -58,7 +58,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       child: const Text(
                         'hatched',
                         style: TextStyle(
-                          fontSize: 34.0,
+                          fontSize: 32,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -76,34 +76,56 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              TextField(
-                controller: emailController,
-                decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.email),
-                    labelText: 'Your email',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15)))),
-              ),
-              const SizedBox(height: 25),
-              TextField(
-                controller: passwordController,
-                obscureText: obscureTextChecked,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.password_sharp),
-                  labelText: 'Your password',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                  height: 50,
+                  width: MediaQuery.of(context).size.width * 0.85,
+                  child: TextField(
+                    controller: emailController,
+                    decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.email),
+                        labelText: 'Your email',
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10)))),
+                  ),
                 ),
               ),
-              const SizedBox(height: 25),
-              TextField(
-                controller: passwordReEntryController,
-                obscureText: obscureTextChecked,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.password_sharp),
-                  labelText: 'Re-enter your password',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
+              const SizedBox(height: 15),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                  height: 50,
+                  width: MediaQuery.of(context).size.width * 0.85,
+                  child: TextField(
+                    controller: passwordController,
+                    obscureText: obscureTextChecked,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.password_sharp),
+                      labelText: 'Your password',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                  height: 50,
+                  width: MediaQuery.of(context).size.width * 0.85,
+                  child: TextField(
+                    controller: passwordReEntryController,
+                    obscureText: obscureTextChecked,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.password_sharp),
+                      labelText: 'Re-enter your password',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 25),
