@@ -82,7 +82,7 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
               Flexible(
                 child: Text("Which of the following best describes you?",
                     style:
-                        TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               ),
             ],
           ),
