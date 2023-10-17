@@ -188,7 +188,8 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
 
                                   // Comment for debug mode
                                   if (emptyNameErrorMsg.isEmpty &&
-                                      incorrectlyFormattedErrorMsg.isEmpty) {
+                                      incorrectlyFormattedErrorMsg.isEmpty &&
+                                      isSafeFromSqlInjection(formattedName)) {
                                     updateUserInfo(
                                         currentUser, controller.text);
                                     Navigator.pushNamed(
