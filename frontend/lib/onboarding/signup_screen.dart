@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/onboarding/interests_screen.dart';
+import 'package:my_app/utils/utils.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({
@@ -303,11 +304,6 @@ class _SignupScreenState extends State<SignupScreen> {
                                 var isExistingUser =
                                     await userExists(emailController.text);
 
-                                // Write a function that determines whether
-                                // a user with this email already exists in the db;
-                                // if it does, render an error message that says that
-                                // they have already registered and do not allow
-                                // them to create an account
                                 if (isExistingUser == true) {
                                   setState(() {
                                     userExistsErrorMsg =
@@ -356,7 +352,11 @@ class _SignupScreenState extends State<SignupScreen> {
                                 if (!isInvalidEmail &&
                                     !isNotMinPasswordLength &&
                                     !passwordsNonMatching &&
-                                    !isExistingUser) {
+                                    !isExistingUser &&
+                                    isSafeFromSqlInjection(
+                                        emailController.text) &&
+                                    isSafeFromSqlInjection(
+                                        passwordController.text)) {
                                   FirebaseAuth.instance
                                       .createUserWithEmailAndPassword(
                                     email: emailController.text,
