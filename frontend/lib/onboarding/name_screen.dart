@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:my_app/utils/utils.dart';
 
 class NameEntryScreen extends StatefulWidget {
   const NameEntryScreen({
@@ -18,11 +19,13 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
   TextEditingController controller = TextEditingController();
 
   updateUserInfo(User? currentUser, String firstName) {
-    FirebaseFirestore.instance.collection('users').add({
-      'first_name': firstName,
-      'timestamp': Timestamp.now(),
-      'user_id': currentUser?.uid
-    });
+    if (isSafeFromSqlInjection(firstName)) {
+      FirebaseFirestore.instance.collection('users').add({
+        'first_name': firstName,
+        'timestamp': Timestamp.now(),
+        'user_id': currentUser?.uid
+      });
+    }
   }
 
   @override
