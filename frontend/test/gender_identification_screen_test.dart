@@ -18,8 +18,9 @@ void main() {
       (WidgetTester widgetTester) async {
     await widgetTester
         .pumpWidget(MaterialApp(home: const GenderIDEntryScreen(), routes: {
-      '/location-disclaimer': (context) =>
-          const LocationDisclaimerScreen(versionId: 'beta')
+      '/location-disclaimer': (context) => const LocationDisclaimerScreen(
+            versionId: 'beta',
+          )
     }));
 
     // Click next button without selecting an option
@@ -33,8 +34,9 @@ void main() {
       (WidgetTester widgetTester) async {
     await widgetTester
         .pumpWidget(MaterialApp(home: const GenderIDEntryScreen(), routes: {
-      '/location-disclaimer': (context) =>
-          const LocationDisclaimerScreen(versionId: 'beta')
+      '/location-disclaimer': (context) => const LocationDisclaimerScreen(
+            versionId: 'beta',
+          )
     }));
 
     // Select first option
