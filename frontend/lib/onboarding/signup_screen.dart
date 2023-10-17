@@ -38,9 +38,11 @@ class _SignupScreenState extends State<SignupScreen> {
                 alignment: Alignment.centerLeft,
                 child: Row(
                   children: [
-                    const Text('Welcome to ',
-                        style: TextStyle(
-                            fontSize: 32, fontWeight: FontWeight.bold)),
+                    const Flexible(
+                      child: Text('Welcome to ',
+                          style: TextStyle(
+                              fontSize: 32, fontWeight: FontWeight.bold)),
+                    ),
                     ShaderMask(
                       shaderCallback: (Rect bounds) {
                         return const LinearGradient(
@@ -184,10 +186,12 @@ class _SignupScreenState extends State<SignupScreen> {
                       const Icon(Icons.info_outline,
                           size: 20, color: Colors.red),
                     if (validEmailErrorMsg.isNotEmpty) const Text(' '),
-                    Text(
-                      validEmailErrorMsg,
-                      style: const TextStyle(
-                          color: Colors.red, fontWeight: FontWeight.bold),
+                    Flexible(
+                      child: Text(
+                        validEmailErrorMsg,
+                        style: const TextStyle(
+                            color: Colors.red, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
@@ -202,10 +206,12 @@ class _SignupScreenState extends State<SignupScreen> {
                       const Icon(Icons.info_outline,
                           size: 20, color: Colors.red),
                     if (passwordFormatErrorMsg.isNotEmpty) const Text(' '),
-                    Text(
-                      passwordFormatErrorMsg,
-                      style: const TextStyle(
-                          color: Colors.red, fontWeight: FontWeight.bold),
+                    Flexible(
+                      child: Text(
+                        passwordFormatErrorMsg,
+                        style: const TextStyle(
+                            color: Colors.red, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
