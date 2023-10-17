@@ -347,18 +347,18 @@ class _SignupScreenState extends State<SignupScreen> {
                                 }
 
                                 // Commenting out for debugging
-                                // if (!isInvalidEmail &&
-                                //     !isNotMinPasswordLength &&
-                                //     !passwordsNonMatching &&
-                                //     !isExistingUser) {
-                                FirebaseAuth.instance
-                                    .createUserWithEmailAndPassword(
-                                  email: emailController.text,
-                                  password: passwordController.text,
-                                );
-                                Navigator.pushNamed(
-                                    context, '/onboarding-name');
-                                // }
+                                if (!isInvalidEmail &&
+                                    !isNotMinPasswordLength &&
+                                    !passwordsNonMatching &&
+                                    !isExistingUser) {
+                                  FirebaseAuth.instance
+                                      .createUserWithEmailAndPassword(
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  );
+                                  Navigator.pushNamed(
+                                      context, '/onboarding-name');
+                                }
 
                                 formatShakeKey.currentState?.shake();
                                 matchShakeKey.currentState?.shake();
