@@ -64,26 +64,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: TextField(
                       controller: emailController,
                       decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.email),
                         labelText: 'Your email',
                         labelStyle: TextStyle(color: Colors.grey[600]),
                         border: const OutlineInputBorder(
                             borderRadius:
-                                BorderRadius.all(Radius.circular(12))),
+                                BorderRadius.all(Radius.circular(10))),
                         filled: true,
                         fillColor: Colors.white,
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        emailErrorMessage,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    ),
-                  ),
+                  const SizedBox(height: 15),
                   SizedBox(
                     height: 50,
                     child: Form(
@@ -92,34 +84,48 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.password),
                           labelStyle: TextStyle(color: Colors.grey[600]),
                           labelText: 'Your password',
                           border: const OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(12))),
+                                  BorderRadius.all(Radius.circular(10))),
                           filled: true,
                           fillColor: Colors.white,
                         ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: ShakeWidget(
-                        shakeCount: 3,
-                        shakeOffset: 10,
-                        shakeDuration: const Duration(milliseconds: 500),
-                        key: shakeKey,
+                  if (emailErrorMessage.isNotEmpty)
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  Row(
+                    children: [
+                      Expanded(
                         child: Text(
-                          passwordErrorMessage,
-                          style: const TextStyle(color: Colors.red),
+                          emailErrorMessage,
+                          style: const TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.bold),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                  // const SizedBox(height: 25),
+                  if (passwordErrorMessage.isNotEmpty)
+                    const SizedBox(
+                      height: 5,
+                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          passwordErrorMessage,
+                          style: const TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -174,9 +180,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onPressed: () async {
                                   try {
                                     // TODO: Enable for prod
-                                    // await auth.signInWithEmailAndPassword(
-                                    //     email: emailController.text,
-                                    //     password: passwordController.text);
+                                    final FirebaseAuth auth =
+                                        FirebaseAuth.instance;
+                                    await auth.signInWithEmailAndPassword(
+                                        email: emailController.text,
+                                        password: passwordController.text);
                                     if (widget.versionId == 'beta') {
                                       Navigator.pushNamed(
                                           context, '/coming-soon');
@@ -195,12 +203,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                         // Handle the 'wrong-password' error
                                         setState(() {
                                           passwordErrorMessage =
-                                              'Invalid password';
+                                              'You have entered an invalid username or password';
                                         });
                                       } else if (e.code == 'user-not-found') {
                                         setState(() {
                                           passwordErrorMessage =
-                                              "You haven't registered yet!";
+                                              "Invalid email or password";
                                         });
                                       }
                                     }
