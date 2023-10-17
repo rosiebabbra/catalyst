@@ -15,7 +15,8 @@ class DOBEntryScreen extends StatefulWidget {
 
 class _DOBEntryScreenState extends State<DOBEntryScreen> {
   var errorMsg = '';
-  DateTime selectedDate = DateTime.now();
+  DateTime selectedDate =
+      DateTime.now().subtract(const Duration(days: 18 * 365));
 
   updateUserInfo(User? user, DateTime birthDate) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
