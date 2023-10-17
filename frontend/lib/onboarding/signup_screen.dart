@@ -356,7 +356,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                     isSafeFromSqlInjection(
                                         emailController.text) &&
                                     isSafeFromSqlInjection(
-                                        passwordController.text)) {
+                                        passwordController.text) &&
+                                    isSafeFromSqlInjection(
+                                        passwordReEntryController.text)) {
                                   FirebaseAuth.instance
                                       .createUserWithEmailAndPassword(
                                     email: emailController.text,
