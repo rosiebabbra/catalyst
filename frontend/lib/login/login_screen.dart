@@ -59,19 +59,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(color: Colors.grey[800], fontSize: 16),
                       )),
                   const SizedBox(height: 25),
-                  TextField(
-                    controller: emailController,
-                    decoration: InputDecoration(
-                      labelText: 'Your email',
-                      labelStyle: TextStyle(color: Colors.grey[600]),
-                      border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(12))),
-                      filled: true,
-                      fillColor: Colors.white,
+                  SizedBox(
+                    height: 50,
+                    child: TextField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Your email',
+                        labelStyle: TextStyle(color: Colors.grey[600]),
+                        border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12))),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -80,20 +84,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 15),
-                  Form(
-                    key: formKey,
-                    child: TextFormField(
-                      controller: passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelStyle: TextStyle(color: Colors.grey[600]),
-                        labelText: 'Your password',
-                        border: const OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(12))),
-                        filled: true,
-                        fillColor: Colors.white,
+                  SizedBox(
+                    height: 50,
+                    child: Form(
+                      key: formKey,
+                      child: TextFormField(
+                        controller: passwordController,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          labelStyle: TextStyle(color: Colors.grey[600]),
+                          labelText: 'Your password',
+                          border: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(12))),
+                          filled: true,
+                          fillColor: Colors.white,
+                        ),
                       ),
                     ),
                   ),
