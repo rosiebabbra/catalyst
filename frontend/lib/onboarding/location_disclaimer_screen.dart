@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:math' as math;
@@ -32,9 +33,7 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
 
     Future<void> getLocation() async {
       try {
-        Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high,
-        );
+        Position? position = await Geolocator.getCurrentPosition();
 
         setState(() {
           latitude += position.latitude;
