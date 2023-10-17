@@ -91,7 +91,7 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
                 textAlign: TextAlign.center,
                 text: TextSpan(
                   text:
-                      'hatched needs location access to provide you the best experience. Your precise location will ',
+                      'catalyst needs location access to provide you the best experience. Your precise location will ',
                   style: TextStyle(fontSize: 16, color: Colors.grey[800]),
                   children: const <TextSpan>[
                     TextSpan(

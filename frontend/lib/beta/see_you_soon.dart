@@ -74,7 +74,7 @@ class _SeeYouSoonMessageState extends State<SeeYouSoonMessage>
       },
       child: const Center(
         child: Text(
-          'hatched',
+          'catalyst',
           style: TextStyle(
             fontSize: 68.0,
             fontWeight: FontWeight.bold,
