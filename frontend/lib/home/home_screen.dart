@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 animationDuration: const Duration(milliseconds: 1000),
                 offset: 2,
                 child: Text(
-                  'hatched',
+                  'catalyst',
                   style: GoogleFonts.openSans(
                       fontWeight: FontWeight.w500,
                       fontSize: 72,

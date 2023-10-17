@@ -48,7 +48,7 @@ class ComingSoonScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
               child: Text(
-                  "hatched will be available in your region soon. Please enable notifications to receive an alert as soon as it's ready.",
+                  "catalyst will be available in your region soon. Please enable notifications to receive an alert as soon as it's ready.",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16, color: Colors.grey[800])),
             )),

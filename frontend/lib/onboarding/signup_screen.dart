@@ -56,7 +56,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ).createShader(bounds);
                       },
                       child: const Text(
-                        'hatched',
+                        'catalyst',
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,

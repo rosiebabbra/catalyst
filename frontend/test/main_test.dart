@@ -25,7 +25,7 @@ void main() {
     expect(
         find.descendant(
           of: find.byType(FadeInText),
-          matching: find.text('hatched'),
+          matching: find.text('catalyst'),
         ),
         findsOneWidget);
 
