@@ -167,6 +167,7 @@ class BackgroundVideoState extends State<MyApp> {
     var videoBackground = useVideoBackground(widget.useVideoAsset);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: colorCustom,
