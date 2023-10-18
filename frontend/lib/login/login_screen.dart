@@ -232,7 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Row(
                   // crossAxisAlignment: CrossAxisAlignment.baseline,
                   textBaseline: TextBaseline.alphabetic,
-                  // mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text("Don't have an account yet? ",
                         style: TextStyle(fontSize: 15)),
