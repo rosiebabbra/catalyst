@@ -224,31 +224,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   child: const Text(
                     "Forgot your password?",
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 14),
                   ),
                 ),
               ),
-              Flexible(
-                child: Row(
-                  // crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Don't have an account yet? ",
-                        style: TextStyle(fontSize: 15)),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/onboarding-signup');
-                      },
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.all(0),
-                      ),
-                      child: const Text(
-                        "Register now",
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    )
-                  ],
+              TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/onboarding-signup');
+                },
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.all(0),
+                ),
+                child: Text(
+                  "Don't have an account yet? Register now",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 14),
                 ),
               ),
             ],
