@@ -85,13 +85,25 @@ class HobbyScreenState extends State<HobbyScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              FadeInText(
-                animationDuration: const Duration(milliseconds: 400),
+              ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return const LinearGradient(
+                    colors: [
+                      Color(0xff7301E4),
+                      Color(0xff0E8BFF),
+                      Color(0xff09CBC8),
+                      Color(0xff33D15F),
+                    ],
+                    stops: [0.0, 0.25, 0.5, 0.75],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ).createShader(bounds);
+                },
                 child: Text(hobbies[i]['interest'],
                     style: GoogleFonts.openSans(
-                      fontSize: 32,
-                      color: Colors.black,
-                    ),
+                        fontSize: 40,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center),
               ),
               FadeInText(
@@ -99,7 +111,7 @@ class HobbyScreenState extends State<HobbyScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: Text(hobbies[i]['interest_desc'],
                       style: GoogleFonts.openSans(
-                        fontSize: 14,
+                        fontSize: 16,
                         color: Colors.blueGrey,
                       ),
                       textAlign: TextAlign.center),
@@ -134,7 +146,7 @@ class HobbyScreenState extends State<HobbyScreen> {
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Explore'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.notifications), label: 'Hatches'),
+                icon: Icon(Icons.notifications), label: 'Matches'),
             BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.star), label: 'My Profile'),
