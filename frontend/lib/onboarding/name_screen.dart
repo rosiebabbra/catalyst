@@ -18,13 +18,28 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
   var incorrectlyFormattedErrorMsg = '';
   TextEditingController controller = TextEditingController();
 
-  updateUserInfo(User? currentUser, String firstName) {
+  updateUserInfo(User? currentUser, String firstName) async {
     if (isSafeFromSqlInjection(firstName)) {
-      FirebaseFirestore.instance.collection('users').add({
-        'first_name': firstName,
-        'timestamp': Timestamp.now(),
-        'user_id': currentUser?.uid
-      });
+      // Filter to user's record and write name
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('user_id', isEqualTo: currentUser?.uid)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        // Assume there's only one matching document (you might need to adjust if multiple documents match)
+        DocumentSnapshot documentSnapshot = snapshot.docs.first;
+
+        // Get the document reference and update the fields
+        DocumentReference documentReference = FirebaseFirestore.instance
+            .collection('users')
+            .doc(documentSnapshot.id);
+
+        // Update the fields
+        await documentReference.update({
+          'first_name': firstName,
+        });
+      }
     }
   }
 
