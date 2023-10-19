@@ -196,7 +196,7 @@ class HobbyScreenState extends State<HobbyScreen> {
                         width: 100,
                         child: CircularProgressIndicator(
                           valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.pink),
+                              AlwaysStoppedAnimation<Color>(Color(0xff33D15F)),
                           strokeWidth: 8,
                         )),
                   );
