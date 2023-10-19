@@ -44,7 +44,7 @@ class LocationServiceDeniedScreenState
         if (widget.versionId == 'beta') {
           Navigator.pushNamed(context, '/coming-soon');
         } else {
-          Navigator.pushNamed(context, '/generating-matches');
+          Navigator.pushNamed(context, '/hobbies');
         }
       }
     }
