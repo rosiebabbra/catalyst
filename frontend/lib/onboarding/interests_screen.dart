@@ -209,8 +209,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
                                 _showVisibilityWidget = true;
                               });
                               if (_selectedItems.length > 4) {
-                                Navigator.pushNamed(
-                                    context, '/generating-matches');
+                                Navigator.pushNamed(context, '/hobbies');
                               }
                               shakeKey.currentState?.shake();
                             },
