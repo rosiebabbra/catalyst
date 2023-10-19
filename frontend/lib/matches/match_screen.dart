@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:geocoding/geocoding.dart';
 
 class Interests {
   final String interest;
@@ -64,6 +66,23 @@ class MatchProfile extends StatefulWidget {
 
   @override
   State<MatchProfile> createState() => _MatchProfileState();
+}
+
+Future<String> getCityName(double latitude, double longitude) async {
+  try {
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(latitude, longitude);
+
+    if (placemarks.isNotEmpty) {
+      // Extract the city name from the placemark
+      String city = placemarks[0].locality ?? 'Unknown City';
+      return city;
+    }
+  } catch (e) {
+    print('Error fetching city name: $e');
+  }
+
+  return 'Unknown City';
 }
 
 class _MatchProfileState extends State<MatchProfile> {
@@ -131,14 +150,15 @@ class _MatchProfileState extends State<MatchProfile> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String? userId = auth.currentUser?.uid;
     getUserData(String senderId) async {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('users') // Replace with your collection name
+          .collection('users')
           .where('user_id', isEqualTo: senderId)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        // Iterate through the documents (there may be multiple matching records)
         for (QueryDocumentSnapshot document in querySnapshot.docs) {
           var recordData = document.data() as Map<String, dynamic>;
           return recordData;
@@ -297,55 +317,59 @@ class _MatchProfileState extends State<MatchProfile> {
                                     const Icon(Icons.cake_outlined),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: FutureBuilder(
-                                        future: getUserData(
-                                            'a3IXF0jBT0SkVW53hCIksmfsqAh2'),
-                                        builder: (BuildContext context,
-                                            AsyncSnapshot snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return const CircularProgressIndicator(); // Loading indicator
-                                          }
-                                          if (snapshot.hasError) {
-                                            return Text(
-                                                'Error: ${snapshot.error}');
-                                          }
-                                          if (!snapshot.hasData) {
-                                            return const Text(
-                                                'No sender IDs available.');
-                                          }
+                                      child: (userId != null)
+                                          ? FutureBuilder(
+                                              future: getUserData(userId),
+                                              builder: (BuildContext context,
+                                                  AsyncSnapshot snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return const CircularProgressIndicator(); // Loading indicator
+                                                }
+                                                if (snapshot.hasError) {
+                                                  return Text(
+                                                      'Error: ${snapshot.error}');
+                                                }
+                                                if (!snapshot.hasData) {
+                                                  return const Text(
+                                                      'No sender IDs available.');
+                                                }
 
-                                          String calculateAge(
-                                              Timestamp timestamp) {
-                                            DateTime currentDate =
-                                                DateTime.now();
-                                            DateTime birthDate = DateTime
-                                                .fromMillisecondsSinceEpoch(
-                                                    timestamp
-                                                        .millisecondsSinceEpoch);
-                                            int age = currentDate.year -
-                                                birthDate.year;
+                                                String calculateAge(
+                                                    Timestamp timestamp) {
+                                                  DateTime currentDate =
+                                                      DateTime.now();
+                                                  DateTime birthDate = DateTime
+                                                      .fromMillisecondsSinceEpoch(
+                                                          timestamp
+                                                              .millisecondsSinceEpoch);
+                                                  int age = currentDate.year -
+                                                      birthDate.year;
 
-                                            if (currentDate.month <
-                                                    birthDate.month ||
-                                                (currentDate.month ==
-                                                        birthDate.month &&
-                                                    currentDate.day <
-                                                        birthDate.day)) {
-                                              age--;
-                                            }
+                                                  if (currentDate.month <
+                                                          birthDate.month ||
+                                                      (currentDate.month ==
+                                                              birthDate.month &&
+                                                          currentDate.day <
+                                                              birthDate.day)) {
+                                                    age--;
+                                                  }
 
-                                            return age.toString();
-                                          }
+                                                  return age.toString();
+                                                }
 
-                                          return Text(
-                                              calculateAge(
-                                                  snapshot.data['birthdate']),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.grey[900]));
-                                        },
-                                      ),
+                                                return Text(
+                                                    calculateAge(snapshot
+                                                        .data['birthdate']),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            Colors.grey[900]));
+                                              },
+                                            )
+                                          : const Text(
+                                              'There was an error retrieving your data'),
                                     ),
                                   ],
                                 ),
@@ -465,12 +489,22 @@ class _MatchProfileState extends State<MatchProfile> {
                                             'a3IXF0jBT0SkVW53hCIksmfsqAh2'),
                                         builder: (BuildContext context,
                                             AsyncSnapshot snapshot) {
-                                          return Text(
-                                              snapshot.data['location'].latitude
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.grey[900]));
+                                          return FutureBuilder(
+                                            future: getCityName(
+                                                snapshot
+                                                    .data['location'].latitude,
+                                                snapshot.data['location']
+                                                    .longitude),
+                                            builder: (BuildContext context,
+                                                AsyncSnapshot
+                                                    locationSnapshot) {
+                                              return Text(locationSnapshot.data,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Colors.grey[900]));
+                                            },
+                                          );
                                         },
                                       ),
                                     ),
@@ -504,116 +538,116 @@ class _MatchProfileState extends State<MatchProfile> {
                       ),
                     ),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.85,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(10.0),
-                        bottomRight: Radius.circular(10.0),
-                      ),
-                      border: Border.all(width: 0.5, color: Colors.grey[300]!),
-                    ),
-                    child: const Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                                child: Icon(Icons.work_outline),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(10, 16, 0, 0),
-                                child: Text(
-                                  'Works at Google',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                                child: Icon(Icons.school_outlined),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(10.0, 16, 0, 0),
-                                child: Text(
-                                  'University of California, Berkeley',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                                child: Icon(Icons.home_outlined),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(10, 16, 0, 0),
-                                child: Text(
-                                  'Chicago, IL',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                                child: Icon(Icons.auto_awesome_outlined),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(10, 16, 0, 0),
-                                child: Text(
-                                  'Agnostic',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(15.0, 0, 0, 15),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                                child: Icon(Icons.ballot_outlined),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(10, 16, 0, 0),
-                                child: Text(
-                                  'Liberal',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Container(
+                  //   width: MediaQuery.of(context).size.width * 0.85,
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.white,
+                  //     borderRadius: const BorderRadius.only(
+                  //       bottomLeft: Radius.circular(10.0),
+                  //       bottomRight: Radius.circular(10.0),
+                  //     ),
+                  //     border: Border.all(width: 0.5, color: Colors.grey[300]!),
+                  //   ),
+                  //   child: const Column(
+                  //     children: [
+                  //       Padding(
+                  //         padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                  //         child: Row(
+                  //           crossAxisAlignment: CrossAxisAlignment.center,
+                  //           children: [
+                  //             Padding(
+                  //               padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+                  //               child: Icon(Icons.work_outline),
+                  //             ),
+                  //             Padding(
+                  //               padding: EdgeInsets.fromLTRB(10, 16, 0, 0),
+                  //               child: Text(
+                  //                 'Works at Google',
+                  //                 style: TextStyle(fontWeight: FontWeight.w500),
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //       Padding(
+                  //         padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                  //         child: Row(
+                  //           crossAxisAlignment: CrossAxisAlignment.center,
+                  //           children: [
+                  //             Padding(
+                  //               padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+                  //               child: Icon(Icons.school_outlined),
+                  //             ),
+                  //             Padding(
+                  //               padding: EdgeInsets.fromLTRB(10.0, 16, 0, 0),
+                  //               child: Text(
+                  //                 'University of California, Berkeley',
+                  //                 style: TextStyle(fontWeight: FontWeight.w500),
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //       Padding(
+                  //         padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                  //         child: Row(
+                  //           crossAxisAlignment: CrossAxisAlignment.center,
+                  //           children: [
+                  //             Padding(
+                  //               padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+                  //               child: Icon(Icons.home_outlined),
+                  //             ),
+                  //             Padding(
+                  //               padding: EdgeInsets.fromLTRB(10, 16, 0, 0),
+                  //               child: Text(
+                  //                 'Chicago, IL',
+                  //                 style: TextStyle(fontWeight: FontWeight.w500),
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //       Padding(
+                  //         padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                  //         child: Row(
+                  //           crossAxisAlignment: CrossAxisAlignment.center,
+                  //           children: [
+                  //             Padding(
+                  //               padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+                  //               child: Icon(Icons.auto_awesome_outlined),
+                  //             ),
+                  //             Padding(
+                  //               padding: EdgeInsets.fromLTRB(10, 16, 0, 0),
+                  //               child: Text(
+                  //                 'Agnostic',
+                  //                 style: TextStyle(fontWeight: FontWeight.w500),
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //       Padding(
+                  //         padding: EdgeInsets.fromLTRB(15.0, 0, 0, 15),
+                  //         child: Row(
+                  //           crossAxisAlignment: CrossAxisAlignment.center,
+                  //           children: [
+                  //             Padding(
+                  //               padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+                  //               child: Icon(Icons.ballot_outlined),
+                  //             ),
+                  //             Padding(
+                  //               padding: EdgeInsets.fromLTRB(10, 16, 0, 0),
+                  //               child: Text(
+                  //                 'Liberal',
+                  //                 style: TextStyle(fontWeight: FontWeight.w500),
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   const Padding(
                     padding: EdgeInsets.fromLTRB(35.0, 25, 0, 15),
                     child: Row(
