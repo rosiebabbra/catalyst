@@ -41,8 +41,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     return Scaffold(
         backgroundColor: Colors.white,
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const SizedBox(height: 50),
             const Padding(
               padding: EdgeInsets.fromLTRB(0, 10, 20, 0),
               child: Row(
@@ -52,7 +52,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 15),
             Center(
               child: Stack(children: [
                 Container(
@@ -69,16 +68,17 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 ),
               ]),
             ),
-            const SizedBox(height: 10),
             FutureBuilder(
               future: getCurrentUserName(currentUserId ?? ''),
               builder: (BuildContext context, snapshot) {
-                return Text(snapshot.data.toString(),
-                    style:
-                        const TextStyle(fontSize: 18, fontWeight: FontWeight.w700));
+                return Flexible(
+                  child: Text(snapshot.data.toString(),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          fontSize: 28, fontWeight: FontWeight.w700)),
+                );
               },
             ),
-            const SizedBox(height: 10),
             // SizedBox(
             //   height: 30,
             //   child: TextButton(
@@ -97,7 +97,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             //       child: const Text('Complete my profile',
             //           style: TextStyle(fontSize: 12))),
             // ),
-            const SizedBox(height: 25),
             Container(
                 width: MediaQuery.of(context).size.width * 0.95,
                 decoration: BoxDecoration(
@@ -206,7 +205,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     Icon(Icons.check, color: Color(0xff33D15F)),
                     Icon(Icons.check, color: Colors.grey),
                   ]),
-            ))
+            )),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.15)
           ],
         ));
   }
