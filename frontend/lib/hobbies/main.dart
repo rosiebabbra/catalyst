@@ -208,8 +208,8 @@ class HobbyScreenState extends State<HobbyScreen> {
               overlayBuilder: (context, swipeProperty) {
                 Color swipeColor =
                     swipeProperty.direction == SwipeDirection.right
-                        ? Colors.green
-                        : Colors.red;
+                        ? const Color(0xff33D15F)
+                        : const Color(0xff7301E4);
                 return Opacity(
                     opacity: swipeProperty.swipeProgress.clamp(0, 0.6),
                     child: Container(
