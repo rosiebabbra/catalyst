@@ -12,14 +12,60 @@ class ChatList extends StatefulWidget {
 }
 
 class ChatListState extends State<ChatList> {
-  @override
+  bool throbber = false;
+  String noMessagesErrorMsg = '';
 
-  // TODO: Sort the list by latest message recency
-  // TODO: Render the most recently sent message by either party in the
-  // respective chat in the Message widget
+  Future<Object> getAllSenderIds(String receiverId) async {
+    QuerySnapshot senderIds = await FirebaseFirestore.instance
+        .collection('messages')
+        .where('receiver_id', isEqualTo: receiverId)
+        .get();
+
+    var allSenderIds = [];
+
+    if (senderIds.docs.isNotEmpty) {
+      for (QueryDocumentSnapshot document in senderIds.docs) {
+        var columnData = document.get('sender_id');
+        allSenderIds.add(columnData.toString());
+      }
+      return allSenderIds.toSet().toList();
+    } else {
+      return allSenderIds;
+    }
+  }
+
+  Future<String> getMessagePreview(String receiverId, String senderId) async {
+    QuerySnapshot messagePreviews = await FirebaseFirestore.instance
+        .collection('messages')
+        .where('receiver_id', isEqualTo: receiverId)
+        .where('sender_id', isEqualTo: senderId)
+        .orderBy('timestamp', descending: true)
+        .get();
+
+    var msgPreview = messagePreviews.docs.first['content'];
+    return msgPreview;
+  }
+
+  getUserName(String senderId) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('user_id', isEqualTo: senderId)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      for (QueryDocumentSnapshot document in querySnapshot.docs) {
+        var recordData = document.data() as Map<String, dynamic>;
+        return recordData['first_name'];
+      }
+    } else {
+      return 'Error rendering user name';
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
-    Stream<QuerySnapshot<Object?>> querySnapshot = users.snapshots();
+    Stream<QuerySnapshot<Object?>> userSnapshots = users.snapshots();
 
     return Scaffold(
         body: Column(
@@ -32,9 +78,16 @@ class ChatListState extends State<ChatList> {
           'Messages',
           style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
         )),
+        if (throbber) const CircularProgressIndicator(),
+        if (noMessagesErrorMsg.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
+            child: Text(noMessagesErrorMsg.toString(),
+                style: const TextStyle(fontSize: 18)),
+          ),
         Flexible(
           child: StreamBuilder(
-              stream: querySnapshot,
+              stream: userSnapshots,
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -51,47 +104,10 @@ class ChatListState extends State<ChatList> {
                 var inboxList = snapshot.data!.docs.toList();
                 return ListView(
                     children: inboxList.map((DocumentSnapshot document) {
-                  Future<Object> getAllSenderIds(String receiverId) async {
-                    //get all sender ids where receiver id is current user
-                    QuerySnapshot senderIds = await FirebaseFirestore.instance
-                        .collection('messages')
-                        .where('receiver_id', isEqualTo: receiverId)
-                        .get();
-
-                    var allSenderIds = [];
-
-                    if (senderIds.docs.isNotEmpty) {
-                      // Iterate through the documents and access data from a specific column
-                      for (QueryDocumentSnapshot document in senderIds.docs) {
-                        var columnData = document
-                            .get('sender_id'); // Replace with your column name
-                        allSenderIds.add(columnData.toString());
-                      }
-                      return allSenderIds.toSet().toList();
-                    } else {}
-
-                    return senderIds;
-                  }
-
-                  Future<String> getMessagePreview(
-                      String receiverId, String senderId) async {
-                    // need to be able to differentiate by sender_id
-                    QuerySnapshot messagePreviews = await FirebaseFirestore
-                        .instance
-                        .collection('messages')
-                        .where('receiver_id', isEqualTo: receiverId)
-                        .where('sender_id', isEqualTo: senderId)
-                        .orderBy('timestamp', descending: true)
-                        .get();
-
-                    var msgPreview = messagePreviews.docs.first['content'];
-                    return msgPreview;
-                  }
-
                   FirebaseAuth auth = FirebaseAuth.instance;
                   User? user = auth.currentUser;
 
-                  var senderIds = getAllSenderIds(user.toString());
+                  var senderIds = getAllSenderIds(user!.uid);
 
                   return FutureBuilder<Object>(
                       future: senderIds,
@@ -99,88 +115,77 @@ class ChatListState extends State<ChatList> {
                           AsyncSnapshot senderIdSnapshot) {
                         if (senderIdSnapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const CircularProgressIndicator(); // Loading indicator
+                          throbber = true;
                         }
                         if (senderIdSnapshot.hasError) {
                           return Text('Error: ${senderIdSnapshot.error}');
                         }
-                        if (!senderIdSnapshot.hasData) {
-                          return const Text('No sender IDs available.');
+                        if (senderIdSnapshot.data == null) {
+                          noMessagesErrorMsg = 'You have no messages yet!';
                         }
+                        throbber = false;
 
                         return SizedBox(
                           height: MediaQuery.of(context).size.height * 0.75,
-                          child: ListView.builder(
-                            itemCount: senderIdSnapshot.data.length,
-                            itemBuilder: (BuildContext context, index) {
-                              var messagePreview = getMessagePreview(
-                                  'a3IXF0jBT0SkVW53hCIksmfsqAh2',
-                                  senderIdSnapshot.data[index]);
-                              return FutureBuilder(
-                                future: messagePreview,
-                                builder: (BuildContext context,
-                                    AsyncSnapshot msgPreviewSnapshot) {
-                                  if (msgPreviewSnapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const CircularProgressIndicator(); // Loading indicator
-                                  }
-                                  if (msgPreviewSnapshot.hasError) {
-                                    return Text(
-                                        'Error: ${msgPreviewSnapshot.error}');
-                                  }
-                                  if (!msgPreviewSnapshot.hasData) {
-                                    return const Text(
-                                        'No sender IDs available.');
-                                  }
+                          child: (senderIdSnapshot.data != null)
+                              ? ListView.builder(
+                                  itemCount: (senderIdSnapshot.data != null)
+                                      ? senderIdSnapshot.data.length
+                                      : 1,
+                                  itemBuilder: (BuildContext context, index) {
+                                    FirebaseAuth auth = FirebaseAuth.instance;
+                                    User? user = auth.currentUser;
 
-                                  getUserName(String senderId) async {
-                                    QuerySnapshot querySnapshot =
-                                        await FirebaseFirestore.instance
-                                            .collection(
-                                                'users') // Replace with your collection name
-                                            .where('user_id',
-                                                isEqualTo: senderId)
-                                            .get();
+                                    var messagePreview = getMessagePreview(
+                                        user!.uid,
+                                        senderIdSnapshot.data[index]);
+                                    return FutureBuilder(
+                                      future: messagePreview,
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot msgPreviewSnapshot) {
+                                        if (msgPreviewSnapshot
+                                                .connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const CircularProgressIndicator();
+                                        }
+                                        if (msgPreviewSnapshot.hasError) {
+                                          return Text(
+                                              'Error: ${msgPreviewSnapshot.error}');
+                                        }
+                                        if (!msgPreviewSnapshot.hasData) {
+                                          return const Text(
+                                              'No sender IDs available.');
+                                        }
 
-                                    if (querySnapshot.docs.isNotEmpty) {
-                                      // Iterate through the documents (there may be multiple matching records)
-                                      for (QueryDocumentSnapshot document
-                                          in querySnapshot.docs) {
-                                        var recordData = document.data()
-                                            as Map<String, dynamic>;
-                                        return recordData['first_name'];
-                                      }
-                                    } else {
-                                      return 'Error rendering user name';
-                                    }
-                                  }
-
-                                  return FutureBuilder(
-                                    future: getUserName(
-                                        senderIdSnapshot.data[index]),
-                                    builder:
-                                        (BuildContext context, nameSnapshot) {
-                                      if (nameSnapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return const CircularProgressIndicator(); // Loading indicator
-                                      }
-                                      if (nameSnapshot.hasError) {
-                                        return Text(
-                                            'Error: ${nameSnapshot.error}');
-                                      }
-                                      if (!nameSnapshot.hasData) {
-                                        return const Text(
-                                            'No sender IDs available.');
-                                      }
-                                      return Message(
-                                          msgPreview: msgPreviewSnapshot.data,
-                                          name: nameSnapshot.data);
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                          ),
+                                        return FutureBuilder(
+                                          future: getUserName(
+                                              senderIdSnapshot.data[index]),
+                                          builder: (BuildContext context,
+                                              nameSnapshot) {
+                                            if (nameSnapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const CircularProgressIndicator();
+                                            }
+                                            if (nameSnapshot.hasError) {
+                                              return Text(
+                                                  'Error: ${nameSnapshot.error}');
+                                            }
+                                            if (!nameSnapshot.hasData) {
+                                              return const Text(
+                                                  'No sender IDs available.');
+                                            }
+                                            return Message(
+                                                msgPreview:
+                                                    msgPreviewSnapshot.data,
+                                                name: nameSnapshot.data
+                                                    .toString());
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                )
+                              : const Text(''),
                         );
                       });
                 }).toList());
