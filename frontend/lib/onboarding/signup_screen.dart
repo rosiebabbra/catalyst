@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/onboarding/interests_screen.dart';
@@ -18,6 +19,7 @@ class _SignupScreenState extends State<SignupScreen> {
   var passwordFormatErrorMsg = '';
   var validEmailErrorMsg = '';
   var userExistsErrorMsg = '';
+  var signUpErrorMsg = '';
   final formatShakeKey = GlobalKey<ShakeWidgetState>();
   final matchShakeKey = GlobalKey<ShakeWidgetState>();
   var obscureTextChecked = true;
@@ -25,6 +27,13 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordReEntryController = TextEditingController();
+
+  updateUserInfo(String userId, String email) {
+    if (isSafeFromSqlInjection(userId) && isSafeFromSqlInjection(email)) {
+      FirebaseFirestore.instance.collection('users').add(
+          {'user_id': userId, 'email': email, 'created_at': DateTime.now()});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -235,6 +244,18 @@ class _SignupScreenState extends State<SignupScreen> {
                   ],
                 ),
               ),
+              Align(
+                child: Row(
+                  children: [
+                    if (signUpErrorMsg.isNotEmpty) const SizedBox(height: 5),
+                    if (signUpErrorMsg.isNotEmpty)
+                      const Icon(Icons.info_outline,
+                          size: 20, color: Colors.red),
+                    if (signUpErrorMsg.isNotEmpty) const Text(' '),
+                    Text(signUpErrorMsg),
+                  ],
+                ),
+              ),
               const SizedBox(height: 25),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 32.0, 0),
@@ -359,11 +380,23 @@ class _SignupScreenState extends State<SignupScreen> {
                                         passwordController.text) &&
                                     isSafeFromSqlInjection(
                                         passwordReEntryController.text)) {
-                                  FirebaseAuth.instance
+                                  UserCredential credential = await FirebaseAuth
+                                      .instance
                                       .createUserWithEmailAndPassword(
                                     email: emailController.text,
                                     password: passwordController.text,
                                   );
+                                  if (credential.user != null) {
+                                    updateUserInfo(
+                                        credential.user!.uid.toString(),
+                                        emailController.text);
+                                  } else {
+                                    setState(() {
+                                      signUpErrorMsg =
+                                          'There was an error creating your account.';
+                                    });
+                                  }
+
                                   Navigator.pushNamed(
                                       context, '/onboarding-name');
                                 }
