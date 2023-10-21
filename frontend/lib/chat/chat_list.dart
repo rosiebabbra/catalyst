@@ -220,7 +220,10 @@ class Message extends StatelessWidget {
         // Navigator.pushNamed(context, '/chat-content-$senderId-to-$receiverId');
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const ChatContent()),
+          MaterialPageRoute(
+              builder: (context) => const ChatContent(
+                    receiverId: '4',
+                  )),
         );
       },
       child: Container(
