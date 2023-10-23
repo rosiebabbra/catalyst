@@ -184,30 +184,39 @@ class _MatchProfileState extends State<MatchProfile> {
                     padding: const EdgeInsets.fromLTRB(35.0, 80, 0, 25),
                     child: Row(
                       children: [
-                        FutureBuilder(
-                          future: getUserData('a3IXF0jBT0SkVW53hCIksmfsqAh2'),
-                          builder:
-                              (BuildContext context, AsyncSnapshot snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const CircularProgressIndicator(); // Loading indicator
-                            }
-                            if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
-                            }
-                            if (!snapshot.hasData) {
-                              return const Text('No sender IDs available.');
-                            }
+                        (userId != null)
+                            ? FutureBuilder(
+                                future: getUserData(userId),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const CircularProgressIndicator(); // Loading indicator
+                                  }
+                                  if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  }
+                                  if (!snapshot.hasData) {
+                                    return const Text(
+                                        'No sender IDs available.');
+                                  }
 
-                            return Text(
-                              snapshot.data['first_name'],
-                              style: const TextStyle(
-                                  fontSize: 35,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
-                            );
-                          },
-                        ),
+                                  return Text(
+                                    snapshot.data['first_name'],
+                                    style: const TextStyle(
+                                        fontSize: 35,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
+                                  );
+                                },
+                              )
+                            : const Text(
+                                'There was an error retrieving your information.',
+                                style: TextStyle(
+                                    fontSize: 35,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
+                              )
                       ],
                     ),
                   ),
