@@ -75,13 +75,13 @@ class ChatListState extends State<ChatList> {
         ),
         const Center(
             child: Text(
-          'Messages',
+          'Inbox',
           style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
         )),
-        if (throbber) const CircularProgressIndicator(),
+        if (throbber) const CircularProgressIndicator(color: Color(0xff33D15F)),
         if (noMessagesErrorMsg.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: Text(noMessagesErrorMsg.toString(),
                 style: const TextStyle(fontSize: 18)),
           ),
@@ -92,7 +92,8 @@ class ChatListState extends State<ChatList> {
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   // While waiting for data, show a loading indicator
-                  return const CircularProgressIndicator();
+                  return const CircularProgressIndicator(
+                      color: Color(0xff33D15F));
                 } else if (snapshot.hasError) {
                   // If an error occurs, display an error message
                   return Text('Error: ${snapshot.error}');
@@ -124,6 +125,7 @@ class ChatListState extends State<ChatList> {
                           noMessagesErrorMsg = 'You have no messages yet!';
                         }
                         throbber = false;
+                        noMessagesErrorMsg = '';
 
                         return SizedBox(
                           height: MediaQuery.of(context).size.height * 0.75,
@@ -146,7 +148,8 @@ class ChatListState extends State<ChatList> {
                                         if (msgPreviewSnapshot
                                                 .connectionState ==
                                             ConnectionState.waiting) {
-                                          return const CircularProgressIndicator();
+                                          return const CircularProgressIndicator(
+                                              color: Color(0xff33D15F));
                                         }
                                         if (msgPreviewSnapshot.hasError) {
                                           return Text(
@@ -164,7 +167,14 @@ class ChatListState extends State<ChatList> {
                                               nameSnapshot) {
                                             if (nameSnapshot.connectionState ==
                                                 ConnectionState.waiting) {
-                                              return const CircularProgressIndicator();
+                                              return const SizedBox(
+                                                height: 25,
+                                                width: 25,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                        color:
+                                                            Color(0xff33D15F)),
+                                              );
                                             }
                                             if (nameSnapshot.hasError) {
                                               return Text(
@@ -242,7 +252,8 @@ class Message extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: const Color(0xff7c94b6),
                   image: const DecorationImage(
-                    image: AssetImage('assets/images/erin.jpg'),
+                    image: NetworkImage(
+                        'https://firebasestorage.googleapis.com/v0/b/dating-appp-2d438.appspot.com/o/profPic2.jpg?alt=media&token=fc59eb71-5a67-4a0a-a22e-e58f24ec063f&_gl=1*t89ldm*_ga*MTIzNDIwNTQ4MC4xNjgyODkxMzk2*_ga_CW55HF8NVT*MTY5ODAyOTY1MS4xMzAuMS4xNjk4MDI5NzAyLjkuMC4w'),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: const BorderRadius.all(Radius.circular(50.0)),
