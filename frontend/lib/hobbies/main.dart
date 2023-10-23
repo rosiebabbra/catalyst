@@ -1,14 +1,10 @@
-// ignore_for_file: must_be_immutable
-
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:my_app/chat/chat_list.dart';
 import 'package:my_app/matches/match_screen.dart';
 import 'package:my_app/my_profile/my_profile_screen.dart';
 import 'package:swipable_stack/swipable_stack.dart';
-import 'dart:convert';
 
 import '../utils/text_fade.dart';
 
@@ -22,14 +18,19 @@ class HobbyScreen extends StatefulWidget {
 class InterestModel {
   final String interest;
   final String interestDesc;
+  final int interestId;
 
-  InterestModel({required this.interest, required this.interestDesc});
+  InterestModel(
+      {required this.interest,
+      required this.interestDesc,
+      required this.interestId});
 
   factory InterestModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
     return InterestModel(
       interest: snapshot.data()?['interest'] ?? '',
       interestDesc: snapshot.data()?['interest_desc'] ?? '',
+      interestId: snapshot.data()?['interest_id'] ?? '',
     );
   }
 }
@@ -73,8 +74,6 @@ class HobbyScreenState extends State<HobbyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool devMode = (Platform.environment['DEV_MODE'] == null) ? false : true;
-
     void onTabTapped(int index) {
       setState(() {
         currentNavbarIndex = index;
@@ -82,7 +81,7 @@ class HobbyScreenState extends State<HobbyScreen> {
     }
 
     final List<Widget> pages = [
-      interestSwipe(context, []),
+      interestSwipe(context),
       const MatchScreen(userId: 1),
       const ChatList(),
       const MyProfileScreen()
@@ -103,17 +102,10 @@ class HobbyScreenState extends State<HobbyScreen> {
           ],
         ),
         backgroundColor: Colors.white,
-        appBar: devMode
-            ? AppBar(
-                elevation: 0,
-                foregroundColor: Colors.black,
-                backgroundColor: Colors.white,
-              )
-            : null,
         body: pages[currentNavbarIndex]);
   }
 
-  interestSwipe(BuildContext context, List<Card> stack) {
+  interestSwipe(BuildContext context) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance.collection('interests').snapshots(),
       builder: (context,
@@ -132,31 +124,114 @@ class HobbyScreenState extends State<HobbyScreen> {
                 .toList() ??
             [];
 
+        writeInterest(User? user, String table, int interestId) async {
+          QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+              .collection(table)
+              .where('user_id', isEqualTo: user?.uid)
+              .get();
+
+          if (querySnapshot.docs.isNotEmpty) {
+            DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+
+            DocumentReference documentReference = FirebaseFirestore.instance
+                .collection(table)
+                .doc(documentSnapshot.id);
+
+            await documentReference.update({
+              'interest_id': FieldValue.arrayUnion([interestId]),
+              'user_id': user?.uid
+            });
+          } else {
+            FirebaseFirestore.instance.collection(table).add({
+              'user_id': user?.uid,
+              'interest_id': [interestId]
+            });
+          }
+        }
+
+        if (data.isEmpty) {
+          return const UnconstrainedBox(
+            child: SizedBox(
+                height: 100,
+                width: 100,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.pink),
+                  strokeWidth: 8,
+                )),
+          );
+        }
+
         return SwipableStack(
+          horizontalSwipeThreshold: 0.5,
+          verticalSwipeThreshold: 0.8,
           itemCount: data.length,
+          stackClipBehaviour: Clip.none,
+          overlayBuilder: (context, swipeProperty) {
+            Color swipeColor = swipeProperty.direction == SwipeDirection.right
+                ? const Color(0xff33D15F)
+                : const Color(0xff7301E4);
+            return Opacity(
+                opacity: swipeProperty.swipeProgress.clamp(0, 0.6),
+                child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    color: swipeColor));
+          },
           builder: (context, properties) {
             final int index = properties.index;
-
-            // try {
-            //   index = properties.index % hobbies.length;
-            // } catch (e) {
-            //   index = 0;
-            // }
 
             if (index >= data.length) {
               return Container();
             }
 
             return Card(
-              child: ListTile(
-                title: Text(data[index].interestDesc),
-                subtitle: Text(data[index].interest),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ShaderMask(
+                      shaderCallback: (Rect bounds) {
+                        return const LinearGradient(
+                          colors: [
+                            Color(0xff7301E4),
+                            Color(0xff0E8BFF),
+                            Color(0xff09CBC8),
+                            Color(0xff33D15F),
+                          ],
+                          stops: [0.0, 0.25, 0.5, 0.75],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                        ).createShader(bounds);
+                      },
+                      child: FittedBox(
+                        child: Text(data[index].interest,
+                            style: const TextStyle(
+                              fontSize: 48.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            )),
+                      )),
+                  FadeInText(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(data[index].interestDesc,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 16.0,
+                          )),
+                    ),
+                  )
+                ],
               ),
             );
           },
           onSwipeCompleted: (index, direction) {
-            // Handle swipe completion if needed
-            print('Swiped $direction on item $index');
+            final FirebaseAuth auth = FirebaseAuth.instance;
+            final User? user = auth.currentUser;
+            if (direction == SwipeDirection.right) {
+              writeInterest(user, 'selected_interests', data[index].interestId);
+            } else if (direction == SwipeDirection.left) {
+              writeInterest(user, 'declined_interests', data[index].interestId);
+            }
           },
         );
       },
