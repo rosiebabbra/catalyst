@@ -32,17 +32,6 @@ class _MatchScreenState extends State<MatchScreen> {
   @override
   Widget build(BuildContext context) {
     final PageController controller = PageController();
-    // final List<Widget> pages = [
-    //   MatchProfile(
-    //       index: currentNavbarIndex,
-    //       controller: controller,
-    //       interests: interests),
-    //   const LikeScreen(
-    //     userId: 1,
-    //   ),
-    //   const ChatList(),
-    //   const MyProfileScreen()
-    // ];
 
     return Scaffold(
         body: MatchProfile(
@@ -88,8 +77,8 @@ class _MatchProfileState extends State<MatchProfile> {
   final _controller = ScrollController();
   double _visiblePercent = 0.0;
   final _scrollSubject = BehaviorSubject<double>.seeded(0);
-  int _currentPage = 0; // initialize to the first page
-  final _pageWidth = 300.0; // replace with the width of your pages
+  int _currentPage = 0;
+  final _pageWidth = 300.0;
   List<String> images = [
     'assets/images/profPic.jpg',
     'assets/images/profPic2.jpg',
@@ -190,7 +179,8 @@ class _MatchProfileState extends State<MatchProfile> {
                                     AsyncSnapshot snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return const CircularProgressIndicator(); // Loading indicator
+                                    return const CircularProgressIndicator(
+                                        color: Color(0xff33D15F));
                                   }
                                   if (snapshot.hasError) {
                                     return Text('Error: ${snapshot.error}');
@@ -332,7 +322,9 @@ class _MatchProfileState extends State<MatchProfile> {
                                                   AsyncSnapshot snapshot) {
                                                 if (snapshot.connectionState ==
                                                     ConnectionState.waiting) {
-                                                  return const CircularProgressIndicator(); // Loading indicator
+                                                  return const CircularProgressIndicator(
+                                                      color: Color(
+                                                          0xff33D15F)); // Loading indicator
                                                 }
                                                 if (snapshot.hasError) {
                                                   return Text(
@@ -400,17 +392,37 @@ class _MatchProfileState extends State<MatchProfile> {
                                     const Icon(Icons.person_outline),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: FutureBuilder(
-                                        future: getUserData(
-                                            'a3IXF0jBT0SkVW53hCIksmfsqAh2'),
-                                        builder: (BuildContext context,
-                                            AsyncSnapshot snapshot) {
-                                          return Text(snapshot.data['gender'],
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.grey[900]));
-                                        },
-                                      ),
+                                      child: (userId != null)
+                                          ? FutureBuilder(
+                                              future: getUserData(userId),
+                                              builder: (BuildContext context,
+                                                  AsyncSnapshot snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return const CircularProgressIndicator(
+                                                      color: Color(
+                                                          0xff33D15F)); // Loading indicator
+                                                }
+                                                if (snapshot.hasError) {
+                                                  return Text(
+                                                      'Error: ${snapshot.error}');
+                                                }
+                                                if (!snapshot.hasData) {
+                                                  return const Text(
+                                                      'No sender IDs available.');
+                                                } else {
+                                                  return Text(
+                                                      snapshot.data['gender'],
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: Colors
+                                                              .grey[900]));
+                                                }
+                                              },
+                                            )
+                                          : const Text(
+                                              'There was an error retrieving this information.'),
                                     ),
                                   ],
                                 ),
@@ -496,23 +508,48 @@ class _MatchProfileState extends State<MatchProfile> {
                                         future: getUserData(
                                             'a3IXF0jBT0SkVW53hCIksmfsqAh2'),
                                         builder: (BuildContext context,
-                                            AsyncSnapshot snapshot) {
-                                          return FutureBuilder(
-                                            future: getCityName(
-                                                snapshot
+                                            AsyncSnapshot locationSnapshot) {
+                                          if (locationSnapshot
+                                                  .connectionState ==
+                                              ConnectionState.waiting) {
+                                            return const CircularProgressIndicator(
+                                                color: Color(
+                                                    0xff33D15F)); // Or any loading indicator
+                                          } else if (locationSnapshot
+                                              .hasError) {
+                                            return Text(
+                                                'Error: ${locationSnapshot.error}');
+                                          } else if (!locationSnapshot
+                                                  .hasData ||
+                                              locationSnapshot.data == null) {
+                                            return Text('No data available');
+                                          } else {
+                                            var location = getCityName(
+                                                locationSnapshot
                                                     .data['location'].latitude,
-                                                snapshot.data['location']
-                                                    .longitude),
-                                            builder: (BuildContext context,
-                                                AsyncSnapshot
-                                                    locationSnapshot) {
-                                              return Text(locationSnapshot.data,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.grey[900]));
-                                            },
-                                          );
+                                                locationSnapshot
+                                                    .data['location']
+                                                    .longitude);
+                                            return FutureBuilder(
+                                              future: location,
+                                              builder: (BuildContext context,
+                                                  AsyncSnapshot
+                                                      locationSnapshot) {
+                                                if (!locationSnapshot.hasData) {
+                                                  return const CircularProgressIndicator(
+                                                      color: Color(0xff33D15F));
+                                                } else {
+                                                  return Text(
+                                                      locationSnapshot.data,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: Colors
+                                                              .grey[900]));
+                                                }
+                                              },
+                                            );
+                                          }
                                         },
                                       ),
                                     ),
