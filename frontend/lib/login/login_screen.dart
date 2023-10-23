@@ -174,11 +174,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: Colors.black),
                             onPressed: () async {
                               try {
-                                // TODO: Enable for prod
-                                final FirebaseAuth auth = FirebaseAuth.instance;
-                                await auth.signInWithEmailAndPassword(
-                                    email: emailController.text,
-                                    password: passwordController.text);
+                                // TODO: UNCOMMENT FOR RELEASE
+                                // final FirebaseAuth auth = FirebaseAuth.instance;
+                                // await auth.signInWithEmailAndPassword(
+                                //     email: emailController.text,
+                                //     password: passwordController.text);
                                 if (widget.versionId == 'beta') {
                                   Navigator.pushNamed(context, '/coming-soon');
                                 } else {
