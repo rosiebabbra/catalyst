@@ -74,7 +74,6 @@ Future<String> getCityName(double latitude, double longitude) async {
         await placemarkFromCoordinates(latitude, longitude);
 
     if (placemarks.isNotEmpty) {
-      // Extract the city name from the placemark
       String city = placemarks[0].locality ?? 'Unknown City';
       return city;
     }
