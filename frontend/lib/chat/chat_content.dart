@@ -3,37 +3,21 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-class ColorConstants {
-  static const themeColor = Color(0xfff5a623);
-  static Map<int, Color> swatchColor = {
-    50: themeColor.withOpacity(0.1),
-    100: themeColor.withOpacity(0.2),
-    200: themeColor.withOpacity(0.3),
-    300: themeColor.withOpacity(0.4),
-    400: themeColor.withOpacity(0.5),
-    500: themeColor.withOpacity(0.6),
-    600: themeColor.withOpacity(0.7),
-    700: themeColor.withOpacity(0.8),
-    800: themeColor.withOpacity(0.9),
-    900: themeColor.withOpacity(1),
-  };
-  static const primaryColor = Color(0xff203152);
-  static const greyColor = Color(0xffaeaeae);
-  static const greyColor2 = Color(0xffE8E8E8);
-}
+import 'package:intl/intl.dart';
 
 class ChatContent extends StatefulWidget {
-  const ChatContent({Key? key}) : super(key: key);
+  final String? receiverId;
+  const ChatContent({Key? key, this.receiverId}) : super(key: key);
 
   @override
   State<ChatContent> createState() => ChatContentState();
 }
 
 class ChatContentState extends State<ChatContent> {
-  // TODO: Query for the name associated with the senderId; hardcoding until it's build
-  // getSenderName() {}
   String senderName = 'Jack';
+  String timestamp = '';
+  bool timestampDisplayed = false;
+  int tappedIndex = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -43,66 +27,120 @@ class ChatContentState extends State<ChatContent> {
             .orderBy('timestamp', descending: false)
             .snapshots();
     TextEditingController messageController = TextEditingController();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+    final currentUserId = user?.uid;
     return Scaffold(
-        appBar: AppBar(title: Text(senderName)),
+        appBar: AppBar(
+          shadowColor: Colors.white,
+          title: Text(senderName,
+              style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold)),
+          backgroundColor: Colors.grey[100],
+          foregroundColor: Colors.black,
+        ),
         body: Column(children: [
-          StreamBuilder(
-              stream: querySnapshot,
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return const Text('Something went wrong');
-                }
+          Expanded(
+            flex: 4,
+            child: StreamBuilder(
+                stream: querySnapshot,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text('Something went wrong');
+                  }
 
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Text("Loading");
-                }
+                  convertTimestampToTime(timestamp) {
+                    var dt = timestamp.toDate();
+                    String formattedTime = DateFormat.jm().format(dt);
+                    return formattedTime;
+                  }
 
-                convertTimestampToDateTime(timestamp) {
-                  var dt = timestamp.toDate();
-                  return dt;
-                }
+                  if (!snapshot.hasData) {
+                    return const CircularProgressIndicator();
+                  } else {
+                    var msgList = snapshot.data!.docs.toList();
+                    return ListView.builder(
+                      itemCount: msgList.length,
+                      itemBuilder: (context, index) {
+                        DocumentSnapshot document = msgList[index];
+                        Map<String, dynamic> data =
+                            document.data()! as Map<String, dynamic>;
+                        String timestamp =
+                            convertTimestampToTime(data['timestamp'])
+                                .toString();
 
-                final FirebaseAuth auth = FirebaseAuth.instance;
-                final User? user = auth.currentUser;
-                final currentUserId = user?.uid;
-                var msgList = snapshot.data!.docs.toList();
-
-                return SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.65,
-                  width: MediaQuery.of(context).size.width * 0.95,
-                  child: ListView(
-                      children: msgList.map((DocumentSnapshot document) {
-                    Map<String, dynamic> data =
-                        document.data()! as Map<String, dynamic>;
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        child: ListTile(
-                            tileColor: data['receiver_id'] == currentUserId
-                                ? Colors.red
-                                : Colors.blue,
-                            title: Padding(
-                              padding: data['receiver_id'] == currentUserId
-                                  ? const EdgeInsets.fromLTRB(200, 0, 0, 0)
-                                  : const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                              child: Text(data['content'].toString()),
+                        return Padding(
+                          padding: data['receiver_id'] == currentUserId
+                              ? const EdgeInsets.fromLTRB(200, 0, 0, 0)
+                              : const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                          child: Card(
+                            color: data['receiver_id'] == currentUserId
+                                ? const Color(0xff7301E4)
+                                : Colors.grey[200],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                            subtitle: Padding(
-                              padding: data['receiver_id'] == currentUserId
-                                  ? const EdgeInsets.fromLTRB(200, 0, 0, 0)
-                                  : const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                              child: Text(
-                                  convertTimestampToDateTime(data['timestamp'])
-                                      .toString()),
-                            )),
-                      ),
+                            child: ListTile(
+                              title: Padding(
+                                padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                                child: timestampDisplayed &&
+                                        tappedIndex == index
+                                    ? Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 10, 0, 0),
+                                        child: Text(data['content'].toString(),
+                                            style: TextStyle(
+                                                color: data['receiver_id'] ==
+                                                        currentUserId
+                                                    ? Colors.white
+                                                    : Colors.black)),
+                                      )
+                                    : Text(data['content'].toString(),
+                                        style: TextStyle(
+                                            color: data['receiver_id'] ==
+                                                    currentUserId
+                                                ? Colors.white
+                                                : Colors.black)),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  if (tappedIndex == index) {
+                                    tappedIndex = -1; // Reset if tapped again
+                                  } else {
+                                    tappedIndex = index; // Set the tapped index
+                                  }
+                                  timestampDisplayed = !timestampDisplayed;
+                                });
+                              },
+                              subtitle: timestampDisplayed &&
+                                      tappedIndex == index
+                                  ? Padding(
+                                      padding:
+                                          data['receiver_id'] == currentUserId
+                                              ? const EdgeInsets.fromLTRB(
+                                                  15, 0, 0, 0)
+                                              : const EdgeInsets.fromLTRB(
+                                                  15, 0, 0, 0),
+                                      child: Text(timestamp,
+                                          style: TextStyle(
+                                              color: data['receiver_id'] ==
+                                                      currentUserId
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                              fontWeight: FontWeight.bold)),
+                                    )
+                                  : Container(),
+                            ),
+                          ),
+                        );
+                      },
                     );
-                  }).toList()),
-                );
-              }),
+                  }
+                }),
+          ),
           TextFormField(
             controller: messageController,
             maxLines: null,
@@ -116,8 +154,8 @@ class ChatContentState extends State<ChatContent> {
                 FirebaseFirestore.instance.collection('messages').add({
                   'content': messageController.text,
                   'timestamp': Timestamp.now(),
-                  'receiver_id': '4',
-                  'sender_id': 'a3IXF0jBT0SkVW53hCIksmfsqAh2'
+                  'receiver_id': widget.receiverId,
+                  'sender_id': currentUserId.toString()
                 });
                 setState(() {
                   messageController.text = '';
