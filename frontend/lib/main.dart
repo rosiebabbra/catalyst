@@ -21,7 +21,6 @@ import 'models/user_data.dart';
 import 'my_profile/my_profile_screen.dart';
 import 'onboarding/dob_screen.dart';
 import 'onboarding/gender_identification_screen.dart';
-import 'onboarding/generating_matches_screen.dart';
 import 'onboarding/location_disclaimer_screen.dart';
 import 'onboarding/name_screen.dart';
 import 'onboarding/phone_number_screen.dart';
@@ -44,7 +43,7 @@ Future<void> main() async {
   runApp(ChangeNotifierProvider(
       create: (context) => PhoneNumberProvider(),
       child: MyApp(
-        versionId: 'beta',
+        versionId: '1.0.0',
         useVideoAsset: true,
       )));
 }
@@ -144,7 +143,7 @@ class BackgroundVideoState extends State<MyApp> {
         '/matches': (context) => const MatchScreen(
               userId: 555,
             ),
-        '/hobbies': (context) => HobbyScreen(hobby: 'Tennis'),
+        '/hobbies': (context) => HobbyScreen(),
         '/onboarding': (context) => const PhoneNumberEntryScreen(),
         '/onboarding-name': (context) => const NameEntryScreen(),
         '/onboarding-dob': (context) => const DOBEntryScreen(),
@@ -152,7 +151,6 @@ class BackgroundVideoState extends State<MyApp> {
         '/onboarding-signup': (context) => const SignupScreen(),
         '/location-disclaimer': (context) =>
             const LocationDisclaimerScreen(versionId: '1.0.0'),
-        '/generating-matches': (context) => const GeneratingMatchesScreen(),
         '/verification-screen': (context) => const VerificationScreen(),
         '/swipes-completed': (context) => const SwipesCompletedScreen(),
         '/subscription-page': (context) => const MyProfileScreen(),
