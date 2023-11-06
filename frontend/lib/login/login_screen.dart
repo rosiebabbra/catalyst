@@ -9,6 +9,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
   String emailErrorMessage = '';
   String passwordErrorMessage = '';
+  User? _user;
 
   @override
   Widget build(BuildContext context) {
@@ -175,10 +176,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () async {
                               try {
                                 // TODO: UNCOMMENT FOR RELEASE
-                                // final FirebaseAuth auth = FirebaseAuth.instance;
-                                // await auth.signInWithEmailAndPassword(
-                                //     email: emailController.text,
-                                //     password: passwordController.text);
+                                final FirebaseAuth auth = FirebaseAuth.instance;
+                                // UserCredential userCredential =
+                                //     await auth.signInWithEmailAndPassword(
+                                //         email: emailController.text,
+                                //         password: passwordController.text);
+                                // setState(() {
+                                //   _user = userCredential.user;
+                                // });
                                 if (widget.versionId == 'beta') {
                                   Navigator.pushNamed(context, '/coming-soon');
                                 } else {
