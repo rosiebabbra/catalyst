@@ -84,7 +84,7 @@ class PhoneVerificationState extends State<PhoneVerification> {
                   ),
                 ));
                 Future.delayed(const Duration(seconds: 6), () {
-                  Navigator.pushNamed(context, '/matches');
+                  Navigator.pushNamed(context, '/explore');
                 });
               }
               // CHECKED! This condition occurs when a user already exists but has forgetten their password

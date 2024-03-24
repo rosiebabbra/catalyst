@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/chat/chat_list.dart';
-import 'package:my_app/matches/match_screen.dart';
 import 'package:my_app/my_profile/my_profile_screen.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 
@@ -82,7 +81,6 @@ class HobbyScreenState extends State<HobbyScreen> {
 
     final List<Widget> pages = [
       interestSwipe(context),
-      const MatchScreen(userId: 1),
       const ChatList(),
       const MyProfileScreen()
     ];
@@ -95,10 +93,9 @@ class HobbyScreenState extends State<HobbyScreen> {
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Explore'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.notifications), label: 'Matches'),
-            BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
+                icon: Icon(Icons.handshake_outlined), label: 'Matches'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.star), label: 'My Profile'),
+                icon: Icon(Icons.star_border), label: 'My Profile'),
           ],
         ),
         backgroundColor: Colors.white,
@@ -173,9 +170,12 @@ class HobbyScreenState extends State<HobbyScreen> {
             return Opacity(
                 opacity: swipeProperty.swipeProgress.clamp(0, 0.6),
                 child: Container(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    color: swipeColor));
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.0),
+                      color: swipeColor),
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                ));
           },
           builder: (context, properties) {
             final int index = properties.index;
@@ -205,7 +205,7 @@ class HobbyScreenState extends State<HobbyScreen> {
                       child: FittedBox(
                         child: Text(data[index].interest,
                             style: const TextStyle(
-                              fontSize: 48.0,
+                              fontSize: 36.0,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             )),

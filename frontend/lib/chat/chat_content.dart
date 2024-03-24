@@ -141,12 +141,15 @@ class ChatContentState extends State<ChatContent> {
                   }
                 }),
           ),
-          TextFormField(
-            controller: messageController,
-            maxLines: null,
-            maxLength: 1000, // Set the maximum number of characters here
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextFormField(
+              controller: messageController,
+              maxLines: null,
+              maxLength: 1000, // Set the maximum number of characters here
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+              ),
             ),
           ),
           ElevatedButton(

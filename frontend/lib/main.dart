@@ -16,7 +16,6 @@ import 'home/home_screen.dart';
 import 'login/forgot_password_screen.dart';
 import 'login/login_screen.dart';
 import 'login/password_reset_landing_screen.dart';
-import 'matches/match_screen.dart';
 import 'models/user_data.dart';
 import 'my_profile/my_profile_screen.dart';
 import 'onboarding/dob_screen.dart';
@@ -140,10 +139,7 @@ class BackgroundVideoState extends State<MyApp> {
         '/password-reset': (context) => const PasswordResetScreen(),
         '/password-reset-landing-page': (context) =>
             const PasswordResetLandingScreen(),
-        '/matches': (context) => const MatchScreen(
-              userId: 555,
-            ),
-        '/hobbies': (context) => HobbyScreen(),
+        '/hobbies': (context) => const HobbyScreen(),
         '/onboarding': (context) => const PhoneNumberEntryScreen(),
         '/onboarding-name': (context) => const NameEntryScreen(),
         '/onboarding-dob': (context) => const DOBEntryScreen(),
