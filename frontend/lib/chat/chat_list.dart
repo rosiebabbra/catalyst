@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'chat_content.dart';
 
 class ChatList extends StatefulWidget {
@@ -46,7 +45,7 @@ class ChatListState extends State<ChatList> {
     return msgPreview;
   }
 
-  getUserName(String senderId) async {
+  dynamic getUserName(String senderId) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('user_id', isEqualTo: senderId)
@@ -253,12 +252,12 @@ class Message extends StatelessWidget {
                   color: const Color(0xff7c94b6),
                   image: const DecorationImage(
                     image: NetworkImage(
-                        'https://firebasestorage.googleapis.com/v0/b/dating-appp-2d438.appspot.com/o/profPic2.jpg?alt=media&token=fc59eb71-5a67-4a0a-a22e-e58f24ec063f&_gl=1*t89ldm*_ga*MTIzNDIwNTQ4MC4xNjgyODkxMzk2*_ga_CW55HF8NVT*MTY5ODAyOTY1MS4xMzAuMS4xNjk4MDI5NzAyLjkuMC4w'),
+                        'https://firebasestorage.googleapis.com/v0/b/dating-appp-2d438.appspot.com/o/user_images%2F32bTzSuJfwUYwSbVBGdDGk5MM5g2_1.jpg?alt=media&token=d69fa31c-5470-4e27-8081-eeb7fc49a17a'),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: const BorderRadius.all(Radius.circular(50.0)),
                   border: Border.all(
-                    color: const Color(0xff7301E4),
+                    // color: const Color(0xff7301E4),
                     width: 2.0,
                   ),
                 ),

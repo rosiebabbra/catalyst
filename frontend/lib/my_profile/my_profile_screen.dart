@@ -154,7 +154,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                     RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(45),
                                 ))),
-                            child: const Text("Upgrade from \$1.95",
+                            child: const Text("Upgrade from \$4.95",
                                 style: TextStyle(fontSize: 16))),
                       ),
                     ],

@@ -26,7 +26,8 @@ class Interests {
   Interests(this.interest);
 }
 
-fetchDocumentsWithinRadius(GeoPoint currentUserLocation) async {
+Future<List<DocumentSnapshot>> fetchDocumentsWithinRadius(
+    GeoPoint currentUserLocation) async {
   double centerLatitude = currentUserLocation.latitude;
   double centerLongitude = currentUserLocation.longitude;
   GeoPoint centerGeoPoint = GeoPoint(centerLatitude, centerLongitude);
@@ -40,8 +41,10 @@ fetchDocumentsWithinRadius(GeoPoint currentUserLocation) async {
           isLessThanOrEqualTo: centerGeoPoint)
       .get();
 
-  List<DocumentSnapshot> documents = querySnapshot.docs;
-  return documents;
+  List<DocumentSnapshot> eligibleMatches = querySnapshot.docs;
+  print('****eligibleMatches***');
+  print(eligibleMatches);
+  return eligibleMatches;
 }
 
 Future<String> getCityFromCoordinates(double latitude, double longitude) async {
@@ -76,19 +79,26 @@ Future<dynamic> getUserData(String userId) async {
   }
 }
 
-getAllMatchedUserIds(String currentUserId) async {
-  QuerySnapshot currentUserQuerySnapshot = await FirebaseFirestore.instance
-      .collection('users')
-      .where('user_id', isEqualTo: currentUserId)
-      .get();
+Future<List> getAllMatchedUserIds(String currentUserId) async {
+  try {
+    QuerySnapshot currentUserQuerySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('user_id', isEqualTo: currentUserId)
+        .get();
 
-  var document = currentUserQuerySnapshot.docs[0];
-  var currentUserRecordData = document.data() as Map<String, dynamic>;
-  var currentUserLatitude = currentUserRecordData['location'].latitude ?? 0;
-  var currentUserLongitude = currentUserRecordData['location'].longitude ?? 0;
-  var currentUserLocation = GeoPoint(currentUserLatitude, currentUserLongitude);
+    var document = currentUserQuerySnapshot.docs[0];
+    var currentUserRecordData = document.data() as Map<String, dynamic>;
+    var currentUserLatitude = currentUserRecordData['location'].latitude ?? 0;
+    var currentUserLongitude = currentUserRecordData['location'].longitude ?? 0;
+    var currentUserLocation =
+        GeoPoint(currentUserLatitude, currentUserLongitude);
 
-  return fetchDocumentsWithinRadius(currentUserLocation);
+    var docs = fetchDocumentsWithinRadius(currentUserLocation);
+    return docs;
+  } catch (error) {
+    print('Error in fetchData: $error');
+    return [];
+  }
 }
 
 Map<String, List<Interests>> interests = {
@@ -153,10 +163,21 @@ class _MatchProfileState extends State<MatchProfile> {
   final _scrollSubject = BehaviorSubject<double>.seeded(0);
   int _currentPage = 0;
   final _pageWidth = 300.0;
+  int matchCount = 0;
+  FirebaseAuth auth = FirebaseAuth.instance;
+  late Future<dynamic> fetchDataFuture;
 
   @override
   void initState() {
+    String? currentUserId = auth.currentUser?.uid;
     super.initState();
+    fetchDataFuture = getAllMatchedUserIds(currentUserId.toString());
+    fetchDataFuture.then((result) {
+      print('Fetch data completed'); // Handle the result here
+      setState(() {
+        matchCount = result;
+      });
+    });
     _controller.addListener(_updateVisiblePercent);
     _controller.addListener(_onScroll);
   }
@@ -207,9 +228,7 @@ class _MatchProfileState extends State<MatchProfile> {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth auth = FirebaseAuth.instance;
     String? currentUserId = auth.currentUser?.uid;
-
     return Offstage(
       offstage: widget.index != 0,
       child: TickerMode(
@@ -327,6 +346,11 @@ class _MatchProfileState extends State<MatchProfile> {
                                                                       .size
                                                                       .width *
                                                                   0.75,
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.5,
                                                               child: Image.network(
                                                                   snapshot.data
                                                                       as String),
@@ -604,40 +628,43 @@ class _MatchProfileState extends State<MatchProfile> {
                                                       return const Text(
                                                           'No data available');
                                                     } else {
-                                                      return SizedBox(
-                                                        width: 150,
-                                                        child: GridView.builder(
-                                                            gridDelegate:
-                                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                                              crossAxisCount: 3,
-                                                            ),
-                                                            itemCount: 300,
-                                                            itemBuilder:
-                                                                (BuildContext
-                                                                        context,
-                                                                    int index) {
-                                                              var location = getCityFromCoordinates(
-                                                                  matchSnapshot
-                                                                      .data[
-                                                                          index]
-                                                                          [
-                                                                          'location']
-                                                                      .latitude,
-                                                                  matchSnapshot
-                                                                      .data[
-                                                                          index]
-                                                                          [
-                                                                          'location']
-                                                                      .longitude);
-                                                              return FutureBuilder(
-                                                                  future:
-                                                                      location,
-                                                                  builder: (context,
-                                                                      locationSnapshot) {
-                                                                    print(
-                                                                        'ze locationnnnnn');
-                                                                    print(locationSnapshot
-                                                                        .data);
+                                                      return ListView.builder(
+                                                          itemCount: matchCount,
+                                                          itemBuilder:
+                                                              (BuildContext
+                                                                      context,
+                                                                  int index) {
+                                                            var city = getCityFromCoordinates(
+                                                                matchSnapshot
+                                                                    .data[index]
+                                                                        [
+                                                                        'location']
+                                                                    .latitude,
+                                                                matchSnapshot
+                                                                    .data[index]
+                                                                        [
+                                                                        'location']
+                                                                    .longitude);
+                                                            return FutureBuilder(
+                                                                future: city,
+                                                                builder: (context,
+                                                                    locationSnapshot) {
+                                                                  if (locationSnapshot
+                                                                          .connectionState ==
+                                                                      ConnectionState
+                                                                          .waiting) {
+                                                                    return const CircularProgressIndicator();
+                                                                  } else if (locationSnapshot
+                                                                      .hasError) {
+                                                                    return Text(
+                                                                        'Error: ${locationSnapshot.error}');
+                                                                  } else if (!locationSnapshot
+                                                                          .hasData ||
+                                                                      locationSnapshot
+                                                                              .data ==
+                                                                          null) {
+                                                                    return const CircularProgressIndicator();
+                                                                  } else {
                                                                     return Text(
                                                                         locationSnapshot
                                                                             .data
@@ -646,9 +673,9 @@ class _MatchProfileState extends State<MatchProfile> {
                                                                             fontWeight:
                                                                                 FontWeight.w500,
                                                                             color: Colors.grey[900]));
-                                                                  });
-                                                            }),
-                                                      );
+                                                                  }
+                                                                });
+                                                          });
                                                     }
                                                   },
                                                 ),
