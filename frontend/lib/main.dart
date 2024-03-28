@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:my_app/beta/coming_soon_screen.dart';
+import 'package:my_app/matches/match_screen.dart';
 import 'package:my_app/onboarding/location_services_denied_screen.dart';
 import 'package:my_app/onboarding/signup_screen.dart';
 import 'beta/see_you_soon.dart';
@@ -27,6 +28,21 @@ import 'onboarding/verification_code_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
+Map<String, List<Interests>> interests = {
+  '32bTzSuJfwUYwSbVBGdDGk5MM5g2': [
+    Interests('Movies'),
+    Interests('Music'),
+    Interests('Reading'),
+    Interests('Writing')
+  ],
+  'a3IXF0jBT0SkVW53hCIksmfsqAh2': [
+    Interests('Movies'),
+    Interests('Music'),
+    Interests('Reading'),
+    Interests('Writing')
+  ]
+};
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -39,8 +55,10 @@ Future<void> main() async {
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     print('User tapped on the notification');
   });
-  runApp(ChangeNotifierProvider(
-      create: (context) => PhoneNumberProvider(),
+  runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => PhoneNumberProvider())
+      ],
       child: MyApp(
         versionId: '1.0.0',
         useVideoAsset: true,
@@ -139,7 +157,8 @@ class BackgroundVideoState extends State<MyApp> {
         '/password-reset': (context) => const PasswordResetScreen(),
         '/password-reset-landing-page': (context) =>
             const PasswordResetLandingScreen(),
-        '/hobbies': (context) => const HobbyScreen(),
+        '/hobbies': (context) =>
+            const HobbyScreen(latitude: 15, longitude: 15, radiusInMiles: 15),
         '/onboarding': (context) => const PhoneNumberEntryScreen(),
         '/onboarding-name': (context) => const NameEntryScreen(),
         '/onboarding-dob': (context) => const DOBEntryScreen(),
