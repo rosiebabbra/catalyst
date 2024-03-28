@@ -1,47 +1,10 @@
-import 'dart:async';
-import 'package:rxdart/rxdart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:my_app/chat/chat_list.dart';
 import 'package:my_app/my_profile/my_profile_screen.dart';
 import 'package:swipable_stack/swipable_stack.dart';
-
 import '../utils/text_fade.dart';
-
-Stream<QuerySnapshot<Object?>> fetchAllUsers() {
-  final CollectionReference usersCollection =
-      FirebaseFirestore.instance.collection('users');
-
-  return usersCollection.snapshots();
-}
-
-updateMatches(userId) async {
-  queryMatches(String field1, field2) async {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('matches')
-        .where(field1, isEqualTo: userId)
-        .get();
-
-    var fieldValues =
-        querySnapshot.docs.map((doc) => doc.data()[field2]).toList();
-
-    return fieldValues;
-  }
-
-  // Perform queries for each condition
-  final user1Matches = await queryMatches('user_1_id', 'user_2_id');
-  final user2Matches = await queryMatches('user_2_id', 'user_1_id');
-
-  // Combine results and remove duplicates
-  var user1Ids = user1Matches.map((map) => map['user_1_id']).toSet().toList();
-  var user2Ids = user2Matches.map((map) => map['user_2_id']).toSet().toList();
-
-  var existingMatches = user1Ids + user2Ids;
-
-  return existingMatches;
-}
 
 class InterestModel {
   final String interest;
@@ -111,65 +74,22 @@ class HobbyScreenState extends State<HobbyScreen> {
       const ChatList(userIds: ['abc']),
       const MyProfileScreen()
     ];
-
-    return StreamBuilder<Object>(
-        stream: fetchAllUsers(),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          final GeoFlutterFire geo = GeoFlutterFire();
-          final GeoFirePoint center =
-              geo.point(latitude: widget.latitude, longitude: widget.longitude);
-          final double radiusInKilometers = widget.radiusInMiles * 1.60934;
-
-          Stream<List<DocumentSnapshot>> stream = geo
-              .collection(
-                  collectionRef: FirebaseFirestore.instance.collection('users'))
-              .within(
-                  center: center,
-                  radius: radiusInKilometers,
-                  field: 'location');
-
-          stream.listen((List<DocumentSnapshot> documentList) {
-            print('doclist');
-            print(documentList);
-          });
-
-          // Check for errors
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator(color: Colors.blue);
-          } else if (snapshot.connectionState == ConnectionState.active) {
-            if (snapshot.hasData) {
-              return Scaffold(
-                  // bottomNavigationBar: BottomNavigationBar(
-                  //   type: BottomNavigationBarType.fixed,
-                  //   currentIndex: currentNavbarIndex,
-                  //   onTap: onTabTapped,
-                  //   items: const [
-                  //     BottomNavigationBarItem(
-                  //         icon: Icon(Icons.search), label: 'Explore'),
-                  //     BottomNavigationBarItem(
-                  //         icon: Icon(Icons.handshake_outlined),
-                  //         label: 'Matches'),
-                  //     BottomNavigationBarItem(
-                  //         icon: Icon(Icons.star_border), label: 'My Profile'),
-                  //   ],
-                  // ),
-                  backgroundColor: Colors.white,
-                  body:
-                      // ADD BACK IN WHEN DONE DEBUGGING STREAM pages[currentNavbarIndex]
-                      ListView.builder(
-                    itemCount: snapshot.hasData ? snapshot.data.docs.length : 0,
-                    itemBuilder: (BuildContext context, int index) {
-                      print(snapshot.data.docs[index]);
-                      // Example usage: Display each userId in a simple ListTile
-                      return ListTile(
-                        title: Text(snapshot.data.docs[index].toString()),
-                      );
-                    },
-                  ));
-            }
-          }
-          return const CircularProgressIndicator(color: Colors.red);
-        });
+    // Load all users on start so that we have access to them all
+    return Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: currentNavbarIndex,
+          onTap: onTabTapped,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Explore'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.handshake_outlined), label: 'Matches'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.star_border), label: 'My Profile'),
+          ],
+        ),
+        backgroundColor: Colors.white,
+        body: pages[currentNavbarIndex]);
   }
 
   interestSwipe(BuildContext context) {
