@@ -57,7 +57,7 @@ Future<void> main() async {
   });
   runApp(MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => PhoneNumberProvider())
+        ChangeNotifierProvider(create: (context) => PhoneNumberProvider()),
       ],
       child: MyApp(
         versionId: '1.0.0',
