@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'chat_content.dart';
 
 class ChatList extends StatefulWidget {
-  const ChatList({Key? key}) : super(key: key);
+  final List<String> userIds; // Declare the required argument
+
+  const ChatList({Key? key, required this.userIds}) : super(key: key);
 
   @override
   State<ChatList> createState() => ChatListState();
@@ -89,6 +92,8 @@ class ChatListState extends State<ChatList> {
               stream: userSnapshots,
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
+                print('these are the users that we have messages from');
+                print(widget.userIds);
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   // While waiting for data, show a loading indicator
                   return const CircularProgressIndicator(

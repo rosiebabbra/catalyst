@@ -2,47 +2,22 @@ import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/matches/match_screen.dart';
+import 'package:geoflutterfire2/geoflutterfire2.dart';
 
-updateMatches(userId) async {
-  // TODO: Build a function that checks if there are any new matches
-  // within 15 miles of the user's nearest metropolitan city.
-  // ***
-  // This workflow works upon the assumption that matches are generated
-  // on swipe to users that are deemed to have met the location criteria
-  // and have the same interest.
-  // ***
-  // - Get all matches for the user.
-  // - Surface all matches in the Inbox, sorted by message sent or received recency.
-  // 1. Query the matches table to get all the match IDs for the users
-  //    who current user is matched with
-  // 2. Then, query the users table with all user IDs that are in the matches results
-  //    to get all the user IDs who meet the location criteria
-  // 2.  if there are any user IDs that have the same
-  //    interests as current user's that are NOT already matches. If yes, surface them
-  //    users in the current user's inbox.
+Future<dynamic> getUserData(String userId) async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .where('user_id', isEqualTo: userId)
+      .get();
 
-  queryMatches(String field1, field2) async {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('matches')
-        .where(field1, isEqualTo: userId)
-        .get();
-
-    var fieldValues =
-        querySnapshot.docs.map((doc) => doc.data()[field2]).toList();
-
-    return fieldValues;
+  if (querySnapshot.docs.isNotEmpty) {
+    for (QueryDocumentSnapshot document in querySnapshot.docs) {
+      var recordData = document.data() as Map<String, dynamic>;
+      return recordData;
+    }
+  } else {
+    return {'first_name': 'Error rendering user name'};
   }
-
-  // Perform queries for each condition
-  final user1Matches = await queryMatches('user_1_id', 'user_2_id');
-  final user2Matches = await queryMatches('user_2_id', 'user_1_id');
-
-  // Combine results and remove duplicates
-  var user1Ids = user1Matches.map((map) => map['user_1_id']).toSet().toList();
-  var user2Ids = user2Matches.map((map) => map['user_2_id']).toSet().toList();
-
-  var existingMatches = user1Ids + user2Ids;
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -236,26 +211,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () async {
                               try {
                                 // TODO: UNCOMMENT FOR RELEASE
-                                UserCredential userCredential =
-                                    await auth.signInWithEmailAndPassword(
-                                        email: emailController.text,
-                                        password: passwordController.text);
-                                setState(() {
-                                  _user = userCredential.user;
-                                });
+                                // UserCredential userCredential =
+                                //     await auth.signInWithEmailAndPassword(
+                                //         email: emailController.text,
+                                //         password: passwordController.text);
+                                // setState(() {
+                                //   _user = userCredential.user;
+                                // });
                                 if (widget.versionId == 'beta') {
                                   Navigator.pushNamed(context, '/coming-soon');
                                 } else {
-                                  // TODO: Run updateMatches function here in order for the user to have new matches once they are logged in.
-                                  var location = userData['location'];
-                                  print(location.latitude);
-                                  print(location.longitude);
-                                  updateMatches(userData['user_id'])
-                                      .then((result) {
-                                    print(result);
-                                  }).catchError((error) {
-                                    print(error);
-                                  });
                                   Navigator.pushNamed(context, '/hobbies');
                                 }
                               } catch (e) {
