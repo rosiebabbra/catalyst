@@ -3,32 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'chat_content.dart';
 
-updateMatches(String userId) async {
-  queryMatches(String field1, field2) async {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('matches')
-        .where(field1, isEqualTo: userId)
-        .get();
-
-    var fieldValues =
-        querySnapshot.docs.map((doc) => doc.data()[field2]).toList();
-
-    return fieldValues;
-  }
-
-  // Perform queries for each condition
-  final user1Matches = await queryMatches('user_1_id', 'user_2_id');
-  final user2Matches = await queryMatches('user_2_id', 'user_1_id');
-
-  // Combine results and remove duplicates
-  var user1Ids = user1Matches.map((map) => map['user_1_id']).toSet().toList();
-  var user2Ids = user2Matches.map((map) => map['user_2_id']).toSet().toList();
-
-  var existingMatches = user1Ids + user2Ids;
-
-  return existingMatches;
-}
-
 double getDistanceBetweenUsers(currentUserData, potentialMatchData) {
   double distanceInMeters = Geolocator.distanceBetween(
       currentUserData['location'].latitude,
@@ -41,24 +15,80 @@ double getDistanceBetweenUsers(currentUserData, potentialMatchData) {
   return distanceInMiles;
 }
 
-Stream<List<Map<String, dynamic>>> fetchMatches(
+Future<bool> determineMatch(userAId, userBId) async {
+  final CollectionReference selectedInterestsCollection =
+      FirebaseFirestore.instance.collection('selected_interests');
+
+  QuerySnapshot<Object?> userAInterests = await selectedInterestsCollection
+      .where('user_id', isEqualTo: userAId)
+      .get();
+  var userAInterestIds = [];
+  if (userAInterests.docs.isNotEmpty) {
+    for (QueryDocumentSnapshot document in userAInterests.docs) {
+      var interest = document.get('interest_ids');
+      if (interest is List) {
+        userAInterestIds.addAll(interest);
+      } else if (interest is String || interest is int) {
+        userAInterestIds.add(interest);
+      }
+    }
+  }
+
+  QuerySnapshot<Object?> userBInterests = await selectedInterestsCollection
+      .where('user_id', isEqualTo: userBId)
+      .get();
+  var userBInterestIds = [];
+  if (userBInterests.docs.isNotEmpty) {
+    for (QueryDocumentSnapshot document in userBInterests.docs) {
+      var interest = document.get('interest_ids');
+      if (interest is List) {
+        userBInterestIds.addAll(interest);
+      } else if (interest is String || interest is int) {
+        userBInterestIds.add(interest);
+      }
+    }
+  }
+
+  if ((userAInterestIds.isNotEmpty) && (userBInterestIds.isNotEmpty)) {
+    bool hasCommonInterests = userAInterestIds
+        .toSet()
+        .intersection(userBInterestIds.toSet())
+        .isNotEmpty;
+
+    return hasCommonInterests ? true : false;
+  } else {
+    return false;
+  }
+}
+
+Stream<List<dynamic>> fetchMatches(
     double currentUserLat, double currentUserLong) {
-  // TODO: Update this to grab all users that:
-  // Are matches, aka have one or more interests in common with current User
   final CollectionReference usersCollection =
       FirebaseFirestore.instance.collection('users');
 
-  return usersCollection.snapshots().map((snapshot) {
+  return usersCollection.snapshots().asyncMap((snapshot) async {
     var users =
         snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-    var filteredUsers = users.where((user) {
-      // Assuming user data contains 'latitude' and 'longitude' fields
+    var potentialMatches = users.where((user) {
       double distance = getDistanceBetweenUsers(
           {'location': GeoPoint(currentUserLat, currentUserLong)}, user);
-      return distance <= 15; // Filter users within 15 miles
+      return distance <= 15;
     }).toList();
 
-    return filteredUsers;
+    var matchedUsers = [];
+
+    for (var user in potentialMatches) {
+      if (await determineMatch(
+          'a3IXF0jBT0SkVW53hCIksmfsqAh2', user['user_id'])) {
+        matchedUsers.add(user);
+      }
+    }
+
+    // Drop the current User ID from here
+    matchedUsers.removeWhere(
+        (user) => user['user_id'] == 'a3IXF0jBT0SkVW53hCIksmfsqAh2');
+
+    return matchedUsers;
   });
 }
 
@@ -132,15 +162,14 @@ class ChatListState extends State<ChatList> {
         builder:
             (BuildContext matchContext, AsyncSnapshot<dynamic> matchSnapshot) {
           if (matchSnapshot.hasError) {
-            return CircularProgressIndicator(color: Colors.red);
+            return const CircularProgressIndicator(color: Colors.red);
           } else {
             if (matchSnapshot.connectionState == ConnectionState.active) {
-              print(matchSnapshot);
               return ListView.builder(
                   itemCount: matchSnapshot.data.length,
                   itemBuilder: (matchChatContext, matchIndex) {
                     return ListTile(
-                      title: Text(matchSnapshot.data[matchIndex].toString()),
+                      title: Text(matchSnapshot.data[matchIndex]['first_name']),
                     );
                   });
             }
