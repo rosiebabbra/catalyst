@@ -385,8 +385,8 @@ class _MatchProfileState extends State<MatchProfile> {
                                 height: 20,
                                 width: 75,
                                 child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    // crossAxisAlignment:
+                                    //     CrossAxisAlignment.center,
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
@@ -500,10 +500,7 @@ class _MatchProfileState extends State<MatchProfile> {
                                                                 .toString();
                                                           }
 
-                                                          return Text(
-                                                              calculateAge(snapshot
-                                                                      .data[
-                                                                  'birthdate']),
+                                                          return Text('27',
                                                               style: TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
@@ -567,8 +564,7 @@ class _MatchProfileState extends State<MatchProfile> {
                                                                 'No sender IDs available.');
                                                           } else {
                                                             return Text(
-                                                                snapshot.data[
-                                                                    'gender'],
+                                                                'Female',
                                                                 style: TextStyle(
                                                                     fontWeight:
                                                                         FontWeight
