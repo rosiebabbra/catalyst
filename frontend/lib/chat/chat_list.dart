@@ -201,7 +201,7 @@ class ChatListState extends State<ChatList> {
                                                 null)
                                             ? 'Start your chat with ${matchData['first_name']}!'
                                             : previewSnapshot.data.toString(),
-                                        name: matchData['first_name']);
+                                        senderName: matchData['first_name']);
                                   });
                             })),
                   ],
@@ -365,14 +365,14 @@ class ChatListState extends State<ChatList> {
 class Message extends StatelessWidget {
   final String senderId;
   final String receiverId;
-  final String name;
+  final String senderName;
   final String msgPreview;
 
   const Message(
       {super.key,
       required this.senderId,
       required this.receiverId,
-      required this.name,
+      required this.senderName,
       required this.msgPreview});
 
   // Get senderId's image and their messages from the db
@@ -389,6 +389,10 @@ class Message extends StatelessWidget {
           MaterialPageRoute(
               builder: (context) => ChatContent(
                     receiverId: receiverId,
+                    senderData: {
+                      'senderId': senderId,
+                      'senderName': senderName
+                    },
                   )),
         );
       },
@@ -426,7 +430,7 @@ class Message extends StatelessWidget {
                   children: [
                     SizedBox(
                       width: 250,
-                      child: Text(name,
+                      child: Text(senderName,
                           maxLines: 1,
                           overflow: TextOverflow.fade,
                           softWrap: false,

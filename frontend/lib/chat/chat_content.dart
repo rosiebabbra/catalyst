@@ -5,15 +5,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
 class ChatContent extends StatefulWidget {
+  final senderData; // contains sender name, id
   final String? receiverId;
-  const ChatContent({Key? key, this.receiverId}) : super(key: key);
+  const ChatContent({Key? key, this.receiverId, this.senderData})
+      : super(key: key);
 
   @override
   State<ChatContent> createState() => ChatContentState();
 }
 
 class ChatContentState extends State<ChatContent> {
-  String senderName = 'Jack';
   String timestamp = '';
   bool timestampDisplayed = false;
   int tappedIndex = -1;
@@ -29,6 +30,7 @@ class ChatContentState extends State<ChatContent> {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
     final currentUserId = user?.uid;
+    String senderName = widget.senderData['senderName'];
     return Scaffold(
         appBar: AppBar(
           shadowColor: Colors.white,
