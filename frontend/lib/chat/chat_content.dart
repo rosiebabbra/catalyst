@@ -197,8 +197,8 @@ class ChatContentState extends State<ChatContent> {
                 FirebaseFirestore.instance.collection('messages').add({
                   'content': messageController.text,
                   'timestamp': Timestamp.now(),
-                  'receiver_id': widget.receiverId,
-                  'sender_id': currentUserId.toString()
+                  'receiver_id': widget.senderData['senderId'],
+                  'sender_id': currentUserId
                 });
                 setState(() {
                   messageController.text = '';
