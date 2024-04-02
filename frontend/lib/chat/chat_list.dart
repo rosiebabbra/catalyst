@@ -186,19 +186,22 @@ class ChatListState extends State<ChatList> {
                             itemBuilder: (matchChatContext, matchIndex) {
                               FirebaseAuth auth = FirebaseAuth.instance;
                               User? user = auth.currentUser;
+
+                              var receiverId = user!.uid;
+                              var matchData = matchSnapshot.data[matchIndex];
+                              var matchId = matchData['user_id'];
+
                               return FutureBuilder(
-                                  future: getMessagePreview(
-                                      user!.uid,
-                                      matchSnapshot.data[matchIndex]
-                                          ['user_id']),
+                                  future: getMessagePreview(user.uid, matchId),
                                   builder: (previewContext, previewSnapshot) {
                                     return Message(
+                                        senderId: matchId,
+                                        receiverId: receiverId,
                                         msgPreview: (previewSnapshot.data ==
                                                 null)
-                                            ? 'Start your chat with ${matchSnapshot.data[matchIndex]['first_name']}!'
+                                            ? 'Start your chat with ${matchData['first_name']}!'
                                             : previewSnapshot.data.toString(),
-                                        name: matchSnapshot.data[matchIndex]
-                                            ['first_name']);
+                                        name: matchData['first_name']);
                                   });
                             })),
                   ],
@@ -360,15 +363,15 @@ class ChatListState extends State<ChatList> {
 }
 
 class Message extends StatelessWidget {
-  // final int senderId;
-  // final int receiverId;
+  final String senderId;
+  final String receiverId;
   final String name;
   final String msgPreview;
 
   const Message(
       {super.key,
-      // required this.senderId,
-      // required this.receiverId,
+      required this.senderId,
+      required this.receiverId,
       required this.name,
       required this.msgPreview});
 
@@ -384,8 +387,8 @@ class Message extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => const ChatContent(
-                    receiverId: '4',
+              builder: (context) => ChatContent(
+                    receiverId: receiverId,
                   )),
         );
       },
