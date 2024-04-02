@@ -195,10 +195,7 @@ class ChatListState extends State<ChatList> {
                                     return Message(
                                         msgPreview: (previewSnapshot.data ==
                                                 null)
-                                            ? 'Start your chat with ' +
-                                                matchSnapshot.data[matchIndex]
-                                                    ['first_name'] +
-                                                '!'
+                                            ? 'Start your chat with ${matchSnapshot.data[matchIndex]['first_name']}!'
                                             : previewSnapshot.data.toString(),
                                         name: matchSnapshot.data[matchIndex]
                                             ['first_name']);
