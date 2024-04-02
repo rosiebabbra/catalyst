@@ -4,6 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
+convertTimestampToTime(timestamp) {
+  var dt = timestamp.toDate();
+  String formattedTime = DateFormat.jm().format(dt);
+  return formattedTime;
+}
+
 class ChatContent extends StatefulWidget {
   final senderData; // contains sender name, id
   final String? receiverId;
@@ -24,17 +30,20 @@ class ChatContentState extends State<ChatContent> {
     Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshot =
         FirebaseFirestore.instance
             .collection('messages')
-            .orderBy('timestamp', descending: false)
+            .where('sender_id', isEqualTo: widget.senderData['senderId'])
+            .where('receiver_id', isEqualTo: widget.receiverId)
+            .orderBy('timestamp')
             .snapshots();
+
     TextEditingController messageController = TextEditingController();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
     final currentUserId = user?.uid;
-    String senderName = widget.senderData['senderName'];
+
     return Scaffold(
         appBar: AppBar(
           shadowColor: Colors.white,
-          title: Text(senderName,
+          title: Text(widget.senderData['senderName'],
               style: const TextStyle(
                   color: Colors.black,
                   fontSize: 28,
@@ -50,13 +59,7 @@ class ChatContentState extends State<ChatContent> {
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
-                    return const Text('Something went wrong');
-                  }
-
-                  convertTimestampToTime(timestamp) {
-                    var dt = timestamp.toDate();
-                    String formattedTime = DateFormat.jm().format(dt);
-                    return formattedTime;
+                    return Text(snapshot.error.toString());
                   }
 
                   if (!snapshot.hasData) {

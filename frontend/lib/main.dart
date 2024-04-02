@@ -169,7 +169,6 @@ class BackgroundVideoState extends State<MyApp> {
         '/verification-screen': (context) => const VerificationScreen(),
         '/swipes-completed': (context) => const SwipesCompletedScreen(),
         '/subscription-page': (context) => const MyProfileScreen(),
-        '/chat-content': (context) => const ChatContent()
       }
     };
 
