@@ -117,9 +117,7 @@ Map<String, List<Interests>> interests = {
 };
 
 class MatchScreen extends StatefulWidget {
-  const MatchScreen({super.key, required this.userId});
-
-  final int userId;
+  const MatchScreen({super.key});
 
   @override
   State<MatchScreen> createState() => _MatchScreenState();

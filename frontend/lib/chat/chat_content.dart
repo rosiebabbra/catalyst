@@ -75,11 +75,16 @@ class ChatContentState extends State<ChatContent> {
     return Scaffold(
         appBar: AppBar(
           shadowColor: Colors.white,
-          title: Text(widget.senderData['senderName'],
-              style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold)),
+          title: ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed('/match-screen');
+            },
+            child: Text(widget.senderData['senderName'],
+                style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold)),
+          ),
           backgroundColor: Colors.grey[100],
           foregroundColor: Colors.black,
         ),
