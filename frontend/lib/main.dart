@@ -28,21 +28,6 @@ import 'onboarding/verification_code_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
-Map<String, List<Interests>> interests = {
-  '32bTzSuJfwUYwSbVBGdDGk5MM5g2': [
-    Interests('Movies'),
-    Interests('Music'),
-    Interests('Reading'),
-    Interests('Writing')
-  ],
-  'a3IXF0jBT0SkVW53hCIksmfsqAh2': [
-    Interests('Movies'),
-    Interests('Music'),
-    Interests('Reading'),
-    Interests('Writing')
-  ]
-};
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
