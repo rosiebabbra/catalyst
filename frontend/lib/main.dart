@@ -135,6 +135,7 @@ class BackgroundVideoState extends State<MyApp> {
         '/onboarding-dob': (context) => const DOBEntryScreen(),
         '/onboarding-gender': (context) => const GenderIDEntryScreen(),
         '/onboarding-signup': (context) => const SignupScreen(),
+        '/match-screen': (context) => MatchScreen()
       },
       '1.0.0': {
         '/login': (context) => const LoginScreen(versionId: '1.0.0'),
@@ -154,6 +155,7 @@ class BackgroundVideoState extends State<MyApp> {
         '/verification-screen': (context) => const VerificationScreen(),
         '/swipes-completed': (context) => const SwipesCompletedScreen(),
         '/subscription-page': (context) => const MyProfileScreen(),
+        '/match-screen': (context) => MatchScreen()
       }
     };
 
