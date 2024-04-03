@@ -95,7 +95,7 @@ class ChatContentState extends State<ChatContent> {
                   }
 
                   if (!snapshot.hasData) {
-                    return const CircularProgressIndicator();
+                    return const Center(child: CircularProgressIndicator());
                   } else {
                     var msgList = snapshot.data!;
                     return ListView.builder(
