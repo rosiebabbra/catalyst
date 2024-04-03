@@ -121,13 +121,15 @@ class HobbyScreenState extends State<HobbyScreen> {
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator(
-                    color: Color(0xff7301E4));
+                return const Center(
+                  child: CircularProgressIndicator(color: Color(0xff7301E4)),
+                );
               }
 
               if (!snapshot.hasData) {
-                return const CircularProgressIndicator(
-                    color: Color(0xff7301E4));
+                return const Center(
+                  child: CircularProgressIndicator(color: Color(0xff7301E4)),
+                );
               }
 
               final docs = snapshot.data?.docs
@@ -141,10 +143,12 @@ class HobbyScreenState extends State<HobbyScreen> {
                   child: SizedBox(
                       height: 100,
                       width: 100,
-                      child: CircularProgressIndicator(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(Color(0xff33D15F)),
-                        strokeWidth: 8,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Color(0xff33D15F)),
+                          strokeWidth: 8,
+                        ),
                       )),
                 );
               }
