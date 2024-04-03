@@ -83,6 +83,9 @@ Future<bool> determineMatch(userAId, userBId) async {
 
 Stream<List<dynamic>> fetchMatches(
     double currentUserLat, double currentUserLong) {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final User? user = auth.currentUser;
+  final currentUserId = user?.uid;
   final CollectionReference usersCollection =
       FirebaseFirestore.instance.collection('users');
 
@@ -98,22 +101,20 @@ Stream<List<dynamic>> fetchMatches(
     var matchedUsers = [];
 
     for (var user in potentialMatches) {
-      if (await determineMatch(
-          'a3IXF0jBT0SkVW53hCIksmfsqAh2', user['user_id'])) {
+      if (await determineMatch(currentUserId, user['user_id'])) {
         matchedUsers.add(user);
       }
     }
 
     // Drop the current User ID from here
-    matchedUsers.removeWhere(
-        (user) => user['user_id'] == 'a3IXF0jBT0SkVW53hCIksmfsqAh2');
+    matchedUsers.removeWhere((user) => user['user_id'] == currentUserId);
 
     return matchedUsers;
   });
 }
 
 class ChatList extends StatefulWidget {
-  final List<String> userIds; // Declare the required argument
+  final List<String> userIds;
 
   const ChatList({Key? key, required this.userIds}) : super(key: key);
 
