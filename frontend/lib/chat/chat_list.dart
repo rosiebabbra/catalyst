@@ -17,46 +17,65 @@ double getDistanceBetweenUsers(currentUserData, potentialMatchData) {
 }
 
 Future<bool> determineMatch(userAId, userBId) async {
-  final CollectionReference selectedInterestsCollection =
-      FirebaseFirestore.instance.collection('selected_interests');
+  if (userAId != userBId) {
+    final CollectionReference selectedInterestsCollection =
+        FirebaseFirestore.instance.collection('selected_interests');
 
-  QuerySnapshot<Object?> userAInterests = await selectedInterestsCollection
-      .where('user_id', isEqualTo: userAId)
-      .get();
-  var userAInterestIds = [];
-  if (userAInterests.docs.isNotEmpty) {
-    for (QueryDocumentSnapshot document in userAInterests.docs) {
-      var interest = document.get('interest_ids');
-      if (interest is List) {
-        userAInterestIds.addAll(interest);
-      } else if (interest is String || interest is int) {
-        userAInterestIds.add(interest);
+    QuerySnapshot<Object?> userAInterests = await selectedInterestsCollection
+        .where('user_id', isEqualTo: userAId)
+        .get();
+    var userAInterestIds = [];
+    if (userAInterests.docs.isNotEmpty) {
+      for (QueryDocumentSnapshot document in userAInterests.docs) {
+        var interest = document.get('interest_ids');
+        if (interest is List) {
+          userAInterestIds.addAll(interest);
+        } else if (interest is String || interest is int) {
+          userAInterestIds.add(interest);
+        }
       }
     }
-  }
 
-  QuerySnapshot<Object?> userBInterests = await selectedInterestsCollection
-      .where('user_id', isEqualTo: userBId)
-      .get();
-  var userBInterestIds = [];
-  if (userBInterests.docs.isNotEmpty) {
-    for (QueryDocumentSnapshot document in userBInterests.docs) {
-      var interest = document.get('interest_ids');
-      if (interest is List) {
-        userBInterestIds.addAll(interest);
-      } else if (interest is String || interest is int) {
-        userBInterestIds.add(interest);
+    QuerySnapshot<Object?> userBInterests = await selectedInterestsCollection
+        .where('user_id', isEqualTo: userBId)
+        .get();
+    var userBInterestIds = [];
+    if (userBInterests.docs.isNotEmpty) {
+      for (QueryDocumentSnapshot document in userBInterests.docs) {
+        var interest = document.get('interest_ids');
+        if (interest is List) {
+          userBInterestIds.addAll(interest);
+        } else if (interest is String || interest is int) {
+          userBInterestIds.add(interest);
+        }
       }
     }
-  }
 
-  if ((userAInterestIds.isNotEmpty) && (userBInterestIds.isNotEmpty)) {
-    bool hasCommonInterests = userAInterestIds
-        .toSet()
-        .intersection(userBInterestIds.toSet())
-        .isNotEmpty;
+    if ((userAInterestIds.isNotEmpty) && (userBInterestIds.isNotEmpty)) {
+      var commonInterests = userAInterestIds
+          .toSet()
+          .intersection(userBInterestIds.toSet())
+          .toList();
 
-    return hasCommonInterests ? true : false;
+      var currentPair = [userAId, userBId];
+      currentPair.sort();
+
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('matches')
+          .where('match_ids', isEqualTo: currentPair)
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        FirebaseFirestore.instance.collection('matches').add({
+          'match_ids': [userAId, userBId],
+          'interest_ids': FieldValue.arrayUnion(commonInterests)
+        });
+      }
+
+      return commonInterests.isEmpty ? false : true;
+    } else {
+      return false;
+    }
   } else {
     return false;
   }
