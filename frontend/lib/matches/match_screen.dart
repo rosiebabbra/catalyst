@@ -341,8 +341,13 @@ class _MatchProfileState extends State<MatchProfile> {
                                                             child: Image.network(
                                                                 snapshot.data
                                                                     .toString(),
+                                                                height: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .height /
+                                                                    2,
                                                                 fit: BoxFit
-                                                                    .fitWidth),
+                                                                    .fill),
                                                           ),
                                                         );
                                                       }
