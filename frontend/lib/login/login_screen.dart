@@ -211,13 +211,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () async {
                               try {
                                 // TODO: UNCOMMENT FOR RELEASE
-                                // UserCredential userCredential =
-                                //     await auth.signInWithEmailAndPassword(
-                                //         email: emailController.text,
-                                //         password: passwordController.text);
-                                // setState(() {
-                                //   _user = userCredential.user;
-                                // });
+                                UserCredential userCredential =
+                                    await auth.signInWithEmailAndPassword(
+                                        email: emailController.text,
+                                        password: passwordController.text);
+                                setState(() {
+                                  _user = userCredential.user;
+                                });
                                 if (widget.versionId == 'beta') {
                                   Navigator.pushNamed(context, '/coming-soon');
                                 } else {
