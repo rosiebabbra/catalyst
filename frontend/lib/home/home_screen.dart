@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_app/matches/match_screen.dart';
+import 'package:catalyst/matches/match_screen.dart';
 import '../utils/text_fade.dart';
 import '../widgets/button.dart';
 

@@ -2,8 +2,8 @@ import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/onboarding/interests_screen.dart';
-import 'package:my_app/utils/utils.dart';
+import 'package:catalyst/onboarding/interests_screen.dart';
+import 'package:catalyst/utils/utils.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({

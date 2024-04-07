@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:my_app/utils/format_phone_number.dart';
+import 'package:catalyst/utils/format_phone_number.dart';
 import 'package:provider/provider.dart';
 import '../models/user_data.dart';
 import 'phone_number_screen.dart';
