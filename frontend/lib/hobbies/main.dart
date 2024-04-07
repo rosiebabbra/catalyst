@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/chat/chat_list.dart';
-import 'package:my_app/my_profile/my_profile_screen.dart';
+import 'package:catalyst/chat/chat_list.dart';
+import 'package:catalyst/my_profile/my_profile_screen.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 import '../utils/text_fade.dart';
 

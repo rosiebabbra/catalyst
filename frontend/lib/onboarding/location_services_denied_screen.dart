@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:my_app/utils/text_fade.dart';
+import 'package:catalyst/utils/text_fade.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class LocationServiceDeniedScreen extends StatefulWidget {

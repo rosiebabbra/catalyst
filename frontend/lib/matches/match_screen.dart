@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/utils/utils.dart';
+import 'package:catalyst/utils/utils.dart';
 import 'package:rxdart/rxdart.dart';
 import 'dart:math' as math;
 import 'package:geocoding/geocoding.dart';
@@ -338,21 +338,11 @@ class _MatchProfileState extends State<MatchProfile> {
                                                                     .all(Radius
                                                                         .circular(
                                                                             10)),
-                                                            child: SizedBox(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.75,
-                                                              height: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .height *
-                                                                  0.5,
-                                                              child: Image.network(
-                                                                  snapshot.data
-                                                                      as String),
-                                                            ),
+                                                            child: Image.network(
+                                                                snapshot.data
+                                                                    .toString(),
+                                                                fit: BoxFit
+                                                                    .fitWidth),
                                                           ),
                                                         );
                                                       }

@@ -7,9 +7,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_app/main.dart';
-import 'package:my_app/utils/text_fade.dart';
-import 'package:my_app/widgets/button.dart';
+import 'package:catalyst/main.dart';
+import 'package:catalyst/utils/text_fade.dart';
+import 'package:catalyst/widgets/button.dart';
 
 void main() {
   testWidgets('Expected main screen elements',

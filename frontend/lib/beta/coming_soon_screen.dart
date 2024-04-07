@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'dart:math' as math;
 
-import 'package:my_app/utils/text_fade.dart';
+import 'package:catalyst/utils/text_fade.dart';
 
 class ComingSoonScreen extends StatelessWidget {
   const ComingSoonScreen({super.key});

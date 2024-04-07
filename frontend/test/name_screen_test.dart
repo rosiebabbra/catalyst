@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_app/onboarding/dob_screen.dart';
-import 'package:my_app/onboarding/name_screen.dart';
+import 'package:catalyst/onboarding/dob_screen.dart';
+import 'package:catalyst/onboarding/name_screen.dart';
 import 'mock.dart';
 
 void main() {

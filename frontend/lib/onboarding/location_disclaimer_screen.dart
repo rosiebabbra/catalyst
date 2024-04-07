@@ -5,7 +5,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:my_app/utils/text_fade.dart';
+import 'package:catalyst/utils/text_fade.dart';
 
 class LocationDisclaimerScreen extends StatefulWidget {
   final String versionId;
