@@ -148,430 +148,457 @@ class _MatchProfileState extends State<MatchProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Offstage(
-      offstage: widget.index != 0,
-      child: FutureBuilder(
-          future: getUserData(matchId),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            return TickerMode(
-              enabled: widget.index == 0,
-              child: Stack(
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      (Stack(
-                        children: [
-                          SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.75,
-                              child: Column(
-                                children: [
-                                  MatchName(name: snapshot.data['first_name']),
-                                  Center(
-                                    child: Row(
+    return SingleChildScrollView(
+      child: Offstage(
+        offstage: widget.index != 0,
+        child: FutureBuilder(
+            future: getUserData(matchId),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              return TickerMode(
+                enabled: widget.index == 0,
+                child: Stack(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        (Stack(
+                          children: [
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.75,
+                                child: Column(
+                                  children: [
+                                    MatchName(
+                                        name: snapshot.data['first_name']),
+                                    Center(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          FutureBuilder(
+                                              future: FirebaseStorage.instance
+                                                  .ref()
+                                                  .child('user_images')
+                                                  .child(
+                                                      '${widget.matchId}_1.jpg')
+                                                  .getDownloadURL(),
+                                              builder: (BuildContext context,
+                                                  AsyncSnapshot snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return const SizedBox(
+                                                    width: 100,
+                                                    height: 100,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                            strokeWidth: 8,
+                                                            color: Color(
+                                                                0xff33D15F)),
+                                                  );
+                                                } else if (snapshot.hasError) {
+                                                  return Text(
+                                                      'Error: ${snapshot.error}');
+                                                } else if (snapshot.data ==
+                                                    null) {
+                                                  return const Text(
+                                                      'Image not found'); // Handle null case
+                                                } else {
+                                                  // Get number of user images for indicator
+                                                  // We are hard coding it as 1 right now.
+                                                  // Currently, the future value of ref.getDownloadURL()
+                                                  // is simply a string link of ONE image.
+                                                  // Eventually, when we allow for multiple image upload,
+                                                  // we will need to use something like snapshot.data.length
+                                                  // which will ideally be a list/array of image links.
+                                                  numImages = 1;
+                                                  // Use the download URL to display the image
+                                                  return Container(
+                                                    decoration: BoxDecoration(
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                              blurRadius: 15,
+                                                              spreadRadius: 2,
+                                                              offset:
+                                                                  const Offset(
+                                                                      -5, 10),
+                                                              color: Colors.grey
+                                                                  .withOpacity(
+                                                                      0.3))
+                                                        ]),
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          const BorderRadius
+                                                              .all(
+                                                              Radius.circular(
+                                                                  10)),
+                                                      child: Image.network(
+                                                          snapshot.data
+                                                              .toString(),
+                                                          height: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height /
+                                                              2,
+                                                          fit: BoxFit.fill),
+                                                    ),
+                                                  );
+                                                }
+                                              }),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                            Positioned(
+                              bottom: MediaQuery.of(context).size.height * 0.05,
+                              left: MediaQuery.of(context).size.width * 0.375,
+                              child: Stack(children: [
+                                Opacity(
+                                  opacity: 0.7,
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey[600],
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      height: 20,
+                                      width: 75),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  height: 20,
+                                  width: 75,
+                                  child: Row(
+                                      // crossAxisAlignment:
+                                      //     CrossAxisAlignment.center,
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        FutureBuilder(
-                                            future: FirebaseStorage.instance
-                                                .ref()
-                                                .child('user_images')
-                                                .child(
-                                                    '${widget.matchId}_1.jpg')
-                                                .getDownloadURL(),
-                                            builder: (BuildContext context,
-                                                AsyncSnapshot snapshot) {
-                                              if (snapshot.connectionState ==
-                                                  ConnectionState.waiting) {
-                                                return const SizedBox(
-                                                  width: 100,
-                                                  height: 100,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                          strokeWidth: 8,
-                                                          color: Color(
-                                                              0xff33D15F)),
-                                                );
-                                              } else if (snapshot.hasError) {
-                                                return Text(
-                                                    'Error: ${snapshot.error}');
-                                              } else if (snapshot.data ==
-                                                  null) {
-                                                return const Text(
-                                                    'Image not found'); // Handle null case
-                                              } else {
-                                                // Get number of user images for indicator
-                                                // We are hard coding it as 1 right now.
-                                                // Currently, the future value of ref.getDownloadURL()
-                                                // is simply a string link of ONE image.
-                                                // Eventually, when we allow for multiple image upload,
-                                                // we will need to use something like snapshot.data.length
-                                                // which will ideally be a list/array of image links.
-                                                numImages = 1;
-                                                // Use the download URL to display the image
-                                                return Container(
-                                                  decoration:
-                                                      BoxDecoration(boxShadow: [
-                                                    BoxShadow(
-                                                        blurRadius: 15,
-                                                        spreadRadius: 2,
-                                                        offset: const Offset(
-                                                            -5, 10),
-                                                        color: Colors.grey
-                                                            .withOpacity(0.3))
-                                                  ]),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        const BorderRadius.all(
-                                                            Radius.circular(
-                                                                10)),
-                                                    child: Image.network(
-                                                        snapshot.data
-                                                            .toString(),
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .height /
-                                                            2,
-                                                        fit: BoxFit.fill),
-                                                  ),
-                                                );
-                                              }
-                                            }),
+                                        for (int i = 0; i < numImages; i++)
+                                          Icon(Icons.circle,
+                                              color: _currentPage == i
+                                                  ? const Color(0xff09CBC8)
+                                                  : Colors.white,
+                                              size: 8),
+                                      ]),
+                                )
+                              ]),
+                            )
+                          ],
+                        )),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                          child: Container(
+                            height: 50,
+                            width: MediaQuery.of(context).size.width * 0.85,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(10.0),
+                                topRight: Radius.circular(10.0),
+                              ),
+                              border: Border.all(
+                                  width: 0.5, color: Colors.grey[300]!),
+                            ),
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 0.5,
+                                                color: Colors.grey[300]!))),
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          10.0, 0, 5, 0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          const Icon(Icons.cake_outlined),
+                                          Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                  calculateAge(snapshot
+                                                          .data['birthdate'])
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color:
+                                                          Colors.grey[900]))),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 0.5,
+                                                color: Colors.grey[300]!))),
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 0, 10, 0),
+                                      child: Row(
+                                        children: [
+                                          const Icon(Icons.person_outline),
+                                          Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                  snapshot.data['gender'],
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color:
+                                                          Colors.grey[900]))),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 0, 10, 0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          const Icon(Icons.location_pin,
+                                              size: 20),
+                                          Padding(
+                                              padding: const EdgeInsets.all(8),
+                                              child: FutureBuilder(
+                                                  future:
+                                                      getCityFromCoordinates(
+                                                          snapshot
+                                                              .data['location']
+                                                              .latitude,
+                                                          snapshot
+                                                              .data['location']
+                                                              .longitude),
+                                                  builder: (context,
+                                                      locationSnapshot) {
+                                                    if (locationSnapshot
+                                                            .connectionState ==
+                                                        ConnectionState
+                                                            .waiting) {
+                                                      return const CircularProgressIndicator();
+                                                    } else if (locationSnapshot
+                                                        .hasError) {
+                                                      return Text(
+                                                          'Error: ${locationSnapshot.error}');
+                                                    } else if (!locationSnapshot
+                                                            .hasData ||
+                                                        locationSnapshot.data ==
+                                                            null) {
+                                                      return const CircularProgressIndicator();
+                                                    } else {
+                                                      return Text(
+                                                          locationSnapshot.data
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color: Colors
+                                                                  .grey[900]));
+                                                    }
+                                                  })),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.local_bar_outlined,
+                                            size: 20),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8),
+                                          child: Text(
+                                            snapshot.data['drinking'],
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.grey[900]),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
-                                ],
-                              )),
-                          Positioned(
-                            bottom: MediaQuery.of(context).size.height * 0.05,
-                            left: MediaQuery.of(context).size.width * 0.375,
-                            child: Stack(children: [
-                              Opacity(
-                                opacity: 0.7,
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey[600],
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    height: 20,
-                                    width: 75),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(10)),
-                                height: 20,
-                                width: 75,
-                                child: Row(
-                                    // crossAxisAlignment:
-                                    //     CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      for (int i = 0; i < numImages; i++)
-                                        Icon(Icons.circle,
-                                            color: _currentPage == i
-                                                ? const Color(0xff09CBC8)
-                                                : Colors.white,
-                                            size: 8),
-                                    ]),
-                              )
-                            ]),
-                          )
-                        ],
-                      )),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                        child: Container(
-                          height: 50,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
                           width: MediaQuery.of(context).size.width * 0.85,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(10.0),
-                              topRight: Radius.circular(10.0),
+                              bottomLeft: Radius.circular(10.0),
+                              bottomRight: Radius.circular(10.0),
                             ),
                             border: Border.all(
                                 width: 0.5, color: Colors.grey[300]!),
                           ),
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
+                          child: const Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                          right: BorderSide(
-                                              width: 0.5,
-                                              color: Colors.grey[300]!))),
-                                  child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        10.0, 0, 5, 0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        const Icon(Icons.cake_outlined),
-                                        Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                                calculateAge(snapshot
-                                                        .data['birthdate'])
-                                                    .toString(),
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.grey[900]))),
-                                      ],
+                                padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+                                      child: Icon(Icons.work_outline),
                                     ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                          right: BorderSide(
-                                              width: 0.5,
-                                              color: Colors.grey[300]!))),
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                    child: Row(
-                                      children: [
-                                        const Icon(Icons.person_outline),
-                                        Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text('Female',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.grey[900]))),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        const Icon(Icons.location_pin,
-                                            size: 20),
-                                        Padding(
-                                            padding: const EdgeInsets.all(8),
-                                            child: FutureBuilder(
-                                                future: getCityFromCoordinates(
-                                                    snapshot.data['location']
-                                                        .latitude,
-                                                    snapshot.data['location']
-                                                        .longitude),
-                                                builder: (context,
-                                                    locationSnapshot) {
-                                                  if (locationSnapshot
-                                                          .connectionState ==
-                                                      ConnectionState.waiting) {
-                                                    return const CircularProgressIndicator();
-                                                  } else if (locationSnapshot
-                                                      .hasError) {
-                                                    return Text(
-                                                        'Error: ${locationSnapshot.error}');
-                                                  } else if (!locationSnapshot
-                                                          .hasData ||
-                                                      locationSnapshot.data ==
-                                                          null) {
-                                                    return const CircularProgressIndicator();
-                                                  } else {
-                                                    return Text(
-                                                        locationSnapshot.data
-                                                            .toString(),
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color: Colors
-                                                                .grey[900]));
-                                                  }
-                                                })),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.local_bar_outlined,
-                                          size: 20),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8),
-                                        child: Text(
-                                          'Socially',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.grey[900]),
-                                        ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(10, 16, 0, 0),
+                                      child: Text(
+                                        'Works at Google',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+                                      child: Icon(Icons.school_outlined),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(10.0, 16, 0, 0),
+                                      child: Text(
+                                        'University of California, Berkeley',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+                                      child: Icon(Icons.home_outlined),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(10, 16, 0, 0),
+                                      child: Text(
+                                        'Chicago, IL',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+                                      child: Icon(Icons.auto_awesome_outlined),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(10, 16, 0, 0),
+                                      child: Text(
+                                        'Agnostic',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(15.0, 0, 0, 15),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+                                      child: Icon(Icons.ballot_outlined),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(10, 16, 0, 0),
+                                      child: Text(
+                                        'Liberal',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.85,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(10.0),
-                            bottomRight: Radius.circular(10.0),
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(35.0, 25, 0, 15),
+                          child: Row(
+                            children: [
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text("Caroline's interests",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black)),
+                              ),
+                            ],
                           ),
-                          border:
-                              Border.all(width: 0.5, color: Colors.grey[300]!),
                         ),
-                        child: const Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                                    child: Icon(Icons.work_outline),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(10, 16, 0, 0),
-                                    child: Text(
-                                      'Works at Google',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                                    child: Icon(Icons.school_outlined),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.fromLTRB(10.0, 16, 0, 0),
-                                    child: Text(
-                                      'University of California, Berkeley',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                                    child: Icon(Icons.home_outlined),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(10, 16, 0, 0),
-                                    child: Text(
-                                      'Chicago, IL',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                                    child: Icon(Icons.auto_awesome_outlined),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(10, 16, 0, 0),
-                                    child: Text(
-                                      'Agnostic',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(15.0, 0, 0, 15),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                                    child: Icon(Icons.ballot_outlined),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(10, 16, 0, 0),
-                                    child: Text(
-                                      'Liberal',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(35.0, 25, 0, 15),
-                        child: Row(
-                          children: [
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text("Caroline's interests",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black)),
-                            ),
-                          ],
-                        ),
-                      ),
-                      InterestsWidget(interests: widget.interests),
-                      SizedBox(height: 100)
-                    ],
-                  ),
-                ],
-              ),
-            );
-          }),
+                        InterestsWidget(interests: widget.interests),
+                        SizedBox(height: 100)
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }),
+      ),
     );
   }
 }
