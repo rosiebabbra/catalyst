@@ -75,18 +75,42 @@ class ChatContentState extends State<ChatContent> {
     return Scaffold(
         appBar: AppBar(
           shadowColor: Colors.white,
-          title: ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed('/match-screen');
-            },
-            child: Text(widget.senderData['senderName'],
-                style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold)),
+          title: Center(
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/match-screen');
+              },
+              style: ButtonStyle(
+                  elevation: MaterialStateProperty.all(0),
+                  backgroundColor: MaterialStateProperty.all(Colors.white)),
+              child: Center(
+                child: Column(
+                  children: [
+                    Text(widget.senderData['senderName'],
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold)),
+                    Center(
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('See profile',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold)),
+                          Icon(Icons.arrow_forward_ios, color: Colors.black)
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
           ),
-          backgroundColor: Colors.grey[100],
-          foregroundColor: Colors.black,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.white,
         ),
         body: Column(children: [
           Expanded(
