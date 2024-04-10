@@ -125,6 +125,7 @@ class ChatList extends StatefulWidget {
 class ChatListState extends State<ChatList> {
   bool throbber = false;
   String noMessagesErrorMsg = '';
+  late String matchId;
 
   Future<Object> getAllSenderIds(String receiverId) async {
     QuerySnapshot senderIds = await FirebaseFirestore.instance
@@ -209,7 +210,7 @@ class ChatListState extends State<ChatList> {
 
                               var receiverId = user!.uid;
                               var matchData = matchSnapshot.data[matchIndex];
-                              var matchId = matchData['user_id'];
+                              matchId = matchData['user_id'];
 
                               return FutureBuilder(
                                   future: getMessagePreview(user.uid, matchId),

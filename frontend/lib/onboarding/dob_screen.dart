@@ -18,7 +18,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
   DateTime selectedDate =
       DateTime.now().subtract(const Duration(days: 18 * 365));
 
-  updateUserInfo(User? user, DateTime birthDate) async {
+  updateUserInfo(User? user, int birthDate) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('user_id', isEqualTo: user?.uid)
@@ -135,7 +135,10 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                               onPressed: () {
                                 FirebaseAuth auth = FirebaseAuth.instance;
                                 User? currentUser = auth.currentUser;
-                                updateUserInfo(currentUser, selectedDate);
+                                var intBirthDate = selectedDate.year * 10000 +
+                                    selectedDate.month * 100 +
+                                    selectedDate.day;
+                                updateUserInfo(currentUser, intBirthDate);
                                 Navigator.pushNamed(
                                     context, '/onboarding-gender');
                               },
