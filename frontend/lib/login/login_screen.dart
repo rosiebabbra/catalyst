@@ -274,7 +274,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.all(0),
                 ),
-                child: Text(
+                child: const Text(
                   "Don't have an account yet? Register now",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 14),
@@ -283,6 +283,13 @@ class _LoginScreenState extends State<LoginScreen> {
             ],
           ),
         ));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
   }
 }
 
