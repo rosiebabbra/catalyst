@@ -67,6 +67,8 @@ class HobbyScreen extends StatefulWidget {
 
 class HobbyScreenState extends State<HobbyScreen> {
   late final SwipableStackController _controller;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  User? user;
   void _listenController() => setState(() {});
   int currentNavbarIndex = 0;
   List<dynamic> hobbies = [];
@@ -87,15 +89,20 @@ class HobbyScreenState extends State<HobbyScreen> {
 
   void onTabTapped(int index) {
     setState(() {
+      user = auth.currentUser;
       currentNavbarIndex = index;
     });
   }
 
-  Future<Set> fetchExclusionList() async {
-    final selectedInterests =
-        await FirebaseFirestore.instance.collection('selected_interests').get();
-    final declinedInterests =
-        await FirebaseFirestore.instance.collection('declined_interests').get();
+  Future<Set> fetchExclusionList(String userId) async {
+    final selectedInterests = await FirebaseFirestore.instance
+        .collection('selected_interests')
+        .where('user_id', isEqualTo: userId)
+        .get();
+    final declinedInterests = await FirebaseFirestore.instance
+        .collection('declined_interests')
+        .where('user_id', isEqualTo: userId)
+        .get();
 
     Set<dynamic> exclusions = {
       ...selectedInterests.docs.expand((doc) => doc['interest_ids']).toSet(),
@@ -107,7 +114,7 @@ class HobbyScreenState extends State<HobbyScreen> {
 
   interestSwipe(BuildContext context) {
     return FutureBuilder(
-        future: fetchExclusionList(),
+        future: fetchExclusionList(user.toString()),
         builder: (context, snapshot) {
           final exclusionList = snapshot.data;
 
