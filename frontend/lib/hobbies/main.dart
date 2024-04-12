@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:catalyst/chat/chat_list.dart';
 import 'package:catalyst/my_profile/my_profile_screen.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 import '../utils/text_fade.dart';
 
@@ -68,7 +69,7 @@ class HobbyScreen extends StatefulWidget {
 class HobbyScreenState extends State<HobbyScreen> {
   late final SwipableStackController _controller;
   final FirebaseAuth auth = FirebaseAuth.instance;
-  User? user;
+  String? user;
   void _listenController() => setState(() {});
   int currentNavbarIndex = 0;
   List<dynamic> hobbies = [];
@@ -77,6 +78,9 @@ class HobbyScreenState extends State<HobbyScreen> {
   void initState() {
     super.initState();
     _controller = SwipableStackController()..addListener(_listenController);
+    setState(() {
+      user = auth.currentUser!.uid;
+    });
   }
 
   @override
@@ -89,32 +93,34 @@ class HobbyScreenState extends State<HobbyScreen> {
 
   void onTabTapped(int index) {
     setState(() {
-      user = auth.currentUser;
       currentNavbarIndex = index;
     });
   }
 
-  Future<Set> fetchExclusionList(String userId) async {
-    final selectedInterests = await FirebaseFirestore.instance
+  Stream<Set> streamExclusionList(String userId) {
+    final selectedInterestsQuery = FirebaseFirestore.instance
         .collection('selected_interests')
         .where('user_id', isEqualTo: userId)
-        .get();
-    final declinedInterests = await FirebaseFirestore.instance
+        .snapshots();
+
+    final declinedInterestsQuery = FirebaseFirestore.instance
         .collection('declined_interests')
         .where('user_id', isEqualTo: userId)
-        .get();
+        .snapshots();
 
-    Set<dynamic> exclusions = {
-      ...selectedInterests.docs.expand((doc) => doc['interest_ids']).toSet(),
-      ...declinedInterests.docs.expand((doc) => doc['interest_ids']).toSet(),
-    };
-
-    return exclusions;
+    return Rx.combineLatest2(selectedInterestsQuery, declinedInterestsQuery,
+        (selectedSnapshot, declinedSnapshot) {
+      Set<dynamic> exclusions = {
+        ...selectedSnapshot.docs.expand((doc) => doc['interest_ids']).toSet(),
+        ...declinedSnapshot.docs.expand((doc) => doc['interest_ids']).toSet(),
+      };
+      return exclusions;
+    });
   }
 
   interestSwipe(BuildContext context) {
-    return FutureBuilder(
-        future: fetchExclusionList(user.toString()),
+    return StreamBuilder(
+        stream: streamExclusionList(user.toString()),
         builder: (context, snapshot) {
           final exclusionList = snapshot.data;
 
