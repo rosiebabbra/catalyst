@@ -13,7 +13,7 @@ convertTimestampToTime(timestamp) {
 }
 
 class ChatContent extends StatefulWidget {
-  final senderData; // contains sender name, id
+  final senderData;
   final String? receiverId;
   const ChatContent({Key? key, this.receiverId, this.senderData})
       : super(key: key);
@@ -26,6 +26,11 @@ class ChatContentState extends State<ChatContent> {
   String timestamp = '';
   bool timestampDisplayed = false;
   int tappedIndex = -1;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +86,7 @@ class ChatContentState extends State<ChatContent> {
             ),
             shadowColor: Colors.white,
             title: SizedBox(
-              width: widget.senderData['senderName'].length * 20.0,
+              width: MediaQuery.of(context).size.width,
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed('/match-screen');
@@ -122,8 +127,7 @@ class ChatContentState extends State<ChatContent> {
         body: Column(children: [
           Expanded(
             flex: 4,
-            child: StreamBuilder<
-                    List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
+            child: StreamBuilder(
                 stream: messageStream,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
@@ -242,5 +246,10 @@ class ChatContentState extends State<ChatContent> {
               },
               child: const Text('Send'))
         ]));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

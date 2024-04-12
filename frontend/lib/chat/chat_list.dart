@@ -215,14 +215,15 @@ class ChatListState extends State<ChatList> {
 
                                 var receiverId = user!.uid;
                                 var matchData = matchSnapshot.data[matchIndex];
-                                matchId = matchData['user_id'];
 
                                 return StreamBuilder(
-                                    stream: streamMessagePreview(user.uid,
-                                        matchId, matchData['first_name']),
+                                    stream: streamMessagePreview(
+                                        user.uid,
+                                        matchData['user_id'],
+                                        matchData['first_name']),
                                     builder: (previewContext, previewSnapshot) {
                                       return Message(
-                                          senderId: matchId,
+                                          senderId: matchData['user_id'],
                                           receiverId: receiverId,
                                           msgPreview:
                                               previewSnapshot.data.toString(),
