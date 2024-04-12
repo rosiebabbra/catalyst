@@ -73,44 +73,51 @@ class ChatContentState extends State<ChatContent> {
     final currentUserId = user?.uid;
 
     return Scaffold(
-        appBar: AppBar(
-          shadowColor: Colors.white,
-          title: Center(
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed('/match-screen');
-              },
-              style: ButtonStyle(
-                  elevation: MaterialStateProperty.all(0),
-                  backgroundColor: MaterialStateProperty.all(Colors.white)),
-              child: Center(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(75.0),
+          child: AppBar(
+            iconTheme: const IconThemeData(
+              color: Colors.black,
+            ),
+            shadowColor: Colors.white,
+            title: SizedBox(
+              width: widget.senderData['senderName'].length * 20.0,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/match-screen');
+                },
+                style: ButtonStyle(
+                    alignment: Alignment.center,
+                    elevation: MaterialStateProperty.all(0),
+                    backgroundColor: MaterialStateProperty.all(Colors.white)),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(widget.senderData['senderName'],
                         style: const TextStyle(
                             color: Colors.black,
                             fontSize: 28,
                             fontWeight: FontWeight.bold)),
-                    Center(
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('See profile',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold)),
-                          Icon(Icons.arrow_forward_ios, color: Colors.black)
-                        ],
-                      ),
+                    const SizedBox(height: 5),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('See profile',
+                            style: TextStyle(
+                                color: Color(0xff7301E4),
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold)),
+                        Icon(Icons.arrow_forward_ios,
+                            color: Colors.black, size: 13)
+                      ],
                     )
                   ],
                 ),
               ),
             ),
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.white,
           ),
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.white,
         ),
         body: Column(children: [
           Expanded(
