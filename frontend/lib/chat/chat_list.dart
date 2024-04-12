@@ -146,16 +146,23 @@ class ChatListState extends State<ChatList> {
     }
   }
 
-  Future<String> getMessagePreview(String receiverId, String senderId) async {
-    QuerySnapshot messagePreviews = await FirebaseFirestore.instance
+  Stream<String> streamMessagePreview(
+      String receiverId, String senderId, String matchName) {
+    final messagePreviewQuery = FirebaseFirestore.instance
         .collection('messages')
         .where('receiver_id', isEqualTo: receiverId)
         .where('sender_id', isEqualTo: senderId)
         .orderBy('timestamp', descending: true)
-        .get();
+        .snapshots();
 
-    var msgPreview = messagePreviews.docs.first['content'];
-    return msgPreview;
+    return messagePreviewQuery.map((querySnapshot) {
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot.docs.first['content'];
+      } else {
+        // Return a default value if no message preview is found
+        return 'Start your chat with ${matchName}!';
+      }
+    });
   }
 
   dynamic getUserName(String senderId) async {
@@ -210,17 +217,15 @@ class ChatListState extends State<ChatList> {
                                 var matchData = matchSnapshot.data[matchIndex];
                                 matchId = matchData['user_id'];
 
-                                return FutureBuilder(
-                                    future:
-                                        getMessagePreview(user.uid, matchId),
+                                return StreamBuilder(
+                                    stream: streamMessagePreview(user.uid,
+                                        matchId, matchData['first_name']),
                                     builder: (previewContext, previewSnapshot) {
                                       return Message(
                                           senderId: matchId,
                                           receiverId: receiverId,
-                                          msgPreview: (previewSnapshot.data ==
-                                                  null)
-                                              ? 'Start your chat with ${matchData['first_name']}!'
-                                              : previewSnapshot.data.toString(),
+                                          msgPreview:
+                                              previewSnapshot.data.toString(),
                                           senderName: matchData['first_name']);
                                     });
                               })),
@@ -314,7 +319,10 @@ class Message extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.fade,
                           softWrap: false,
-                          style: const TextStyle(fontSize: 18)),
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey[600],
+                          )),
                     ),
                   ],
                 ),
