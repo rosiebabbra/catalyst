@@ -180,204 +180,56 @@ class ChatListState extends State<ChatList> {
     Stream<QuerySnapshot<Object?>> userSnapshots = users.snapshots();
 
     return Scaffold(
-      appBar: AppBar(
-          elevation: 1,
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          title: const Text(
-            'Inbox',
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
-          )),
-      body: StreamBuilder(
-          stream: fetchMatches(38, 90),
-          builder: (BuildContext matchContext,
-              AsyncSnapshot<dynamic> matchSnapshot) {
-            if (matchSnapshot.hasError) {
-              return const CircularProgressIndicator(color: Colors.red);
-            } else {
-              if (matchSnapshot.connectionState == ConnectionState.active) {
-                return Column(
-                  children: [
-                    Flexible(
-                        flex: 12,
-                        child: ListView.builder(
-                            itemCount: matchSnapshot.data.length,
-                            itemBuilder: (matchChatContext, matchIndex) {
-                              FirebaseAuth auth = FirebaseAuth.instance;
-                              User? user = auth.currentUser;
+        appBar: AppBar(
+            elevation: 1,
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+            title: const Text(
+              'Inbox',
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+            )),
+        body: StreamBuilder(
+            stream: fetchMatches(38, 90),
+            builder: (BuildContext matchContext,
+                AsyncSnapshot<dynamic> matchSnapshot) {
+              if (matchSnapshot.hasError) {
+                return const CircularProgressIndicator(color: Colors.red);
+              } else {
+                if (matchSnapshot.connectionState == ConnectionState.active) {
+                  return Column(
+                    children: [
+                      Flexible(
+                          flex: 12,
+                          child: ListView.builder(
+                              itemCount: matchSnapshot.data.length,
+                              itemBuilder: (matchChatContext, matchIndex) {
+                                FirebaseAuth auth = FirebaseAuth.instance;
+                                User? user = auth.currentUser;
 
-                              var receiverId = user!.uid;
-                              var matchData = matchSnapshot.data[matchIndex];
-                              matchId = matchData['user_id'];
+                                var receiverId = user!.uid;
+                                var matchData = matchSnapshot.data[matchIndex];
+                                matchId = matchData['user_id'];
 
-                              return FutureBuilder(
-                                  future: getMessagePreview(user.uid, matchId),
-                                  builder: (previewContext, previewSnapshot) {
-                                    return Message(
-                                        senderId: matchId,
-                                        receiverId: receiverId,
-                                        msgPreview: (previewSnapshot.data ==
-                                                null)
-                                            ? 'Start your chat with ${matchData['first_name']}!'
-                                            : previewSnapshot.data.toString(),
-                                        senderName: matchData['first_name']);
-                                  });
-                            })),
-                  ],
-                );
+                                return FutureBuilder(
+                                    future:
+                                        getMessagePreview(user.uid, matchId),
+                                    builder: (previewContext, previewSnapshot) {
+                                      return Message(
+                                          senderId: matchId,
+                                          receiverId: receiverId,
+                                          msgPreview: (previewSnapshot.data ==
+                                                  null)
+                                              ? 'Start your chat with ${matchData['first_name']}!'
+                                              : previewSnapshot.data.toString(),
+                                          senderName: matchData['first_name']);
+                                    });
+                              })),
+                    ],
+                  );
+                }
               }
-            }
-            return CircularProgressIndicator(color: Colors.green);
-            // return Scaffold(
-            //     body: Column(
-            //   children: [
-            //     const SizedBox(
-            //       height: 75,
-            //     ),
-            //     const Center(
-            //         child: Text(
-            //       'Inbox',
-            //       style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
-            //     )),
-            //     if (throbber)
-            //       const CircularProgressIndicator(color: Color(0xff33D15F)),
-            //     if (noMessagesErrorMsg.isNotEmpty)
-            //       Padding(
-            //         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-            //         child: Text(noMessagesErrorMsg.toString(),
-            //             style: const TextStyle(fontSize: 18)),
-            //       ),
-            //     Flexible(
-            //       child: StreamBuilder(
-            //           stream: userSnapshots,
-            //           builder: (BuildContext context,
-            //               AsyncSnapshot<QuerySnapshot> snapshot) {
-            //             print('these are the users that we have messages from');
-            //             print(widget.userIds);
-            //             if (snapshot.connectionState == ConnectionState.waiting) {
-            //               // While waiting for data, show a loading indicator
-            //               return const CircularProgressIndicator(
-            //                   color: Color(0xff33D15F));
-            //             } else if (snapshot.hasError) {
-            //               // If an error occurs, display an error message
-            //               return Text('Error: ${snapshot.error}');
-            //             } else if (!snapshot.hasData) {
-            //               // If there's no data, show a message indicating an empty state
-            //               return const Text('No data available.');
-            //             }
-
-            //             var inboxList = snapshot.data!.docs.toList();
-            //             return ListView(
-            //                 children: inboxList.map((DocumentSnapshot document) {
-            //               FirebaseAuth auth = FirebaseAuth.instance;
-            //               User? user = auth.currentUser;
-
-            //               var senderIds = getAllSenderIds(user!.uid);
-
-            //               return FutureBuilder<Object>(
-            //                   future: senderIds,
-            //                   builder: (BuildContext context,
-            //                       AsyncSnapshot senderIdSnapshot) {
-            //                     if (senderIdSnapshot.connectionState ==
-            //                         ConnectionState.waiting) {
-            //                       throbber = true;
-            //                     }
-            //                     if (senderIdSnapshot.hasError) {
-            //                       return Text('Error: ${senderIdSnapshot.error}');
-            //                     }
-            //                     if (senderIdSnapshot.data == null) {
-            //                       noMessagesErrorMsg =
-            //                           'You have no messages yet!';
-            //                     }
-            //                     throbber = false;
-            //                     noMessagesErrorMsg = '';
-
-            //                     return SizedBox(
-            //                       height:
-            //                           MediaQuery.of(context).size.height * 0.75,
-            //                       child: (senderIdSnapshot.data != null)
-            //                           ? ListView.builder(
-            //                               itemCount:
-            //                                   (senderIdSnapshot.data != null)
-            //                                       ? senderIdSnapshot.data.length
-            //                                       : 1,
-            //                               itemBuilder:
-            //                                   (BuildContext context, index) {
-            //                                 FirebaseAuth auth =
-            //                                     FirebaseAuth.instance;
-            //                                 User? user = auth.currentUser;
-
-            //                                 var messagePreview =
-            //                                     getMessagePreview(user!.uid,
-            //                                         senderIdSnapshot.data[index]);
-            //                                 return FutureBuilder(
-            //                                   future: messagePreview,
-            //                                   builder: (BuildContext context,
-            //                                       AsyncSnapshot
-            //                                           msgPreviewSnapshot) {
-            //                                     if (msgPreviewSnapshot
-            //                                             .connectionState ==
-            //                                         ConnectionState.waiting) {
-            //                                       return const CircularProgressIndicator(
-            //                                           color: Color(0xff33D15F));
-            //                                     }
-            //                                     if (msgPreviewSnapshot.hasError) {
-            //                                       return Text(
-            //                                           'Error: ${msgPreviewSnapshot.error}');
-            //                                     }
-            //                                     if (!msgPreviewSnapshot.hasData) {
-            //                                       return const Text(
-            //                                           'No sender IDs available.');
-            //                                     }
-
-            //                                     return FutureBuilder(
-            //                                       future: getUserName(
-            //                                           senderIdSnapshot
-            //                                               .data[index]),
-            //                                       builder: (BuildContext context,
-            //                                           nameSnapshot) {
-            //                                         if (nameSnapshot
-            //                                                 .connectionState ==
-            //                                             ConnectionState.waiting) {
-            //                                           return const SizedBox(
-            //                                             height: 25,
-            //                                             width: 25,
-            //                                             child:
-            //                                                 CircularProgressIndicator(
-            //                                                     color: Color(
-            //                                                         0xff33D15F)),
-            //                                           );
-            //                                         }
-            //                                         if (nameSnapshot.hasError) {
-            //                                           return Text(
-            //                                               'Error: ${nameSnapshot.error}');
-            //                                         }
-            //                                         if (!nameSnapshot.hasData) {
-            //                                           return const Text(
-            //                                               'No sender IDs available.');
-            //                                         }
-            //                                         return Message(
-            //                                             msgPreview:
-            //                                                 msgPreviewSnapshot
-            //                                                     .data,
-            //                                             name: nameSnapshot.data
-            //                                                 .toString());
-            //                                       },
-            //                                     );
-            //                                   },
-            //                                 );
-            //                               },
-            //                             )
-            //                           : const Text(''),
-            //                     );
-            //                   });
-            //             }).toList());
-            //           }),
-            //     ),
-            //   ],
-            // ));
-          }),
-    );
+              return const CircularProgressIndicator(color: Colors.green);
+            }));
   }
 }
 
