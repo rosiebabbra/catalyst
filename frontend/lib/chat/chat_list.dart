@@ -180,6 +180,14 @@ class ChatListState extends State<ChatList> {
     Stream<QuerySnapshot<Object?>> userSnapshots = users.snapshots();
 
     return Scaffold(
+      appBar: AppBar(
+          elevation: 1,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          title: const Text(
+            'Inbox',
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+          )),
       body: StreamBuilder(
           stream: fetchMatches(38, 90),
           builder: (BuildContext matchContext,
@@ -190,18 +198,8 @@ class ChatListState extends State<ChatList> {
               if (matchSnapshot.connectionState == ConnectionState.active) {
                 return Column(
                   children: [
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.075),
-                    const Flexible(
-                      child: Center(
-                          child: Text(
-                        'Inbox',
-                        style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.w600),
-                      )),
-                    ),
                     Flexible(
-                        flex: 10,
+                        flex: 12,
                         child: ListView.builder(
                             itemCount: matchSnapshot.data.length,
                             itemBuilder: (matchChatContext, matchIndex) {
@@ -456,7 +454,7 @@ class Message extends StatelessWidget {
                           overflow: TextOverflow.fade,
                           softWrap: false,
                           style: const TextStyle(
-                              fontSize: 25, fontWeight: FontWeight.w700)),
+                              fontSize: 22, fontWeight: FontWeight.w700)),
                     ),
                     SizedBox(
                       width: 250,
