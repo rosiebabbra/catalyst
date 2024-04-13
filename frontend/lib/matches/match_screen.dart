@@ -458,7 +458,7 @@ class _MatchProfileState extends State<MatchProfile> {
                             border: Border.all(
                                 width: 0.5, color: Colors.grey[300]!),
                           ),
-                          child: const Column(
+                          child: Column(
                             children: [
                               Padding(
                                 padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
@@ -481,27 +481,33 @@ class _MatchProfileState extends State<MatchProfile> {
                                   ],
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                                      child: Icon(Icons.school_outlined),
-                                    ),
-                                    Padding(
+                              (snapshot.data['college'] != null)
+                                  ? Padding(
                                       padding:
-                                          EdgeInsets.fromLTRB(10.0, 16, 0, 0),
-                                      child: Text(
-                                        'University of California, Berkeley',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500),
+                                          EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0, 16, 0, 0),
+                                            child: Icon(Icons.school_outlined),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                10.0, 16, 0, 0),
+                                            child: Text(
+                                              snapshot.data['college']
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                    )
+                                  : SizedBox.shrink(),
                               Padding(
                                 padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
                                 child: Row(
