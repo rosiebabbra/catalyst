@@ -45,9 +45,9 @@ Future<String> getCityFromCoordinates(double latitude, double longitude) async {
     }
   } catch (e) {
     print('Error fetching city name: $e');
-    return Future.delayed(Duration(seconds: 2), () => 'Unknown City');
+    return Future.delayed(const Duration(seconds: 2), () => 'Unknown City');
   }
-  return Future.delayed(Duration(seconds: 2), () => 'Unknown City');
+  return Future.delayed(const Duration(seconds: 2), () => 'Unknown City');
 }
 
 Future<dynamic> getUserData(String userId) async {
@@ -460,7 +460,7 @@ class _MatchProfileState extends State<MatchProfile> {
                           ),
                           child: Column(
                             children: [
-                              Padding(
+                              const Padding(
                                 padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -483,6 +483,33 @@ class _MatchProfileState extends State<MatchProfile> {
                               ),
                               (snapshot.data['college'] != null)
                                   ? Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          15.0, 0, 0, 0),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0, 16, 0, 0),
+                                            child: Icon(Icons.school_outlined),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                10.0, 16, 0, 0),
+                                            child: Text(
+                                              snapshot.data['college']
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  : const SizedBox(),
+                              (snapshot.data['hometown'] != null)
+                                  ? const Padding(
                                       padding:
                                           EdgeInsets.fromLTRB(15.0, 0, 0, 0),
                                       child: Row(
@@ -492,85 +519,75 @@ class _MatchProfileState extends State<MatchProfile> {
                                           Padding(
                                             padding: EdgeInsets.fromLTRB(
                                                 0, 16, 0, 0),
-                                            child: Icon(Icons.school_outlined),
+                                            child: Icon(Icons.home_outlined),
                                           ),
                                           Padding(
                                             padding: EdgeInsets.fromLTRB(
-                                                10.0, 16, 0, 0),
+                                                10, 16, 0, 0),
                                             child: Text(
-                                              snapshot.data['college']
-                                                  .toString(),
+                                              'Chicago, IL',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w500),
                                             ),
-                                          )
+                                          ),
                                         ],
                                       ),
                                     )
-                                  : SizedBox.shrink(),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                                      child: Icon(Icons.home_outlined),
-                                    ),
-                                    Padding(
+                                  : const SizedBox.shrink(),
+                              (snapshot.data['religious_pref'] != null)
+                                  ? const Padding(
                                       padding:
-                                          EdgeInsets.fromLTRB(10, 16, 0, 0),
-                                      child: Text(
-                                        'Chicago, IL',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500),
+                                          EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0, 16, 0, 0),
+                                            child: Icon(
+                                                Icons.auto_awesome_outlined),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                10, 16, 0, 0),
+                                            child: Text(
+                                              'Agnostic',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                                      child: Icon(Icons.auto_awesome_outlined),
-                                    ),
-                                    Padding(
+                                    )
+                                  : const SizedBox.shrink(),
+                              (snapshot.data['political_affiliation'] != null)
+                                  ? const Padding(
                                       padding:
-                                          EdgeInsets.fromLTRB(10, 16, 0, 0),
-                                      child: Text(
-                                        'Agnostic',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500),
+                                          EdgeInsets.fromLTRB(15.0, 0, 0, 15),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0, 16, 0, 0),
+                                            child: Icon(Icons.ballot_outlined),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                10, 16, 0, 0),
+                                            child: Text(
+                                              'Liberal',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(15.0, 0, 0, 15),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                                      child: Icon(Icons.ballot_outlined),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.fromLTRB(10, 16, 0, 0),
-                                      child: Text(
-                                        'Liberal',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                    )
+                                  : const SizedBox.shrink(),
+                              const SizedBox(height: 16)
                             ],
                           ),
                         ),
@@ -590,7 +607,7 @@ class _MatchProfileState extends State<MatchProfile> {
                           ),
                         ),
                         InterestsWidget(interests: widget.interests),
-                        SizedBox(height: 100)
+                        const SizedBox(height: 100)
                       ],
                     ),
                   ],
@@ -620,7 +637,7 @@ class MatchName extends StatelessWidget {
           style: const TextStyle(
               fontSize: 32, fontWeight: FontWeight.bold, color: Colors.black),
         ),
-        SizedBox(height: 100)
+        const SizedBox(height: 100)
       ],
     );
   }
