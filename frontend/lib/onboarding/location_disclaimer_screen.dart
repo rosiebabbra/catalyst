@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:catalyst/onboarding/image_upload.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:math' as math;
@@ -145,7 +146,12 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
                         if (widget.versionId == 'beta') {
                           Navigator.pushNamed(context, '/coming-soon');
                         } else {
-                          Navigator.pushNamed(context, '/hobbies');
+                          // Navigator.pushNamed(context, '/hobbies');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ImageUpload()),
+                          );
                         }
                       }
                     } else {
@@ -157,7 +163,10 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
                       Navigator.pushNamed(context, '/location-services-denied');
                     }
                   },
-                  child: const Text('Enable location access')),
+                  child: const Text(
+                    'Enable location access',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )),
             ),
           ),
         ),

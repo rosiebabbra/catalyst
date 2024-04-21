@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:catalyst/matches/match_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -89,7 +90,13 @@ class ChatContentState extends State<ChatContent> {
               width: MediaQuery.of(context).size.width,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed('/match-screen');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MatchScreen(
+                              matchId: widget.senderData['senderId'],
+                            )),
+                  );
                 },
                 style: ButtonStyle(
                     alignment: Alignment.center,
