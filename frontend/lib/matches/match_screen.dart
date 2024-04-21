@@ -4,12 +4,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 
-class Interests {
-  final String interest;
-
-  Interests(this.interest);
-}
-
 int calculateAge(int birthdateInt) {
   // Extract year, month, and day from the birthdate integer
   int year = birthdateInt ~/ 10000;
@@ -66,30 +60,23 @@ Future<dynamic> getUserData(String userId) async {
   }
 }
 
-Map<String, List<Interests>> interests = {
-  '32bTzSuJfwUYwSbVBGdDGk5MM5g2': [
-    Interests('Movies'),
-    Interests('Music'),
-    Interests('Reading'),
-    Interests('Writing')
-  ],
-  'a3IXF0jBT0SkVW53hCIksmfsqAh2': [
-    Interests('Movies'),
-    Interests('Music'),
-    Interests('Reading'),
-    Interests('Writing')
-  ]
-};
-
 class MatchScreen extends StatefulWidget {
-  const MatchScreen({super.key});
+  final String matchId;
+  MatchScreen({super.key, required this.matchId});
 
   @override
-  State<MatchScreen> createState() => _MatchScreenState();
+  State<MatchScreen> createState() => MatchScreenState();
 }
 
-class _MatchScreenState extends State<MatchScreen> {
+class MatchScreenState extends State<MatchScreen> {
   int currentNavbarIndex = 0;
+  List<String> interestNames = [];
+  final Set<String> interestIds = Set();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,9 +86,8 @@ class _MatchScreenState extends State<MatchScreen> {
         body: MatchProfile(
             index: currentNavbarIndex,
             controller: controller,
-            matchId: 'vhfjksskdjhf',
-            interests:
-                interests['32bTzSuJfwUYwSbVBGdDGk5MM5g2'] ?? [Interests('')]));
+            matchId: widget.matchId.toString(),
+            interests: interestNames));
   }
 }
 
@@ -115,30 +101,20 @@ class MatchProfile extends StatefulWidget {
 
   final int index;
   final PageController controller;
-  final List<Interests> interests;
+  final List<String> interests;
   final String matchId;
 
   @override
-  State<MatchProfile> createState() => _MatchProfileState();
+  State<MatchProfile> createState() => MatchProfileState();
 }
 
-class _MatchProfileState extends State<MatchProfile> {
+class MatchProfileState extends State<MatchProfile> {
   FirebaseAuth auth = FirebaseAuth.instance;
-  int _currentPage = 0;
   int numImages = 0;
-  late Future<dynamic> matchDataFuture;
-  late String matchId;
-  var first_name;
-  var last_name;
-  var birthdate;
-  var latitude;
-  var longitude;
-  Map<String, dynamic> matchData = {};
 
   @override
   void initState() {
     super.initState();
-    matchId = widget.matchId;
   }
 
   @override
@@ -152,7 +128,7 @@ class _MatchProfileState extends State<MatchProfile> {
       child: Offstage(
         offstage: widget.index != 0,
         child: FutureBuilder(
-            future: getUserData(matchId),
+            future: getUserData(widget.matchId),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               return TickerMode(
                 enabled: widget.index == 0,
@@ -460,27 +436,32 @@ class _MatchProfileState extends State<MatchProfile> {
                           ),
                           child: Column(
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                                      child: Icon(Icons.work_outline),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.fromLTRB(10, 16, 0, 0),
-                                      child: Text(
-                                        'Works at Google',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500),
+                              (snapshot.data['occupation'] != null)
+                                  ? Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          15.0, 0, 0, 0),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0, 16, 0, 0),
+                                            child: Icon(Icons.work_outline),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                10, 16, 0, 0),
+                                            child: Text(
+                                              snapshot.data['occupation'],
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                    )
+                                  : const SizedBox.shrink(),
                               (snapshot.data['college'] != null)
                                   ? Padding(
                                       padding: const EdgeInsets.fromLTRB(
@@ -509,24 +490,24 @@ class _MatchProfileState extends State<MatchProfile> {
                                     )
                                   : const SizedBox(),
                               (snapshot.data['hometown'] != null)
-                                  ? const Padding(
-                                      padding:
-                                          EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                                  ? Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          15.0, 0, 0, 0),
                                       child: Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          Padding(
+                                          const Padding(
                                             padding: EdgeInsets.fromLTRB(
                                                 0, 16, 0, 0),
                                             child: Icon(Icons.home_outlined),
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.fromLTRB(
+                                            padding: const EdgeInsets.fromLTRB(
                                                 10, 16, 0, 0),
                                             child: Text(
-                                              'Chicago, IL',
-                                              style: TextStyle(
+                                              snapshot.data['hometown'],
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.w500),
                                             ),
                                           ),
@@ -535,25 +516,25 @@ class _MatchProfileState extends State<MatchProfile> {
                                     )
                                   : const SizedBox.shrink(),
                               (snapshot.data['religious_pref'] != null)
-                                  ? const Padding(
-                                      padding:
-                                          EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                                  ? Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          15.0, 0, 0, 0),
                                       child: Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          Padding(
+                                          const Padding(
                                             padding: EdgeInsets.fromLTRB(
                                                 0, 16, 0, 0),
                                             child: Icon(
                                                 Icons.auto_awesome_outlined),
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.fromLTRB(
+                                            padding: const EdgeInsets.fromLTRB(
                                                 10, 16, 0, 0),
                                             child: Text(
-                                              'Agnostic',
-                                              style: TextStyle(
+                                              snapshot.data['religious_pref'],
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.w500),
                                             ),
                                           ),
@@ -562,24 +543,25 @@ class _MatchProfileState extends State<MatchProfile> {
                                     )
                                   : const SizedBox.shrink(),
                               (snapshot.data['political_affiliation'] != null)
-                                  ? const Padding(
-                                      padding:
-                                          EdgeInsets.fromLTRB(15.0, 0, 0, 15),
+                                  ? Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          15.0, 0, 0, 15),
                                       child: Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          Padding(
+                                          const Padding(
                                             padding: EdgeInsets.fromLTRB(
                                                 0, 16, 0, 0),
                                             child: Icon(Icons.ballot_outlined),
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.fromLTRB(
+                                            padding: const EdgeInsets.fromLTRB(
                                                 10, 16, 0, 0),
                                             child: Text(
-                                              'Liberal',
-                                              style: TextStyle(
+                                              snapshot.data[
+                                                  'political_affiliation'],
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.w500),
                                             ),
                                           ),
@@ -591,23 +573,23 @@ class _MatchProfileState extends State<MatchProfile> {
                             ],
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(35.0, 25, 0, 15),
-                          child: Row(
-                            children: [
-                              FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text("Caroline's interests",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black)),
-                              ),
-                            ],
-                          ),
-                        ),
-                        InterestsWidget(interests: widget.interests),
-                        const SizedBox(height: 100)
+                        // const Padding(
+                        //   padding: EdgeInsets.fromLTRB(35.0, 25, 0, 15),
+                        //   child: Row(
+                        //     children: [
+                        //       FittedBox(
+                        //         fit: BoxFit.scaleDown,
+                        //         child: Text("Caroline's interests",
+                        //             style: TextStyle(
+                        //                 fontSize: 20,
+                        //                 fontWeight: FontWeight.bold,
+                        //                 color: Colors.black)),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        // InterestsWidget(uid: auth.currentUser?.uid),
+                        // const SizedBox(height: 100)
                       ],
                     ),
                   ],
@@ -721,12 +703,10 @@ class ActionButton extends StatelessWidget {
 }
 
 class InterestsWidget extends StatelessWidget {
-  const InterestsWidget({
-    super.key,
-    required this.interests,
-  });
+  InterestsWidget({super.key, required uid});
 
-  final List<Interests> interests;
+  // Get all interest IDs associated with the currently logged in user ID
+  // Query each interest ID for its name from the interests table
 
   @override
   Widget build(BuildContext context) {
@@ -745,30 +725,26 @@ class InterestsWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          for (var i in interests)
-            Padding(
-              padding: const EdgeInsets.all(3.0),
-              child: TextButton(
-                style: ButtonStyle(
-                    enableFeedback: false,
-                    foregroundColor: MaterialStateProperty.all<Color>(
-                        const Color(0xff7301E4)),
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.grey[100]!),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(45),
-                            side: BorderSide(color: Colors.grey[800]!)))),
-                onPressed: () => {},
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(3.0, 0, 3, 0),
-                  child: Text(
-                    i.interest,
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                ),
+          Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: TextButton(
+              style: ButtonStyle(
+                  enableFeedback: false,
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(const Color(0xff7301E4)),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.grey[100]!),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(45),
+                          side: BorderSide(color: Colors.grey[800]!)))),
+              onPressed: () => {},
+              child: Text(
+                'somecrap',
+                style: TextStyle(fontSize: 12),
               ),
-            )
+            ),
+          )
         ],
       ),
     );

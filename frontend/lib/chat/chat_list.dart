@@ -183,9 +183,6 @@ class ChatListState extends State<ChatList> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-    Stream<QuerySnapshot<Object?>> userSnapshots = users.snapshots();
-
     return Scaffold(
         appBar: AppBar(
             elevation: 1,
@@ -288,9 +285,9 @@ class Message extends StatelessWidget {
                 height: 80.0,
                 decoration: BoxDecoration(
                   color: const Color(0xff7c94b6),
-                  image: const DecorationImage(
+                  image: DecorationImage(
                     image: NetworkImage(
-                        'https://firebasestorage.googleapis.com/v0/b/dating-appp-2d438.appspot.com/o/user_images%2F32bTzSuJfwUYwSbVBGdDGk5MM5g2_1.jpg?alt=media&token=d69fa31c-5470-4e27-8081-eeb7fc49a17a'),
+                        'https://firebasestorage.googleapis.com/v0/b/dating-appp-2d438.appspot.com/o/user_images%2F${senderId}.jpg?alt=media&token=d69fa31c-5470-4e27-8081-eeb7fc49a17a'),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: const BorderRadius.all(Radius.circular(50.0)),

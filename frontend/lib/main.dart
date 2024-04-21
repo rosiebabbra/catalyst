@@ -1,10 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:catalyst/beta/coming_soon_screen.dart';
-import 'package:catalyst/matches/match_screen.dart';
 import 'package:catalyst/onboarding/location_services_denied_screen.dart';
 import 'package:catalyst/onboarding/signup_screen.dart';
 import 'beta/see_you_soon.dart';
-import 'chat/chat_content.dart';
 import 'firebase_options.dart';
 import 'package:chewie/chewie.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -134,8 +132,7 @@ class BackgroundVideoState extends State<MyApp> {
         '/onboarding-name': (context) => const NameEntryScreen(),
         '/onboarding-dob': (context) => const DOBEntryScreen(),
         '/onboarding-gender': (context) => const GenderIDEntryScreen(),
-        '/onboarding-signup': (context) => const SignupScreen(),
-        '/match-screen': (context) => MatchScreen()
+        '/onboarding-signup': (context) => const SignupScreen()
       },
       '1.0.0': {
         '/login': (context) => const LoginScreen(versionId: '1.0.0'),
@@ -154,8 +151,7 @@ class BackgroundVideoState extends State<MyApp> {
             const LocationDisclaimerScreen(versionId: '1.0.0'),
         '/verification-screen': (context) => const VerificationScreen(),
         '/swipes-completed': (context) => const SwipesCompletedScreen(),
-        '/subscription-page': (context) => const MyProfileScreen(),
-        '/match-screen': (context) => MatchScreen()
+        '/subscription-page': (context) => const MyProfileScreen()
       }
     };
 
