@@ -153,7 +153,7 @@ class MatchProfileState extends State<MatchProfile> {
                                           future: FirebaseStorage.instance
                                               .ref()
                                               .child('user_images')
-                                              .child('${widget.matchId}_1.jpg')
+                                              .child('${widget.matchId}.jpg')
                                               .getDownloadURL(),
                                           builder: (BuildContext context,
                                               AsyncSnapshot snapshot) {
