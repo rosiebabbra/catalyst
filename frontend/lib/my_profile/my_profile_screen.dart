@@ -57,13 +57,14 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 Container(
                   width: 100.0,
                   height: 100.0,
-                  decoration: const BoxDecoration(
-                    color: Color(0xff7c94b6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xff7c94b6),
                     image: DecorationImage(
-                      image: AssetImage('assets/images/profPic3.jpg'),
+                      image: NetworkImage(
+                          'https://firebasestorage.googleapis.com/v0/b/dating-appp-2d438.appspot.com/o/user_images%2F$currentUserId.jpeg?alt=media&token=93205064-c7ab-4b20-8750-9821c2bd97d0'),
                       fit: BoxFit.cover,
                     ),
-                    borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                    borderRadius: const BorderRadius.all(Radius.circular(50.0)),
                   ),
                 ),
               ]),
@@ -72,10 +73,12 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               future: getCurrentUserName(currentUserId ?? ''),
               builder: (BuildContext context, snapshot) {
                 return Flexible(
-                  child: Text(snapshot.data.toString(),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          fontSize: 28, fontWeight: FontWeight.w700)),
+                  child: (snapshot.data != null)
+                      ? Text(snapshot.data.toString(),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 28, fontWeight: FontWeight.w700))
+                      : CircularProgressIndicator(),
                 );
               },
             ),

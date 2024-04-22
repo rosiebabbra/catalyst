@@ -1,7 +1,8 @@
 import 'dart:async';
-import 'dart:math';
+import 'dart:math' as math;
 import 'package:catalyst/matches/match_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
@@ -86,45 +87,45 @@ class ChatContentState extends State<ChatContent> {
               color: Colors.black,
             ),
             shadowColor: Colors.white,
-            title: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MatchScreen(
-                              matchId: widget.senderData['senderId'],
-                            )),
-                  );
-                },
-                style: ButtonStyle(
-                    alignment: Alignment.center,
-                    elevation: MaterialStateProperty.all(0),
-                    backgroundColor: MaterialStateProperty.all(Colors.white)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(widget.senderData['senderName'],
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 5),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('See profile',
-                            style: TextStyle(
-                                color: Color(0xff7301E4),
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold)),
-                        Icon(Icons.arrow_forward_ios,
-                            color: Colors.black, size: 13)
-                      ],
-                    )
-                  ],
-                ),
+            flexibleSpace: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MatchScreen(
+                            matchId: widget.senderData['senderId'],
+                          )),
+                );
+              },
+              style: ButtonStyle(
+                  alignment: Alignment.center,
+                  elevation: MaterialStateProperty.all(0),
+                  backgroundColor: MaterialStateProperty.all(Colors.white)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                  Text(widget.senderData['senderName'],
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 5),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('See profile',
+                          style: TextStyle(
+                              color: Color(0xff7301E4),
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold)),
+                      Icon(Icons.arrow_forward_ios,
+                          color: Colors.black, size: 13)
+                    ],
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                ],
               ),
             ),
             backgroundColor: Colors.white,
@@ -146,7 +147,7 @@ class ChatContentState extends State<ChatContent> {
                   } else {
                     var msgList = snapshot.data!;
                     return ListView.builder(
-                      key: Key("${Random().nextDouble()}"),
+                      key: Key("${math.Random().nextDouble()}"),
                       itemCount: msgList.length,
                       itemBuilder: (context, index) {
                         DocumentSnapshot document = msgList[index];
@@ -176,8 +177,8 @@ class ChatContentState extends State<ChatContent> {
                                         padding: const EdgeInsets.fromLTRB(
                                             0, 10, 0, 0),
                                         child: Text(data['content'].toString(),
-                                            key:
-                                                Key("${Random().nextDouble()}"),
+                                            key: Key(
+                                                "${math.Random().nextDouble()}"),
                                             style: TextStyle(
                                                 color: data['receiver_id'] ==
                                                         currentUserId
@@ -185,7 +186,8 @@ class ChatContentState extends State<ChatContent> {
                                                     : Colors.white)),
                                       )
                                     : Text(data['content'].toString(),
-                                        key: Key("${Random().nextDouble()}"),
+                                        key: Key(
+                                            "${math.Random().nextDouble()}"),
                                         style: TextStyle(
                                             color: data['receiver_id'] ==
                                                     currentUserId
@@ -228,30 +230,63 @@ class ChatContentState extends State<ChatContent> {
                   }
                 }),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextFormField(
-              controller: messageController,
-              maxLines: null,
-              maxLength: 1000, // Set the maximum number of characters here
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: MediaQuery.sizeOf(context).width * 0.75,
+                child: TextFormField(
+                  controller: messageController,
+                  maxLines: null,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(width: 5),
+              SizedBox(
+                height: 60,
+                width: 60,
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(5)),
+                      shape: BoxShape.rectangle,
+                      border: Border.all(width: 3.5, color: Colors.transparent),
+                      gradient: const LinearGradient(
+                        transform: GradientRotation(math.pi / 4),
+                        colors: [
+                          Color(0xff7301E4),
+                          Color(0xff0E8BFF),
+                          Color(0xff09CBC8),
+                          Color(0xff33D15F),
+                        ],
+                      )),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(2.5)),
+                        shape: BoxShape.rectangle,
+                        color: Colors.white),
+                    child: CupertinoButton(
+                        onPressed: () {
+                          FirebaseFirestore.instance
+                              .collection('messages')
+                              .add({
+                            'content': messageController.text,
+                            'timestamp': Timestamp.now(),
+                            'receiver_id': widget.senderData['senderId'],
+                            'sender_id': currentUserId
+                          });
+                          setState(() {
+                            messageController.text = '';
+                          });
+                        },
+                        child: const Icon(Icons.arrow_forward_ios)),
+                  ),
+                ),
+              )
+            ],
           ),
-          ElevatedButton(
-              onPressed: () {
-                FirebaseFirestore.instance.collection('messages').add({
-                  'content': messageController.text,
-                  'timestamp': Timestamp.now(),
-                  'receiver_id': widget.senderData['senderId'],
-                  'sender_id': currentUserId
-                });
-                setState(() {
-                  messageController.text = '';
-                });
-              },
-              child: const Text('Send'))
+          SizedBox(height: 45)
         ]));
   }
 

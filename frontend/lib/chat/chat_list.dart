@@ -292,7 +292,7 @@ class Message extends StatelessWidget {
                   ),
                   borderRadius: const BorderRadius.all(Radius.circular(50.0)),
                   border: Border.all(
-                    // color: const Color(0xff7301E4),
+                    color: const Color(0xff33D15F),
                     width: 2.0,
                   ),
                 ),
