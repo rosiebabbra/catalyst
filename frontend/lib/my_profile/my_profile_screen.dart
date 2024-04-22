@@ -76,9 +76,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   child: (snapshot.data != null)
                       ? Text(snapshot.data.toString(),
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 28, fontWeight: FontWeight.w700))
-                      : CircularProgressIndicator(),
+                      : const CircularProgressIndicator(),
                 );
               },
             ),

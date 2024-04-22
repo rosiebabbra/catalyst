@@ -272,10 +272,18 @@ class Message extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-            color: Colors.white,
+            // gradient: LinearGradient(
+            //   begin: Alignment.topLeft,
+            //   end: Alignment.bottomRight,
+            //   colors: [
+            //     Color.fromARGB(50, 114, 1, 228),
+            //     Color.fromARGB(35, 114, 1, 228),
+            //     Color.fromARGB(11, 114, 1, 228),
+            //   ],
+            // ),
             border: Border(
-              bottom: BorderSide(width: 1.0, color: Colors.grey[300]!),
-            )),
+          bottom: BorderSide(width: 1.0, color: Colors.grey[300]!),
+        )),
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Row(
@@ -292,7 +300,7 @@ class Message extends StatelessWidget {
                   ),
                   borderRadius: const BorderRadius.all(Radius.circular(50.0)),
                   border: Border.all(
-                    color: const Color(0xff33D15F),
+                    color: Colors.white,
                     width: 2.0,
                   ),
                 ),
