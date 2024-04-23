@@ -201,12 +201,17 @@ class MatchProfileState extends State<MatchProfile> {
                                                           Radius.circular(10)),
                                                   child: Image.network(
                                                       snapshot.data.toString(),
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.85,
                                                       height:
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .height /
                                                               2,
-                                                      fit: BoxFit.fill),
+                                                      fit: BoxFit.cover),
                                                 ),
                                               );
                                             }
