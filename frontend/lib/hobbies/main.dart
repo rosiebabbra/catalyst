@@ -262,6 +262,7 @@ class HobbyScreenState extends State<HobbyScreen> {
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: currentNavbarIndex,
+          selectedItemColor: Colors.black,
           onTap: onTabTapped,
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Explore'),
