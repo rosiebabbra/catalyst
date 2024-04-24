@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math' as math;
+import 'package:catalyst/onboarding/university_selection.dart';
 import 'package:catalyst/utils/text_fade.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -147,22 +148,27 @@ class _ImageUploadState extends State<ImageUpload> {
                       decoration: const BoxDecoration(
                           shape: BoxShape.circle, color: Colors.white),
                       child: TextButton(
-                        child: const Icon(Icons.arrow_forward_ios,
-                            color: Colors.black),
-                        onPressed: () {
-                          if (nextButtonEnabled == true) {
-                            setState(() {
-                              buttonUnenabledMsg = '';
-                            });
-                            Navigator.pushNamed(context, '/hobbies');
-                          } else {
-                            setState(() {
-                              buttonUnenabledMsg =
-                                  'An image must be uploaded to continue.';
-                            });
+                          child: const Icon(Icons.arrow_forward_ios,
+                              color: Colors.black),
+                          onPressed: () {
+                            // if (nextButtonEnabled == true) {
+                            //   setState(() {
+                            //     buttonUnenabledMsg = '';
+                            //   });
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      UniversitySelectionScreen()),
+                            );
+                            // } else {
+                            //   setState(() {
+                            //     buttonUnenabledMsg =
+                            //         'An image must be uploaded to continue.';
+                            //   });
                           }
-                        },
-                      ),
+                          // },
+                          ),
                     ),
                   )),
             ),
