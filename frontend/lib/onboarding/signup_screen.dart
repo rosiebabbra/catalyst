@@ -283,128 +283,130 @@ class _SignupScreenState extends State<SignupScreen> {
                             decoration: const BoxDecoration(
                                 shape: BoxShape.circle, color: Colors.white),
                             child: TextButton(
-                              child: const Icon(Icons.arrow_forward_ios,
-                                  color: Colors.black),
-                              onPressed: () async {
-                                bool invalidEmailInput(String email) {
-                                  final RegExp emailRegex = RegExp(
-                                    r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
-                                  );
+                                child: const Icon(Icons.arrow_forward_ios,
+                                    color: Colors.black),
+                                onPressed: () async {
+                                  bool invalidEmailInput(String email) {
+                                    final RegExp emailRegex = RegExp(
+                                      r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
+                                    );
 
-                                  return !emailRegex.hasMatch(email);
-                                }
+                                    return !emailRegex.hasMatch(email);
+                                  }
 
-                                Future<dynamic> userExists(String email) async {
-                                  try {
-                                    List<String> signInMethods =
-                                        await FirebaseAuth.instance
-                                            .fetchSignInMethodsForEmail(email);
+                                  Future<dynamic> userExists(
+                                      String email) async {
+                                    try {
+                                      List<String> signInMethods =
+                                          await FirebaseAuth.instance
+                                              .fetchSignInMethodsForEmail(
+                                                  email);
 
-                                    if (signInMethods.isNotEmpty) {
-                                      return true;
-                                      // Email is already registered; signInMethods contains the sign-in methods
-                                    } else {
-                                      return false;
-                                      // Email is not registered
+                                      if (signInMethods.isNotEmpty) {
+                                        return true;
+                                        // Email is already registered; signInMethods contains the sign-in methods
+                                      } else {
+                                        return false;
+                                        // Email is not registered
+                                      }
+                                    } catch (e) {
+                                      setState(() {
+                                        userExistsErrorMsg =
+                                            "An error occurred. Please check your network settings or try again later.";
+                                      });
                                     }
-                                  } catch (e) {
+                                  }
+
+                                  var isInvalidEmail =
+                                      invalidEmailInput(emailController.text);
+                                  var isNotMinPasswordLength =
+                                      passwordController.text.length < 8;
+                                  var passwordsNonMatching =
+                                      passwordController.text !=
+                                          passwordReEntryController.text;
+                                  var isExistingUser =
+                                      await userExists(emailController.text);
+
+                                  if (isExistingUser == true) {
                                     setState(() {
                                       userExistsErrorMsg =
-                                          "An error occurred. Please check your network settings or try again later.";
+                                          "It looks like you've already registered! Head to the login page to log in to your account.";
                                     });
-                                  }
-                                }
-
-                                var isInvalidEmail =
-                                    invalidEmailInput(emailController.text);
-                                var isNotMinPasswordLength =
-                                    passwordController.text.length < 8;
-                                var passwordsNonMatching =
-                                    passwordController.text !=
-                                        passwordReEntryController.text;
-                                var isExistingUser =
-                                    await userExists(emailController.text);
-
-                                if (isExistingUser == true) {
-                                  setState(() {
-                                    userExistsErrorMsg =
-                                        "It looks like you've already registered! Head to the login page to log in to your account.";
-                                  });
-                                } else {
-                                  setState(() {
-                                    userExistsErrorMsg = "";
-                                  });
-                                }
-
-                                if (isInvalidEmail) {
-                                  setState(() {
-                                    validEmailErrorMsg =
-                                        'Please enter a valid email address.';
-                                  });
-                                } else {
-                                  setState(() {
-                                    validEmailErrorMsg = '';
-                                  });
-                                }
-
-                                if (isNotMinPasswordLength) {
-                                  setState(() {
-                                    passwordFormatErrorMsg =
-                                        'Your password must be at least 8 characters long.';
-                                  });
-                                } else {
-                                  setState(() {
-                                    passwordFormatErrorMsg = '';
-                                  });
-                                }
-
-                                if (passwordsNonMatching) {
-                                  setState(() {
-                                    unMatchingPasswordsErrorMsg =
-                                        "The entered passwords do not match.";
-                                  });
-                                } else {
-                                  setState(() {
-                                    unMatchingPasswordsErrorMsg = '';
-                                  });
-                                }
-
-                                // Commenting out for debugging
-                                if (!isInvalidEmail &&
-                                    !isNotMinPasswordLength &&
-                                    !passwordsNonMatching &&
-                                    !isExistingUser &&
-                                    isSafeFromSqlInjection(
-                                        emailController.text) &&
-                                    isSafeFromSqlInjection(
-                                        passwordController.text) &&
-                                    isSafeFromSqlInjection(
-                                        passwordReEntryController.text)) {
-                                  UserCredential credential = await FirebaseAuth
-                                      .instance
-                                      .createUserWithEmailAndPassword(
-                                    email: emailController.text,
-                                    password: passwordController.text,
-                                  );
-                                  if (credential.user != null) {
-                                    updateUserInfo(
-                                        credential.user!.uid.toString(),
-                                        emailController.text);
                                   } else {
                                     setState(() {
-                                      signUpErrorMsg =
-                                          'There was an error creating your account.';
+                                      userExistsErrorMsg = "";
                                     });
                                   }
 
-                                  Navigator.pushNamed(
-                                      context, '/onboarding-name');
-                                }
+                                  if (isInvalidEmail) {
+                                    setState(() {
+                                      validEmailErrorMsg =
+                                          'Please enter a valid email address.';
+                                    });
+                                  } else {
+                                    setState(() {
+                                      validEmailErrorMsg = '';
+                                    });
+                                  }
 
-                                formatShakeKey.currentState?.shake();
-                                matchShakeKey.currentState?.shake();
-                              },
-                            ),
+                                  if (isNotMinPasswordLength) {
+                                    setState(() {
+                                      passwordFormatErrorMsg =
+                                          'Your password must be at least 8 characters long.';
+                                    });
+                                  } else {
+                                    setState(() {
+                                      passwordFormatErrorMsg = '';
+                                    });
+                                  }
+
+                                  if (passwordsNonMatching) {
+                                    setState(() {
+                                      unMatchingPasswordsErrorMsg =
+                                          "The entered passwords do not match.";
+                                    });
+                                  } else {
+                                    setState(() {
+                                      unMatchingPasswordsErrorMsg = '';
+                                    });
+                                  }
+
+                                  // Commenting out for debugging
+                                  if (!isInvalidEmail &&
+                                      !isNotMinPasswordLength &&
+                                      !passwordsNonMatching &&
+                                      !isExistingUser &&
+                                      isSafeFromSqlInjection(
+                                          emailController.text) &&
+                                      isSafeFromSqlInjection(
+                                          passwordController.text) &&
+                                      isSafeFromSqlInjection(
+                                          passwordReEntryController.text)) {
+                                    UserCredential credential =
+                                        await FirebaseAuth.instance
+                                            .createUserWithEmailAndPassword(
+                                      email: emailController.text,
+                                      password: passwordController.text,
+                                    );
+                                    if (credential.user != null) {
+                                      updateUserInfo(
+                                          credential.user!.uid.toString(),
+                                          emailController.text);
+                                    } else {
+                                      setState(() {
+                                        signUpErrorMsg =
+                                            'There was an error creating your account.';
+                                      });
+                                    }
+
+                                    Navigator.pushNamed(
+                                        context, '/onboarding-name');
+                                  }
+
+                                  // formatShakeKey.currentState?.shake();
+                                  // matchShakeKey.currentState?.shake();
+                                  // },
+                                }),
                           ),
                         )),
                   ],
