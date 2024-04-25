@@ -1,3 +1,4 @@
+import 'package:catalyst/onboarding/religious_preference_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -125,7 +126,12 @@ class CareerScreenState extends State<CareerScreen> {
                         child: const Icon(Icons.arrow_forward_ios,
                             color: Colors.black),
                         onPressed: () {
-                          Navigator.pushNamed(context, '/hobbies');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ReligiousPreferenceScreen()),
+                          );
                         }),
                   ),
                 )),
