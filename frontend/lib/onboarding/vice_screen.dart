@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'package:catalyst/onboarding/career_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -85,6 +86,7 @@ class ViceScreenState extends State<ViceScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(25, 0, 75, 0),
                   child: DropdownButton<String>(
+                      value: selectedDrinkingValue,
                       items: const [
                         DropdownMenuItem(value: 'Yes', child: Text('Yes')),
                         DropdownMenuItem(
@@ -110,6 +112,7 @@ class ViceScreenState extends State<ViceScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(25, 0, 75, 0),
                   child: DropdownButton<String>(
+                      value: selectedSmokingValue,
                       items: const [
                         DropdownMenuItem(value: 'Yes', child: Text('Yes')),
                         DropdownMenuItem(
@@ -135,6 +138,7 @@ class ViceScreenState extends State<ViceScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(25, 0, 75, 0),
                   child: DropdownButton<String>(
+                      value: selectedMarjiuanaValue,
                       items: const [
                         DropdownMenuItem(value: 'Yes', child: Text('Yes')),
                         DropdownMenuItem(
@@ -160,6 +164,7 @@ class ViceScreenState extends State<ViceScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(25, 0, 75, 0),
                   child: DropdownButton<String>(
+                      value: selectedDrugsValue,
                       items: const [
                         DropdownMenuItem(value: 'Yes', child: Text('Yes')),
                         DropdownMenuItem(
@@ -203,11 +208,10 @@ class ViceScreenState extends State<ViceScreen> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Scaffold()),
+                          MaterialPageRoute(
+                              builder: (context) => CareerScreen()),
                         );
-                      }
-                      // },
-                      ),
+                      }),
                 ),
               )),
         )
