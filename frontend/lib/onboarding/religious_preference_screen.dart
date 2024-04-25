@@ -3,6 +3,27 @@ import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+updateReligion(User? user, String selection) async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .where('user_id', isEqualTo: user?.uid)
+      .get();
+
+  if (querySnapshot.docs.isNotEmpty) {
+    // Assume there's only one matching document (you might need to adjust if multiple documents match)
+    DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+
+    // Get the document reference and update the fields
+    DocumentReference documentReference =
+        FirebaseFirestore.instance.collection('users').doc(documentSnapshot.id);
+
+    // Update the fields
+    await documentReference.update({
+      'religious_pref': selection,
+    });
+  } else {}
+}
+
 class ReligiousPreferenceScreen extends StatefulWidget {
   const ReligiousPreferenceScreen({super.key});
 
@@ -11,8 +32,11 @@ class ReligiousPreferenceScreen extends StatefulWidget {
 }
 
 class ReligiousPreferenceScreenState extends State<ReligiousPreferenceScreen> {
+  String selected = 'Agnostic';
   @override
   Widget build(BuildContext context) {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
     return Scaffold(
         body: Center(
       child: Column(
@@ -35,6 +59,7 @@ class ReligiousPreferenceScreenState extends State<ReligiousPreferenceScreen> {
               style: TextStyle(fontSize: 16, color: Colors.grey[800])),
           const SizedBox(height: 25),
           DropdownButton<String>(
+              value: selected,
               menuMaxHeight: 250,
               items: const [
                 DropdownMenuItem(value: 'Agnostic', child: Text('Agnostic')),
@@ -54,7 +79,10 @@ class ReligiousPreferenceScreenState extends State<ReligiousPreferenceScreen> {
               ],
               onChanged: (value) {
                 // Write to db
-                setState(() {});
+                setState(() {
+                  selected = value.toString();
+                  updateReligion(user, value.toString());
+                });
               }),
           const SizedBox(height: 150),
           Padding(
