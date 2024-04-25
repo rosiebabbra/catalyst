@@ -27,7 +27,7 @@ class _ImageUploadState extends State<ImageUpload> {
     final User? user = auth.currentUser;
     final currentUserId = user?.uid;
 
-    Future<void> _pickAndUploadImage(String userId) async {
+    Future<void> pickAndUploadImage(String userId) async {
       final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
       if (pickedFile != null) {
@@ -49,7 +49,7 @@ class _ImageUploadState extends State<ImageUpload> {
           final url = await snapshot.ref.getDownloadURL();
           print('Download URL: $url');
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Text('Upload complete!'),
               duration: Duration(seconds: 2),
             ),
@@ -61,7 +61,7 @@ class _ImageUploadState extends State<ImageUpload> {
             _isUploading = false; // Stop uploading
           });
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Text('Error occurred during upload.'),
             ),
           );
@@ -96,15 +96,15 @@ class _ImageUploadState extends State<ImageUpload> {
               ),
             ),
             // if (_image != null) Image.file(_image!),
-            SizedBox(height: 25),
+            const SizedBox(height: 25),
             CupertinoButton(
-                onPressed: () => _pickAndUploadImage(currentUserId.toString()),
-                color: Color(0xff09CBC8),
-                borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                child: SizedBox(
-                  height: 35,
+                onPressed: () => pickAndUploadImage(currentUserId.toString()),
+                color: const Color(0xff09CBC8),
+                borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                child: const SizedBox(
+                  height: 25,
                   width: 175,
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.upload),
@@ -117,16 +117,16 @@ class _ImageUploadState extends State<ImageUpload> {
                     ],
                   ),
                 )),
-            SizedBox(height: 25),
-            if (_isUploading) CircularProgressIndicator(),
-            SizedBox(height: 25),
+            const SizedBox(height: 25),
+            if (_isUploading) const CircularProgressIndicator(),
+            const SizedBox(height: 25),
             if (!nextButtonEnabled)
               Text(buttonUnenabledMsg,
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Colors.red, fontWeight: FontWeight.bold)),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             Padding(
-              padding: const EdgeInsets.fromLTRB(200, 0, 0, 0),
+              padding: const EdgeInsets.fromLTRB(225, 0, 0, 0),
               child: SizedBox(
                   height: 75,
                   width: 75,
@@ -159,7 +159,7 @@ class _ImageUploadState extends State<ImageUpload> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      UniversitySelectionScreen()),
+                                      const UniversitySelectionScreen()),
                             );
                             // } else {
                             //   setState(() {

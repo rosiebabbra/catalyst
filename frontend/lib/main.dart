@@ -149,6 +149,10 @@ class BackgroundVideoState extends State<MyApp> {
         '/onboarding-signup': (context) => const SignupScreen(),
         '/location-disclaimer': (context) =>
             const LocationDisclaimerScreen(versionId: '1.0.0'),
+        '/location-services-denied': (content) =>
+            const LocationServiceDeniedScreen(
+              versionId: '1.0.0',
+            ),
         '/verification-screen': (context) => const VerificationScreen(),
         '/swipes-completed': (context) => const SwipesCompletedScreen(),
         '/subscription-page': (context) => const MyProfileScreen()

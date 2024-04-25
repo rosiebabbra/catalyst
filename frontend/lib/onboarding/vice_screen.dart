@@ -182,7 +182,7 @@ class ViceScreenState extends State<ViceScreen> {
               ]),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(200, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(225, 0, 0, 0),
           child: SizedBox(
               height: 75,
               width: 75,

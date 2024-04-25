@@ -8,6 +8,28 @@ import 'package:geolocator/geolocator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:catalyst/utils/text_fade.dart';
 
+Future<void> writeData(
+  String collection,
+  String fieldToFilter,
+  String valueToFilter,
+  String columnToWrite,
+  dynamic valueToWrite,
+) async {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  try {
+    QuerySnapshot querySnapshot = await firestore
+        .collection(collection)
+        .where(fieldToFilter, isEqualTo: valueToFilter)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // If the document with the specified field and value exists, update the column
+      DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+      await documentSnapshot.reference.update({columnToWrite: valueToWrite});
+    }
+  } catch (e) {}
+}
+
 class LocationDisclaimerScreen extends StatefulWidget {
   final String versionId;
   const LocationDisclaimerScreen({super.key, required this.versionId});
@@ -30,7 +52,6 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
   Widget build(BuildContext context) {
     double latitude = 0;
     double longitude = 0;
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     Future<void> getLocation() async {
       try {
@@ -40,28 +61,6 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
           latitude += position.latitude;
           longitude += position.longitude;
         });
-      } catch (e) {}
-    }
-
-    Future<void> writeData(
-      String collection,
-      String fieldToFilter,
-      String valueToFilter,
-      String columnToWrite,
-      dynamic valueToWrite,
-    ) async {
-      try {
-        QuerySnapshot querySnapshot = await firestore
-            .collection(collection)
-            .where(fieldToFilter, isEqualTo: valueToFilter)
-            .get();
-
-        if (querySnapshot.docs.isNotEmpty) {
-          // If the document with the specified field and value exists, update the column
-          DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
-          await documentSnapshot.reference
-              .update({columnToWrite: valueToWrite});
-        }
       } catch (e) {}
     }
 
@@ -109,7 +108,7 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
           animationDuration: const Duration(milliseconds: 1200),
           child: Container(
             width: 300,
-            height: 55,
+            height: 60,
             decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(30)),
                 shape: BoxShape.rectangle,
@@ -165,7 +164,6 @@ class _LocationDisclaimerScreenState extends State<LocationDisclaimerScreen> {
                   },
                   child: const Text(
                     'Enable location access',
-                    style: TextStyle(fontWeight: FontWeight.bold),
                   )),
             ),
           ),

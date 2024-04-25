@@ -1,3 +1,7 @@
+import 'package:catalyst/onboarding/image_upload.dart';
+import 'package:catalyst/onboarding/location_disclaimer_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:catalyst/utils/text_fade.dart';
@@ -44,7 +48,18 @@ class LocationServiceDeniedScreenState
         if (widget.versionId == 'beta') {
           Navigator.pushNamed(context, '/coming-soon');
         } else {
-          Navigator.pushNamed(context, '/hobbies');
+          final FirebaseAuth auth = FirebaseAuth.instance;
+          final User? user = auth.currentUser;
+          final currentUserId = user?.uid;
+
+          Position? position = await Geolocator.getCurrentPosition();
+
+          writeData('users', 'user_id', currentUserId.toString(), 'location',
+              GeoPoint(position.latitude, position.longitude));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ImageUpload()),
+          );
         }
       }
     }
