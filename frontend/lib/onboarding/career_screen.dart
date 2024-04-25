@@ -102,7 +102,7 @@ class CareerScreenState extends State<CareerScreen> {
               }),
           const SizedBox(height: 175),
           Padding(
-            padding: const EdgeInsets.fromLTRB(200, 0, 0, 0),
+            padding: const EdgeInsets.fromLTRB(225, 0, 0, 0),
             child: SizedBox(
                 height: 75,
                 width: 75,

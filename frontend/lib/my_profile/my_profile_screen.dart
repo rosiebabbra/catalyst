@@ -187,7 +187,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.grey)),
-                    Text('Unlimited likes',
+                    Text('Unlimited swipes',
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w600)),
                     Icon(Icons.check, color: Color(0xff33D15F)),
@@ -206,7 +206,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w600)),
                     Icon(Icons.check, color: Color(0xff33D15F)),
-                    Icon(Icons.check, color: Colors.grey),
+                    Icon(Icons.check, color: Colors.transparent),
                   ]),
             )),
             SizedBox(height: MediaQuery.of(context).size.height * 0.15)

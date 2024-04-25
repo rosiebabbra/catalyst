@@ -86,7 +86,7 @@ class ReligiousPreferenceScreenState extends State<ReligiousPreferenceScreen> {
               }),
           const SizedBox(height: 150),
           Padding(
-            padding: const EdgeInsets.fromLTRB(200, 0, 0, 0),
+            padding: const EdgeInsets.fromLTRB(225, 0, 0, 0),
             child: SizedBox(
                 height: 75,
                 width: 75,
