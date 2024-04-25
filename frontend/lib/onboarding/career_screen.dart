@@ -125,10 +125,7 @@ class CareerScreenState extends State<CareerScreen> {
                         child: const Icon(Icons.arrow_forward_ios,
                             color: Colors.black),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Scaffold()),
-                          );
+                          Navigator.pushNamed(context, '/hobbies');
                         }),
                   ),
                 )),
