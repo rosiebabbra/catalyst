@@ -424,6 +424,27 @@ class MatchProfileState extends State<MatchProfile> {
                                     ),
                                   ),
                                 ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.nature, size: 20),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8),
+                                          child: Text(
+                                            snapshot.data['marijuana'],
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.grey[900]),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
