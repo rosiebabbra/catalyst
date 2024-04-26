@@ -1,8 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'chat_content.dart';
+
+Future<dynamic> getUserData(String userId) async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .where('user_id', isEqualTo: userId)
+      .get();
+
+  if (querySnapshot.docs.isNotEmpty) {
+    for (QueryDocumentSnapshot document in querySnapshot.docs) {
+      var recordData = document.data() as Map<String, dynamic>;
+      return recordData;
+    }
+  } else {
+    return {'first_name': 'Error rendering user name'};
+  }
+}
 
 double getDistanceBetweenUsers(currentUserData, potentialMatchData) {
   double distanceInMeters = Geolocator.distanceBetween(
@@ -126,6 +143,8 @@ class ChatListState extends State<ChatList> {
   bool throbber = false;
   String noMessagesErrorMsg = '';
   late String matchId;
+  double latitude = 0.0;
+  double longitude = 0.0;
 
   Future<Object> getAllSenderIds(String receiverId) async {
     QuerySnapshot senderIds = await FirebaseFirestore.instance
@@ -165,24 +184,10 @@ class ChatListState extends State<ChatList> {
     });
   }
 
-  dynamic getUserName(String senderId) async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .where('user_id', isEqualTo: senderId)
-        .get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      for (QueryDocumentSnapshot document in querySnapshot.docs) {
-        var recordData = document.data() as Map<String, dynamic>;
-        return recordData['first_name'];
-      }
-    } else {
-      return 'Error rendering user name';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String currentUserId = auth.currentUser!.uid;
     return Scaffold(
         appBar: AppBar(
             elevation: 1,
@@ -192,47 +197,62 @@ class ChatListState extends State<ChatList> {
               'Inbox',
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
             )),
-        body: StreamBuilder(
-            stream: fetchMatches(38, 90),
-            builder: (BuildContext matchContext,
-                AsyncSnapshot<dynamic> matchSnapshot) {
-              if (matchSnapshot.hasError) {
-                return const CircularProgressIndicator(color: Colors.red);
-              } else {
-                if (matchSnapshot.connectionState == ConnectionState.active) {
-                  return Column(
-                    children: [
-                      Flexible(
-                          flex: 12,
-                          child: ListView.builder(
-                              itemCount: matchSnapshot.data.length,
-                              itemBuilder: (matchChatContext, matchIndex) {
-                                FirebaseAuth auth = FirebaseAuth.instance;
-                                User? user = auth.currentUser;
+        body: FutureBuilder(
+          future: getUserData(currentUserId),
+          builder: (BuildContext userContext, AsyncSnapshot userSnapshot) {
+            if (userSnapshot.data['location'] != null) {
+              return StreamBuilder(
+                  stream: fetchMatches(userSnapshot.data['location'].latitude,
+                      userSnapshot.data['location'].longitude),
+                  builder:
+                      (BuildContext matchContext, AsyncSnapshot matchSnapshot) {
+                    if (matchSnapshot.hasError) {
+                      return const CircularProgressIndicator(color: Colors.red);
+                    } else {
+                      if (matchSnapshot.connectionState ==
+                          ConnectionState.active) {
+                        return Column(
+                          children: [
+                            Flexible(
+                                flex: 12,
+                                child: ListView.builder(
+                                    itemCount: matchSnapshot.data.length,
+                                    itemBuilder:
+                                        (matchChatContext, matchIndex) {
+                                      FirebaseAuth auth = FirebaseAuth.instance;
+                                      User? user = auth.currentUser;
 
-                                var receiverId = user!.uid;
-                                var matchData = matchSnapshot.data[matchIndex];
+                                      var receiverId = user!.uid;
+                                      var matchData =
+                                          matchSnapshot.data[matchIndex];
 
-                                return StreamBuilder(
-                                    stream: streamMessagePreview(
-                                        user.uid,
-                                        matchData['user_id'],
-                                        matchData['first_name']),
-                                    builder: (previewContext, previewSnapshot) {
-                                      return Message(
-                                          senderId: matchData['user_id'],
-                                          receiverId: receiverId,
-                                          msgPreview:
-                                              previewSnapshot.data.toString(),
-                                          senderName: matchData['first_name']);
-                                    });
-                              })),
-                    ],
-                  );
-                }
-              }
-              return const CircularProgressIndicator(color: Colors.green);
-            }));
+                                      return StreamBuilder(
+                                          stream: streamMessagePreview(
+                                              user.uid,
+                                              matchData['user_id'],
+                                              matchData['first_name']),
+                                          builder: (previewContext,
+                                              previewSnapshot) {
+                                            return Message(
+                                                senderId: matchData['user_id'],
+                                                receiverId: receiverId,
+                                                msgPreview: previewSnapshot.data
+                                                    .toString(),
+                                                senderName:
+                                                    matchData['first_name']);
+                                          });
+                                    })),
+                          ],
+                        );
+                      }
+                    }
+                    return const CircularProgressIndicator(color: Colors.green);
+                  });
+            } else {
+              return CircularProgressIndicator();
+            }
+          },
+        ));
   }
 }
 
