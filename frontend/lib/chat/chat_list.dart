@@ -200,6 +200,10 @@ class ChatListState extends State<ChatList> {
         body: FutureBuilder(
           future: getUserData(currentUserId),
           builder: (BuildContext userContext, AsyncSnapshot userSnapshot) {
+            if (userSnapshot.connectionState != ConnectionState.done) {
+              return CircularProgressIndicator();
+            }
+
             if (userSnapshot.data['location'] != null) {
               return StreamBuilder(
                   stream: fetchMatches(userSnapshot.data['location'].latitude,
@@ -219,6 +223,16 @@ class ChatListState extends State<ChatList> {
                                     itemCount: matchSnapshot.data.length,
                                     itemBuilder:
                                         (matchChatContext, matchIndex) {
+                                      // FIXME
+                                      if (matchSnapshot.data.length == 0) {
+                                        return Column(
+                                          children: [
+                                            Text(
+                                                'No matches yet - keep swiping!'),
+                                          ],
+                                        );
+                                      }
+
                                       FirebaseAuth auth = FirebaseAuth.instance;
                                       User? user = auth.currentUser;
 

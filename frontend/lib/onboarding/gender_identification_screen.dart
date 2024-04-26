@@ -4,6 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:multiple_search_selection/multiple_search_selection.dart';
 import 'dart:math' as math;
 
+enum Identity {
+  woman,
+  man,
+  nonBinary,
+  agender,
+  genderNonconforming,
+  preferNotToSay,
+  unselected
+}
+
 List<GenderIdentification> otherGenderIdentifications = [
   GenderIdentification(id: 1, gender: 'Transgender'),
   GenderIdentification(id: 2, gender: 'Genderqueer/Gender Non-Conforming'),
@@ -27,16 +37,10 @@ class GenderIDEntryScreen extends StatefulWidget {
 }
 
 class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
-  bool maleChecked = false;
-  bool femaleChecked = false;
-  bool nonBinaryChecked = false;
-  bool agenderChecked = false;
-  bool genderNCChecked = false;
-  bool preferNotToSayChecked = false;
-  bool otherChecked = false;
+  Identity? selectedGender = Identity.unselected;
   var errorMsg = '';
 
-  updateUserGender(User? user, List genderIdentity) async {
+  updateUserGender(User? user, String genderIdentity) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('user_id', isEqualTo: user?.uid)
@@ -102,18 +106,20 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
             children: [
               Row(
                 children: [
-                  Checkbox(
-                    value: femaleChecked,
+                  Radio(
+                    value: Identity.woman,
+                    groupValue: selectedGender,
                     fillColor: MaterialStateProperty.resolveWith<Color>(
                         (Set<MaterialState> states) {
                       if (states.contains(MaterialState.selected)) {
                         return const Color(0xff33D15F);
+                      } else {
+                        return Colors.grey[800] ?? Colors.grey;
                       }
-                      return Colors.transparent;
                     }),
                     onChanged: (value) {
                       setState(() {
-                        femaleChecked = value!;
+                        selectedGender = value;
                       });
                     },
                   ),
@@ -131,18 +137,20 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
               ),
               Row(
                 children: [
-                  Checkbox(
-                    value: maleChecked,
+                  Radio(
+                    value: Identity.man,
+                    groupValue: selectedGender,
                     fillColor: MaterialStateProperty.resolveWith<Color>(
                         (Set<MaterialState> states) {
                       if (states.contains(MaterialState.selected)) {
                         return const Color(0xff33D15F);
+                      } else {
+                        return Colors.grey[800] ?? Colors.grey;
                       }
-                      return Colors.transparent;
                     }),
                     onChanged: (value) {
                       setState(() {
-                        maleChecked = value!;
+                        selectedGender = value;
                       });
                     },
                   ),
@@ -160,18 +168,20 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
               ),
               Row(
                 children: [
-                  Checkbox(
-                    value: nonBinaryChecked,
+                  Radio(
+                    value: Identity.nonBinary,
+                    groupValue: selectedGender,
                     fillColor: MaterialStateProperty.resolveWith<Color>(
                         (Set<MaterialState> states) {
                       if (states.contains(MaterialState.selected)) {
                         return const Color(0xff33D15F);
+                      } else {
+                        return Colors.grey[800] ?? Colors.grey;
                       }
-                      return Colors.transparent;
                     }),
                     onChanged: (value) {
                       setState(() {
-                        nonBinaryChecked = value!;
+                        selectedGender = value;
                       });
                     },
                   ),
@@ -189,18 +199,20 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
               ),
               Row(
                 children: [
-                  Checkbox(
-                    value: agenderChecked,
+                  Radio(
+                    value: Identity.agender,
+                    groupValue: selectedGender,
                     fillColor: MaterialStateProperty.resolveWith<Color>(
                         (Set<MaterialState> states) {
                       if (states.contains(MaterialState.selected)) {
                         return const Color(0xff33D15F);
+                      } else {
+                        return Colors.grey[800] ?? Colors.grey;
                       }
-                      return Colors.transparent;
                     }),
                     onChanged: (value) {
                       setState(() {
-                        agenderChecked = value!;
+                        selectedGender = value;
                       });
                     },
                   ),
@@ -218,18 +230,20 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
               ),
               Row(
                 children: [
-                  Checkbox(
-                    value: genderNCChecked,
+                  Radio(
+                    value: Identity.genderNonconforming,
+                    groupValue: selectedGender,
                     fillColor: MaterialStateProperty.resolveWith<Color>(
                         (Set<MaterialState> states) {
                       if (states.contains(MaterialState.selected)) {
                         return const Color(0xff33D15F);
+                      } else {
+                        return Colors.grey[800] ?? Colors.grey;
                       }
-                      return Colors.transparent;
                     }),
                     onChanged: (value) {
                       setState(() {
-                        genderNCChecked = value!;
+                        selectedGender = value;
                       });
                     },
                   ),
@@ -247,18 +261,20 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
               ),
               Row(
                 children: [
-                  Checkbox(
-                    value: preferNotToSayChecked,
+                  Radio(
+                    value: Identity.preferNotToSay,
+                    groupValue: selectedGender,
                     fillColor: MaterialStateProperty.resolveWith<Color>(
                         (Set<MaterialState> states) {
                       if (states.contains(MaterialState.selected)) {
                         return const Color(0xff33D15F);
+                      } else {
+                        return Colors.grey[800] ?? Colors.grey;
                       }
-                      return Colors.transparent;
                     }),
                     onChanged: (value) {
                       setState(() {
-                        preferNotToSayChecked = value!;
+                        selectedGender = value;
                       });
                     },
                   ),
@@ -269,45 +285,6 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
                           color: Colors.grey[800]))
                 ],
               ),
-              if (otherChecked == true)
-                MultipleSearchSelection(
-                  noResultsWidget: const Text('No results'),
-                  showClearAllButton: false,
-                  items: otherGenderIdentifications,
-                  pickedItemBuilder: (genderIdentification) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey[400]!),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Text(genderIdentification.gender),
-                      ),
-                    );
-                  },
-                  fieldToCheck: (c) {
-                    return c.gender;
-                  },
-                  itemBuilder: (genderIdentification, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(6.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          color: Colors.white,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 20.0,
-                            horizontal: 12,
-                          ),
-                          child: Text(genderIdentification.gender),
-                        ),
-                      ),
-                    );
-                  },
-                )
             ],
           ),
         ),
@@ -362,29 +339,23 @@ class _GenderIDEntryScreenState extends State<GenderIDEntryScreen> {
                         child: const Icon(Icons.arrow_forward_ios,
                             color: Colors.black),
                         onPressed: () {
-                          var identityOptions = {
-                            'Male': maleChecked,
-                            'Female': femaleChecked,
-                            'Non-binary': nonBinaryChecked,
-                            'Agender': agenderChecked,
-                            'Gender non-conforming': genderNCChecked,
-                            'Prefer not to say': preferNotToSayChecked,
-                            'Other': otherChecked
+                          Map<Identity, String> identityOptions = {
+                            Identity.man: 'Male',
+                            Identity.woman: 'Female',
+                            Identity.agender: 'Agender',
+                            Identity.genderNonconforming:
+                                'Gender non-conforming',
+                            Identity.nonBinary: 'Non-binary',
+                            Identity.preferNotToSay: 'Prefer not to state',
                           };
-
-                          var identities = [];
-                          for (var option in identityOptions.entries) {
-                            if (option.value) {
-                              identities.add(option.key);
-                            }
-                          }
 
                           // Write identities to db
                           FirebaseAuth auth = FirebaseAuth.instance;
                           User? currentUser = auth.currentUser;
 
-                          if (identities.isNotEmpty) {
-                            updateUserGender(currentUser, identities);
+                          if (selectedGender != Identity.unselected) {
+                            updateUserGender(currentUser,
+                                identityOptions[selectedGender].toString());
                             Navigator.pushNamed(
                                 context, '/location-disclaimer');
                           } else {

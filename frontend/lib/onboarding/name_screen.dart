@@ -192,29 +192,30 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                                   }
                                 }
 
-                                // var formattedName = formatName(controller.text);
+                                var formattedName = formatName(controller.text);
 
-                                // if (formattedName is String) {
-                                //   setState(() {
-                                //     emptyNameErrorMsg = '';
-                                //   });
-                                //   FirebaseAuth auth = FirebaseAuth.instance;
-                                //   User? currentUser = auth.currentUser;
+                                if (formattedName is String) {
+                                  setState(() {
+                                    emptyNameErrorMsg = '';
+                                  });
+                                  FirebaseAuth auth = FirebaseAuth.instance;
+                                  User? currentUser = auth.currentUser;
 
-                                // Comment for debug mode
-                                // if (emptyNameErrorMsg.isEmpty &&
-                                //     incorrectlyFormattedErrorMsg.isEmpty &&
-                                //     isSafeFromSqlInjection(formattedName)) {
-                                //   updateUserInfo(
-                                //       currentUser, controller.text);
-                                Navigator.pushNamed(context, '/onboarding-dob');
-                                // }
-                                // } else {
-                                //   setState(() {
-                                //     emptyNameErrorMsg =
-                                //         'Please enter a name to continue.';
-                                //   });
-                                // }
+                                  // Comment for debug mode
+                                  if (emptyNameErrorMsg.isEmpty &&
+                                      incorrectlyFormattedErrorMsg.isEmpty &&
+                                      isSafeFromSqlInjection(formattedName)) {
+                                    updateUserInfo(
+                                        currentUser, controller.text);
+                                    Navigator.pushNamed(
+                                        context, '/onboarding-dob');
+                                  }
+                                } else {
+                                  setState(() {
+                                    emptyNameErrorMsg =
+                                        'Please enter a name to continue.';
+                                  });
+                                }
                               },
                             ),
                           ),
