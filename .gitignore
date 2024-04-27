@@ -53,13 +53,8 @@ frontend/assets/files/**
 frontend/assets/images/**
 frontend/assets/videos/**
 frontend/build/**
-frontend/ios/**
-frontend/android/**
 frontend/web/**
-frontend/linux/**
-frontend/macos/**
 frontend/pubspec.lock
-frontend/windows/
 python/bin/
 python/lib/
 python/database/serviceAccountKey.json

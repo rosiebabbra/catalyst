@@ -28,6 +28,9 @@ import 'package:flutter/services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  //Stripe.publishableKey =
+  //    "pk_live_51P9xsxH8ZsaSLBBpnByQoVf5XU75HJAL4jRdAT0c8Ks75A6wCKn72KaO9guKmoRaRNb5nFOEvlQoyHy5seiW2Gl400g8hetdcS";
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -123,12 +126,12 @@ class BackgroundVideoState extends State<MyApp> {
             const LocationServiceDeniedScreen(versionId: 'beta'),
         '/see-you-soon': (context) => const SeeYouSoonScreen(),
         '/coming-soon': (context) => const ComingSoonScreen(),
-        '/forgot-password': (context) => const ForgotPasswordScreen(),
+        // '/forgot-password': (context) => const ForgotPasswordScreen(),
         '/password-reset': (context) => const PasswordResetScreen(),
         '/password-reset-landing-page': (context) =>
             const PasswordResetLandingScreen(),
-        '/verification-screen': (context) => const VerificationScreen(),
-        '/onboarding': (context) => const PhoneNumberEntryScreen(),
+        // '/verification-screen': (context) => const VerificationScreen(),
+        // '/onboarding': (context) => const PhoneNumberEntryScreen(),
         '/onboarding-name': (context) => const NameEntryScreen(),
         '/onboarding-dob': (context) => const DOBEntryScreen(),
         '/onboarding-gender': (context) => const GenderIDEntryScreen(),
@@ -136,13 +139,13 @@ class BackgroundVideoState extends State<MyApp> {
       },
       '1.0.0': {
         '/login': (context) => const LoginScreen(versionId: '1.0.0'),
-        '/forgot-password': (context) => const ForgotPasswordScreen(),
+        // '/forgot-password': (context) => const ForgotPasswordScreen(),
         '/password-reset': (context) => const PasswordResetScreen(),
         '/password-reset-landing-page': (context) =>
             const PasswordResetLandingScreen(),
         '/hobbies': (context) =>
             const HobbyScreen(latitude: 15, longitude: 15, radiusInMiles: 15),
-        '/onboarding': (context) => const PhoneNumberEntryScreen(),
+        // '/onboarding': (context) => const PhoneNumberEntryScreen(),
         '/onboarding-name': (context) => const NameEntryScreen(),
         '/onboarding-dob': (context) => const DOBEntryScreen(),
         '/onboarding-gender': (context) => const GenderIDEntryScreen(),
@@ -153,7 +156,7 @@ class BackgroundVideoState extends State<MyApp> {
             const LocationServiceDeniedScreen(
               versionId: '1.0.0',
             ),
-        '/verification-screen': (context) => const VerificationScreen(),
+        // '/verification-screen': (context) => const VerificationScreen(),
         '/swipes-completed': (context) => const SwipesCompletedScreen(),
         '/subscription-page': (context) => const MyProfileScreen()
       }

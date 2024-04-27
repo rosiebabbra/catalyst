@@ -1,7 +1,8 @@
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({Key? key}) : super(key: key);
@@ -11,6 +12,8 @@ class MyProfileScreen extends StatefulWidget {
 }
 
 class _MyProfileScreenState extends State<MyProfileScreen> {
+  Map<String, dynamic>? paymentIntent;
+
   @override
   void initState() {
     super.initState();
@@ -30,13 +33,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       }
     } else {
       return 'Error rendering user name';
-    }
-  }
-
-  _launchURL() async {
-    final Uri url = Uri.parse('https://buy.stripe.com/dR600a2XK4da0WAbII');
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch webpage');
     }
   }
 
@@ -152,7 +148,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         height: 35,
                         width: 185,
                         child: TextButton(
-                            onPressed: _launchURL,
+                            onPressed: () async {},
                             style: ButtonStyle(
                                 foregroundColor:
                                     MaterialStateProperty.all<Color>(
