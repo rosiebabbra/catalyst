@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "198162720342",
+    "project_id": "dating-appp-2d438",
+    "storage_bucket": "dating-appp-2d438.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:198162720342:android:48bf854c0ccec8b4da7df7",
+        "android_client_info": {
+          "package_name": "com.example.hobby_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "198162720342-3m0n4trp2moauurc5040lgoa7en6a5kr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcNfpSjYngndN4NmG-Vgl3zdEZ1XgcNCw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "198162720342-3m0n4trp2moauurc5040lgoa7en6a5kr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "198162720342-4q48nvtfihn6pf0miojovc3o7b460tou.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.rbabbra"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
