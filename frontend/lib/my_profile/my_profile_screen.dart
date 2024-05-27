@@ -44,10 +44,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     return Scaffold(
         backgroundColor: Colors.white,
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             const Padding(
-              padding: EdgeInsets.fromLTRB(0, 10, 20, 0),
+              padding: EdgeInsets.fromLTRB(0, 10, 20, 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -55,173 +54,182 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 ],
               ),
             ),
-            Center(
-              child: Stack(children: [
-                Container(
-                  width: 100.0,
-                  height: 100.0,
-                  decoration: BoxDecoration(
-                    color: const Color(0xff7c94b6),
-                    image: DecorationImage(
-                      image: NetworkImage(
-                          'https://firebasestorage.googleapis.com/v0/b/dating-appp-2d438.appspot.com/o/user_images%2F$currentUserId?alt=media&token=93205064-c7ab-4b20-8750-9821c2bd97d0'),
-                      fit: BoxFit.cover,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(50.0)),
-                  ),
-                ),
-              ]),
-            ),
-            FutureBuilder(
-              future: getCurrentUserName(currentUserId ?? ''),
-              builder: (BuildContext context, snapshot) {
-                return Flexible(
-                  child: (snapshot.data != null)
-                      ? Text(snapshot.data.toString(),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              fontSize: 28, fontWeight: FontWeight.w700))
-                      : const CircularProgressIndicator(),
-                );
-              },
-            ),
-            Container(
-                width: MediaQuery.of(context).size.width * 0.95,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [
-                    Color.fromARGB(255, 154, 231, 176),
-                    Color(0xff33D15F),
-                    Color(0xff09CBC8)
-                  ]),
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  border: Border.all(width: 0.5, color: Colors.grey[300]!),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 25),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Premium',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w600)),
-                        ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: Stack(children: [
+                  Container(
+                    width: 100.0,
+                    height: 100.0,
+                    decoration: BoxDecoration(
+                      color: const Color(0xff7c94b6),
+                      image: DecorationImage(
+                        image: NetworkImage(
+                            'https://firebasestorage.googleapis.com/v0/b/dating-appp-2d438.appspot.com/o/user_images%2F$currentUserId?alt=media&token=93205064-c7ab-4b20-8750-9821c2bd97d0'),
+                        fit: BoxFit.cover,
                       ),
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(15.0, 10, 15, 15),
-                        child: Row(
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(50.0)),
+                    ),
+                  ),
+                ]),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FutureBuilder(
+                future: getCurrentUserName(currentUserId ?? ''),
+                builder: (BuildContext context, snapshot) {
+                  return Flexible(
+                    child: (snapshot.data != null)
+                        ? Text(snapshot.data.toString(),
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                fontSize: 28, fontWeight: FontWeight.w700))
+                        : const CircularProgressIndicator(),
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  height: MediaQuery.of(context).size.width * 0.4,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(colors: [
+                      Color.fromARGB(255, 154, 231, 176),
+                      Color(0xff33D15F),
+                      Color(0xff09CBC8)
+                    ]),
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    border: Border.all(width: 0.5, color: Colors.grey[300]!),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 25),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Flexible(
-                              child: Text(
-                                  'Unlock all of our features and get more matches',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600)),
-                            ),
+                            Text('Premium',
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.w600)),
                           ],
                         ),
-                      ),
-                      // SizedBox(
-                      //   height: 100,
-                      //   child: Expanded(
-                      //     child: ListView.builder(
-                      //       itemCount: _nonConsumableProducts.length,
-                      //       itemBuilder: (context, index) {
-                      //         final product = _nonConsumableProducts[index];
-                      //         return ListTile(
-                      //           title: Text(product.title),
-                      //           trailing: TextButton(
-                      //             child: Text(product.price),
-                      //             onPressed: () {
-                      //               final PurchaseParam purchaseParam =
-                      //                   PurchaseParam(productDetails: product);
-                      //               _iap.buyNonConsumable(
-                      //                   purchaseParam: purchaseParam);
-                      //             },
-                      //           ),
-                      //         );
-                      //       },
-                      //     ),
-                      //   ),
-                      // ),
-                      SizedBox(
-                        height: 35,
-                        width: 185,
-                        child: TextButton(
-                            onPressed: () {},
-                            style: ButtonStyle(
-                                foregroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.black),
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.white),
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(45),
-                                ))),
-                            child: Text("Coming soon",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    height: 0.5,
-                                    color: Colors.grey[800]))),
-                      ),
-                    ],
-                  ),
-                )),
-            Expanded(
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(15.0, 10, 15, 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                    'Unlock all of our features and get more matches',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600)),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // SizedBox(
+                        //   height: 100,
+                        //   child: Expanded(
+                        //     child: ListView.builder(
+                        //       itemCount: _nonConsumableProducts.length,
+                        //       itemBuilder: (context, index) {
+                        //         final product = _nonConsumableProducts[index];
+                        //         return ListTile(
+                        //           title: Text(product.title),
+                        //           trailing: TextButton(
+                        //             child: Text(product.price),
+                        //             onPressed: () {
+                        //               final PurchaseParam purchaseParam =
+                        //                   PurchaseParam(productDetails: product);
+                        //               _iap.buyNonConsumable(
+                        //                   purchaseParam: purchaseParam);
+                        //             },
+                        //           ),
+                        //         );
+                        //       },
+                        //     ),
+                        //   ),
+                        // ),
+                        SizedBox(
+                          height: 35,
+                          width: 185,
+                          child: TextButton(
+                              onPressed: () {},
+                              style: ButtonStyle(
+                                  foregroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.black),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.white),
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(45),
+                                  ))),
+                              child: Text("Coming soon",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      height: 0.5,
+                                      color: Colors.grey[800]))),
+                        ),
+                      ],
+                    ),
+                  )),
+            ),
+            SizedBox(
+                height: MediaQuery.of(context).size.height * 0.4,
                 child: Padding(
-              padding: const EdgeInsets.fromLTRB(25.0, 35.0, 15.0, 15.0),
-              child: GridView.count(
-                  clipBehavior: Clip.none,
-                  shrinkWrap: false,
-                  padding: const EdgeInsets.all(0),
-                  crossAxisCount: 3,
-                  childAspectRatio: 5,
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 10,
-                  children: [
-                    Text('What you get:',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                    Text('Premium',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                    Text('Standard',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    Text('Unlimited swipes',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w600)),
-                    Icon(Icons.check, color: Color(0xff33D15F)),
-                    Icon(Icons.check, color: Color(0xff33D15F)),
-                    Text('Advanced filters',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w600)),
-                    Icon(Icons.check, color: Color(0xff33D15F)),
-                    Icon(Icons.clear, color: Colors.grey[400]),
-                    Text('Incognito mode',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w600)),
-                    Icon(Icons.check, color: Color(0xff33D15F)),
-                    Icon(Icons.clear, color: Colors.grey[400]),
-                    Text('Travel mode',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w600)),
-                    Icon(Icons.check, color: Color(0xff33D15F)),
-                    Icon(Icons.clear, color: Colors.grey[400]),
-                  ]),
-            )),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.15)
+                  padding: const EdgeInsets.fromLTRB(25.0, 35.0, 15.0, 15.0),
+                  child: GridView.count(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(0),
+                      crossAxisCount: 3,
+                      childAspectRatio: 5,
+                      mainAxisSpacing: 10,
+                      children: [
+                        const Text('What you get:',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+                        const Text('Premium',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+                        const Text('Standard',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )),
+                        const Text('Unlimited swipes',
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w600)),
+                        const Icon(Icons.check, color: Color(0xff33D15F)),
+                        const Icon(Icons.check, color: Color(0xff33D15F)),
+                        const Text('Advanced filters',
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w600)),
+                        const Icon(Icons.check, color: Color(0xff33D15F)),
+                        Icon(Icons.clear, color: Colors.grey[400]),
+                        const Text('Incognito mode',
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w600)),
+                        const Icon(Icons.check, color: Color(0xff33D15F)),
+                        Icon(Icons.clear, color: Colors.grey[400]),
+                        const Text('Travel mode',
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w600)),
+                        const Icon(Icons.check, color: Color(0xff33D15F)),
+                        Icon(Icons.clear, color: Colors.grey[400]),
+                      ]),
+                )),
           ],
         ));
   }

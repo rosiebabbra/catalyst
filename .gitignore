@@ -32,7 +32,6 @@
 **/.pub/
 **/build/
 frontend/.metadata
-frontend/hobby-app/hobby-app.xcodeproj/**
 
 # firebase
 frontend/lib/firebase_options.dart
