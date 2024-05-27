@@ -194,6 +194,7 @@ class HobbyScreenState extends State<HobbyScreen> {
                   }
 
                   return Card(
+                    color: Colors.white,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

@@ -201,7 +201,7 @@ class ChatListState extends State<ChatList> {
           future: getUserData(currentUserId),
           builder: (BuildContext userContext, AsyncSnapshot userSnapshot) {
             if (userSnapshot.connectionState != ConnectionState.done) {
-              return CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             }
 
             if (userSnapshot.data['location'] != null) {
@@ -211,7 +211,8 @@ class ChatListState extends State<ChatList> {
                   builder:
                       (BuildContext matchContext, AsyncSnapshot matchSnapshot) {
                     if (matchSnapshot.hasError) {
-                      return const CircularProgressIndicator(color: Colors.red);
+                      return const Center(
+                          child: CircularProgressIndicator(color: Colors.red));
                     } else {
                       if (matchSnapshot.connectionState ==
                           ConnectionState.active) {
@@ -225,7 +226,7 @@ class ChatListState extends State<ChatList> {
                                         (matchChatContext, matchIndex) {
                                       // FIXME
                                       if (matchSnapshot.data.length == 0) {
-                                        return Column(
+                                        return const Column(
                                           children: [
                                             Text(
                                                 'No matches yet - keep swiping!'),
@@ -260,10 +261,11 @@ class ChatListState extends State<ChatList> {
                         );
                       }
                     }
-                    return const CircularProgressIndicator(color: Colors.green);
+                    return const Center(
+                        child: CircularProgressIndicator(color: Colors.green));
                   });
             } else {
-              return CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             }
           },
         ));

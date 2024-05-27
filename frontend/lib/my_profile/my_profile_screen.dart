@@ -1,8 +1,9 @@
-import 'dart:convert';
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:in_app_purchase/in_app_purchase.dart';
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({Key? key}) : super(key: key);
@@ -12,8 +13,6 @@ class MyProfileScreen extends StatefulWidget {
 }
 
 class _MyProfileScreenState extends State<MyProfileScreen> {
-  Map<String, dynamic>? paymentIntent;
-
   @override
   void initState() {
     super.initState();
@@ -86,24 +85,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 );
               },
             ),
-            // SizedBox(
-            //   height: 30,
-            //   child: TextButton(
-            //       onPressed: () {
-            //         getData();
-            //       },
-            //       style: ButtonStyle(
-            //           foregroundColor:
-            //               MaterialStateProperty.all<Color>(Colors.grey[600]!),
-            //           backgroundColor:
-            //               MaterialStateProperty.all<Color>(Colors.grey[100]!),
-            //           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            //               RoundedRectangleBorder(
-            //             borderRadius: BorderRadius.circular(45),
-            //           ))),
-            //       child: const Text('Complete my profile',
-            //           style: TextStyle(fontSize: 12))),
-            // ),
             Container(
                 width: MediaQuery.of(context).size.width * 0.95,
                 decoration: BoxDecoration(
@@ -144,11 +125,34 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           ],
                         ),
                       ),
+                      // SizedBox(
+                      //   height: 100,
+                      //   child: Expanded(
+                      //     child: ListView.builder(
+                      //       itemCount: _nonConsumableProducts.length,
+                      //       itemBuilder: (context, index) {
+                      //         final product = _nonConsumableProducts[index];
+                      //         return ListTile(
+                      //           title: Text(product.title),
+                      //           trailing: TextButton(
+                      //             child: Text(product.price),
+                      //             onPressed: () {
+                      //               final PurchaseParam purchaseParam =
+                      //                   PurchaseParam(productDetails: product);
+                      //               _iap.buyNonConsumable(
+                      //                   purchaseParam: purchaseParam);
+                      //             },
+                      //           ),
+                      //         );
+                      //       },
+                      //     ),
+                      //   ),
+                      // ),
                       SizedBox(
                         height: 35,
                         width: 185,
                         child: TextButton(
-                            onPressed: () async {},
+                            onPressed: () {},
                             style: ButtonStyle(
                                 foregroundColor:
                                     MaterialStateProperty.all<Color>(
@@ -161,8 +165,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                     RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(45),
                                 ))),
-                            child: const Text("Upgrade from \$4.95",
-                                style: TextStyle(fontSize: 16))),
+                            child: Text("Coming soon",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    height: 0.5,
+                                    color: Colors.grey[800]))),
                       ),
                     ],
                   ),
@@ -171,13 +178,14 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 child: Padding(
               padding: const EdgeInsets.fromLTRB(25.0, 35.0, 15.0, 15.0),
               child: GridView.count(
+                  clipBehavior: Clip.none,
                   shrinkWrap: false,
                   padding: const EdgeInsets.all(0),
                   crossAxisCount: 3,
-                  childAspectRatio: 5 / 1,
-                  crossAxisSpacing: 10,
+                  childAspectRatio: 5,
+                  crossAxisSpacing: 5,
                   mainAxisSpacing: 10,
-                  children: const [
+                  children: [
                     Text('What you get:',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
@@ -188,29 +196,29 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     Text('Standard',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey)),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        )),
                     Text('Unlimited swipes',
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w600)),
                     Icon(Icons.check, color: Color(0xff33D15F)),
-                    Icon(Icons.check, color: Colors.transparent),
+                    Icon(Icons.check, color: Color(0xff33D15F)),
                     Text('Advanced filters',
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w600)),
                     Icon(Icons.check, color: Color(0xff33D15F)),
-                    Icon(Icons.check, color: Colors.transparent),
+                    Icon(Icons.clear, color: Colors.grey[400]),
                     Text('Incognito mode',
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w600)),
                     Icon(Icons.check, color: Color(0xff33D15F)),
-                    Icon(Icons.check, color: Colors.transparent),
+                    Icon(Icons.clear, color: Colors.grey[400]),
                     Text('Travel mode',
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w600)),
                     Icon(Icons.check, color: Color(0xff33D15F)),
-                    Icon(Icons.check, color: Colors.transparent),
+                    Icon(Icons.clear, color: Colors.grey[400]),
                   ]),
             )),
             SizedBox(height: MediaQuery.of(context).size.height * 0.15)

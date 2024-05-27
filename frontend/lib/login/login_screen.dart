@@ -30,10 +30,12 @@ class _LoginScreenState extends State<LoginScreen> {
   FirebaseAuth auth = FirebaseAuth.instance;
   late Future<dynamic> userFuture;
   dynamic userData;
+  bool _passwordVisible = false;
 
   @override
   void initState() {
     super.initState();
+    _passwordVisible = false;
     loadData();
   }
 
@@ -114,8 +116,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   key: formKey,
                   child: TextFormField(
                     controller: passwordController,
-                    obscureText: true,
+                    obscureText: !_passwordVisible,
                     decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          // Based on passwordVisible state choose the icon
+                          _passwordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Theme.of(context).primaryColorDark,
+                        ),
+                        onPressed: () {
+                          // Update the state i.e. toogle the state of passwordVisible variable
+                          setState(() {
+                            _passwordVisible = !_passwordVisible;
+                          });
+                        },
+                      ),
                       prefixIcon: const Icon(Icons.password),
                       labelStyle: TextStyle(color: Colors.grey[600]),
                       labelText: 'Your password',
