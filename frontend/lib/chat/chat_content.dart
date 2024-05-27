@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -79,55 +80,68 @@ class ChatContentState extends State<ChatContent> {
     final User? user = auth.currentUser;
     final currentUserId = user?.uid;
 
+    double getFontSize(int textLength) {
+      const int baseSize = 16;
+      if (textLength >= baseSize) {
+        textLength = baseSize - 2;
+      }
+      int fontSize = baseSize - textLength;
+      return MediaQuery.of(context).size.width * 0.01 * fontSize;
+    }
+
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(75.0),
           child: AppBar(
+            title: Text(widget.senderData['senderName'],
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize:
+                        getFontSize(widget.senderData['senderName'].length),
+                    fontWeight: FontWeight.bold)),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MatchScreen(
+                              matchId: widget.senderData['senderId'],
+                            )),
+                  );
+                },
+                style: ButtonStyle(
+                    alignment: Alignment.center,
+                    elevation: MaterialStateProperty.all(0),
+                    backgroundColor: MaterialStateProperty.all(Colors.white)),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Stack(children: [
+                      Icon(Icons.person, color: Colors.black, size: 45),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: CircleAvatar(
+                            radius: 12,
+                            backgroundColor: Colors.white,
+                            child: Icon(
+                              Icons.info,
+                              color: Colors.black,
+                              size: 22.5,
+                            )),
+                      )
+                    ]),
+                    SizedBox(width: 5),
+                    Icon(Icons.arrow_forward_ios, color: Colors.black)
+                  ],
+                ),
+              ),
+            ],
             iconTheme: const IconThemeData(
               color: Colors.black,
             ),
             shadowColor: Colors.white,
-            flexibleSpace: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MatchScreen(
-                            matchId: widget.senderData['senderId'],
-                          )),
-                );
-              },
-              style: ButtonStyle(
-                  alignment: Alignment.center,
-                  elevation: MaterialStateProperty.all(0),
-                  backgroundColor: MaterialStateProperty.all(Colors.white)),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                  Text(widget.senderData['senderName'],
-                      style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 5),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('See profile',
-                          style: TextStyle(
-                              color: Color(0xff7301E4),
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold)),
-                      Icon(Icons.arrow_forward_ios,
-                          color: Colors.black, size: 13)
-                    ],
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                ],
-              ),
-            ),
             backgroundColor: Colors.white,
             foregroundColor: Colors.white,
           ),
@@ -171,26 +185,11 @@ class ChatContentState extends State<ChatContent> {
                             child: ListTile(
                               title: Padding(
                                 padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                                child: timestampDisplayed &&
-                                        tappedIndex == index
-                                    ? Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 10, 0, 0),
-                                        child: Text(data['content'].toString(),
-                                            key: Key(
-                                                "${math.Random().nextDouble()}"),
-                                            style: TextStyle(
-                                                color: data['receiver_id'] ==
-                                                        currentUserId
-                                                    ? Colors.black
-                                                    : Colors.white)),
-                                      )
-                                    : Text(data['content'].toString(),
-                                        key: Key(
-                                            "${math.Random().nextDouble()}"),
-                                        style: TextStyle(
-                                            color: data['receiver_id'] ==
-                                                    currentUserId
+                                child: Text(data['content'].toString(),
+                                    key: Key("${math.Random().nextDouble()}"),
+                                    style: TextStyle(
+                                        color:
+                                            data['receiver_id'] == currentUserId
                                                 ? Colors.black
                                                 : Colors.white)),
                               ),
@@ -198,30 +197,27 @@ class ChatContentState extends State<ChatContent> {
                                 setState(() {
                                   if (tappedIndex == index) {
                                     tappedIndex = -1; // Reset if tapped again
+                                    timestampDisplayed = false;
                                   } else {
                                     tappedIndex = index; // Set the tapped index
+                                    timestampDisplayed = true;
                                   }
-                                  timestampDisplayed = !timestampDisplayed;
                                 });
                               },
-                              subtitle: timestampDisplayed &&
-                                      tappedIndex == index
-                                  ? Padding(
-                                      padding:
-                                          data['receiver_id'] == currentUserId
-                                              ? const EdgeInsets.fromLTRB(
-                                                  15, 0, 0, 0)
-                                              : const EdgeInsets.fromLTRB(
-                                                  15, 0, 0, 0),
-                                      child: Text(timestamp,
-                                          style: TextStyle(
-                                              color: data['receiver_id'] ==
-                                                      currentUserId
-                                                  ? Colors.black
-                                                  : Colors.white,
-                                              fontWeight: FontWeight.bold)),
-                                    )
-                                  : Container(),
+                              subtitle:
+                                  timestampDisplayed && tappedIndex == index
+                                      ? Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              15, 0, 0, 0),
+                                          child: Text(timestamp,
+                                              style: TextStyle(
+                                                  color: data['receiver_id'] ==
+                                                          currentUserId
+                                                      ? Colors.black
+                                                      : Colors.white,
+                                                  fontWeight: FontWeight.bold)),
+                                        )
+                                      : null,
                             ),
                           ),
                         );
@@ -235,6 +231,7 @@ class ChatContentState extends State<ChatContent> {
             children: [
               SizedBox(
                 width: MediaQuery.sizeOf(context).width * 0.75,
+                // height: MediaQuery.sizeOf(context).width * 0.125,
                 child: TextFormField(
                   controller: messageController,
                   maxLines: null,
@@ -245,8 +242,8 @@ class ChatContentState extends State<ChatContent> {
               ),
               const SizedBox(width: 5),
               SizedBox(
-                height: 60,
-                width: 60,
+                height: 65,
+                width: 65,
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(5)),
@@ -283,7 +280,8 @@ class ChatContentState extends State<ChatContent> {
                         child: const Icon(Icons.arrow_forward_ios)),
                   ),
                 ),
-              )
+              ),
+              SizedBox(height: 10)
             ],
           ),
           SizedBox(height: 45)

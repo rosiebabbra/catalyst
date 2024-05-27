@@ -12,7 +12,6 @@ import 'package:catalyst/login/password_reset_screen.dart';
 import 'package:catalyst/swipes_completed/main.dart';
 import 'package:video_player/video_player.dart';
 import 'home/home_screen.dart';
-import 'login/forgot_password_screen.dart';
 import 'login/login_screen.dart';
 import 'login/password_reset_landing_screen.dart';
 import 'models/user_data.dart';
@@ -21,15 +20,11 @@ import 'onboarding/dob_screen.dart';
 import 'onboarding/gender_identification_screen.dart';
 import 'onboarding/location_disclaimer_screen.dart';
 import 'onboarding/name_screen.dart';
-import 'onboarding/phone_number_screen.dart';
-import 'onboarding/verification_code_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //Stripe.publishableKey =
-  //    "pk_live_51P9xsxH8ZsaSLBBpnByQoVf5XU75HJAL4jRdAT0c8Ks75A6wCKn72KaO9guKmoRaRNb5nFOEvlQoyHy5seiW2Gl400g8hetdcS";
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
