@@ -54,6 +54,7 @@ frontend/assets/videos/**
 frontend/build/**
 frontend/web/**
 frontend/pubspec.lock
+frontend/hobby-app/hobby-app/Assets.xcassets/
 python/bin/
 python/lib/
 python/database/serviceAccountKey.json
