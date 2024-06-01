@@ -28,5 +28,13 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Always allow location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Allow location when app is in use</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Allow location always and when app is in use</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow access to photos</string>
 </dict>
 </plist>

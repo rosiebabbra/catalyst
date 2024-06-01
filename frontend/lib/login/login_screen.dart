@@ -227,7 +227,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: Colors.black),
                             onPressed: () async {
                               try {
-                                // TODO: UNCOMMENT FOR RELEASE
+                                FocusManager.instance.primaryFocus?.unfocus();
                                 UserCredential userCredential =
                                     await auth.signInWithEmailAndPassword(
                                         email: emailController.text,

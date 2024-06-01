@@ -431,7 +431,8 @@ class MatchProfileState extends State<MatchProfile> {
                                     alignment: Alignment.center,
                                     child: Row(
                                       children: [
-                                        const Icon(Icons.nature, size: 20),
+                                        const Icon(Icons.smoking_rooms,
+                                            size: 25),
                                         Padding(
                                           padding: const EdgeInsets.all(8),
                                           child: Text(
