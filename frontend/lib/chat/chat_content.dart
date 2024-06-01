@@ -9,10 +9,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 
-convertTimestampToTime(timestamp) {
+String convertTimestampToDateTime(Timestamp timestamp) {
   var dt = timestamp.toDate();
-  String formattedTime = DateFormat.jm().format(dt);
-  return formattedTime;
+  String formattedDateTime = DateFormat.yMd().add_jm().format(dt);
+  return formattedDateTime;
 }
 
 class ChatContent extends StatefulWidget {
@@ -168,7 +168,7 @@ class ChatContentState extends State<ChatContent> {
                         Map<String, dynamic> data =
                             document.data()! as Map<String, dynamic>;
                         String timestamp =
-                            convertTimestampToTime(data['timestamp'])
+                            convertTimestampToDateTime(data['timestamp'])
                                 .toString();
 
                         return Padding(

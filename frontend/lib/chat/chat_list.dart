@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:rxdart/rxdart.dart';
 import 'chat_content.dart';
 
 Future<dynamic> getUserData(String userId) async {
@@ -125,15 +125,13 @@ Stream<List<dynamic>> fetchMatches(
 
     // Drop the current User ID from here
     matchedUsers.removeWhere((user) => user['user_id'] == currentUserId);
-
+    print(matchedUsers);
     return matchedUsers;
   });
 }
 
 class ChatList extends StatefulWidget {
-  final List<String> userIds;
-
-  const ChatList({Key? key, required this.userIds}) : super(key: key);
+  const ChatList({Key? key}) : super(key: key);
 
   @override
   State<ChatList> createState() => ChatListState();
@@ -165,23 +163,46 @@ class ChatListState extends State<ChatList> {
     }
   }
 
-  Stream<String> streamMessagePreview(
-      String receiverId, String senderId, String matchName) {
-    final messagePreviewQuery = FirebaseFirestore.instance
-        .collection('messages')
-        .where('receiver_id', isEqualTo: receiverId)
-        .where('sender_id', isEqualTo: senderId)
-        .orderBy('timestamp', descending: true)
-        .snapshots();
+  Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      streamMessagePreview(
+          String receiverId, String senderId, String matchName) {
+    Stream<QuerySnapshot<Map<String, dynamic>>> receivedQuerySnapshot =
+        FirebaseFirestore.instance
+            .collection('messages')
+            .where('sender_id', isEqualTo: senderId)
+            .where('receiver_id', isEqualTo: receiverId)
+            .snapshots();
 
-    return messagePreviewQuery.map((querySnapshot) {
-      if (querySnapshot.docs.isNotEmpty) {
-        return querySnapshot.docs.first['content'];
-      } else {
-        // Return a default value if no message preview is found
-        return 'Start your chat with ${matchName}!';
-      }
+    Stream<QuerySnapshot<Map<String, dynamic>>> sentQuerySnapshot =
+        FirebaseFirestore.instance
+            .collection('messages')
+            .where('sender_id', isEqualTo: receiverId)
+            .where('receiver_id', isEqualTo: senderId)
+            .snapshots();
+
+    Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>> messageStream =
+        CombineLatestStream.list([receivedQuerySnapshot, sentQuerySnapshot])
+            .map((List<dynamic> snapshotList) {
+      // Cast each dynamic element to QuerySnapshot<Map<String, dynamic>>
+      List<QuerySnapshot<Map<String, dynamic>>> snapshots = snapshotList
+          .map((dynamic snapshot) =>
+              snapshot as QuerySnapshot<Map<String, dynamic>>)
+          .toList();
+
+      // Merge documents from both snapshots into a single list
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> allDocuments =
+          snapshots.expand((snapshot) => snapshot.docs).toList();
+
+      // Sort the combined list by timestamp
+      allDocuments.sort((a, b) {
+        DateTime aTimestamp = a.data()['timestamp'].toDate();
+        DateTime bTimestamp = b.data()['timestamp'].toDate();
+        return aTimestamp
+            .compareTo(bTimestamp); // Use compareTo for ascending order
+      });
+      return allDocuments;
     });
+    return messageStream;
   }
 
   @override
@@ -251,8 +272,8 @@ class ChatListState extends State<ChatList> {
                                             return Message(
                                                 senderId: matchData['user_id'],
                                                 receiverId: receiverId,
-                                                msgPreview: previewSnapshot.data
-                                                    .toString(),
+                                                msgPreview: previewSnapshot
+                                                    .data!.last['content'],
                                                 senderName:
                                                     matchData['first_name']);
                                           });

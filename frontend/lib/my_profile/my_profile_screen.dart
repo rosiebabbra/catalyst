@@ -1,9 +1,6 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({Key? key}) : super(key: key);
@@ -75,21 +72,18 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 ]),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FutureBuilder(
-                future: getCurrentUserName(currentUserId ?? ''),
-                builder: (BuildContext context, snapshot) {
-                  return Flexible(
-                    child: (snapshot.data != null)
-                        ? Text(snapshot.data.toString(),
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                fontSize: 28, fontWeight: FontWeight.w700))
-                        : const CircularProgressIndicator(),
-                  );
-                },
-              ),
+            FutureBuilder(
+              future: getCurrentUserName(currentUserId ?? ''),
+              builder: (BuildContext context, snapshot) {
+                return Flexible(
+                  child: (snapshot.data != null)
+                      ? Text(snapshot.data.toString(),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontSize: 28, fontWeight: FontWeight.w700))
+                      : const CircularProgressIndicator(),
+                );
+              },
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -106,9 +100,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     border: Border.all(width: 0.5, color: Colors.grey[300]!),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 25),
+                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -118,21 +112,15 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                     fontSize: 20, fontWeight: FontWeight.w600)),
                           ],
                         ),
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(15.0, 10, 15, 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Flexible(
-                                child: Text(
-                                    'Unlock all of our features and get more matches',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600)),
-                              ),
-                            ],
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                                'Unlock all of our features and get more matches',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w600)),
+                          ],
                         ),
                         // SizedBox(
                         //   height: 100,

@@ -255,10 +255,10 @@ class HobbyScreenState extends State<HobbyScreen> {
   Widget build(BuildContext context) {
     final List<Widget> pages = [
       interestSwipe(context),
-      const ChatList(userIds: ['abc']),
+      ChatList(),
       const MyProfileScreen()
     ];
-    // Load all users on start so that we have access to them all
+
     return Scaffold(
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
