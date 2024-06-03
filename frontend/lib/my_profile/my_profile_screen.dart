@@ -28,7 +28,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         return recordData['first_name'];
       }
     } else {
-      return 'Error rendering user name';
+      return 'Error';
     }
   }
 
@@ -62,7 +62,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       color: const Color(0xff7c94b6),
                       image: DecorationImage(
                         image: NetworkImage(
-                            'https://firebasestorage.googleapis.com/v0/b/dating-appp-2d438.appspot.com/o/user_images%2F$currentUserId?alt=media&token=93205064-c7ab-4b20-8750-9821c2bd97d0'),
+                            'https://firebasestorage.googleapis.com/v0/b/dating-appp-2d438.appspot.com/o/user_images%2F$currentUserId.jpg?alt=media&token=93205064-c7ab-4b20-8750-9821c2bd97d0'),
                         fit: BoxFit.cover,
                       ),
                       borderRadius:
@@ -79,8 +79,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   child: (snapshot.data != null)
                       ? Text(snapshot.data.toString(),
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              fontSize: 28, fontWeight: FontWeight.w700))
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.w700))
                       : const CircularProgressIndicator(),
                 );
               },

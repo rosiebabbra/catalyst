@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:rxdart/rxdart.dart';
 import 'chat_content.dart';
+import 'package:http/http.dart' as http;
 
 Future<dynamic> getUserData(String userId) async {
   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -112,7 +113,7 @@ Stream<List<dynamic>> fetchMatches(
     var potentialMatches = users.where((user) {
       double distance = getDistanceBetweenUsers(
           {'location': GeoPoint(currentUserLat, currentUserLong)}, user);
-      return distance <= 15;
+      return distance <= 100;
     }).toList();
 
     var matchedUsers = [];
@@ -125,7 +126,6 @@ Stream<List<dynamic>> fetchMatches(
 
     // Drop the current User ID from here
     matchedUsers.removeWhere((user) => user['user_id'] == currentUserId);
-    print(matchedUsers);
     return matchedUsers;
   });
 }
@@ -163,9 +163,8 @@ class ChatListState extends State<ChatList> {
     }
   }
 
-  Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
-      streamMessagePreview(
-          String receiverId, String senderId, String matchName) {
+  dynamic streamMessagePreview(
+      String receiverId, String senderId, String matchName) {
     Stream<QuerySnapshot<Map<String, dynamic>>> receivedQuerySnapshot =
         FirebaseFirestore.instance
             .collection('messages')
@@ -180,7 +179,7 @@ class ChatListState extends State<ChatList> {
             .where('receiver_id', isEqualTo: senderId)
             .snapshots();
 
-    Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>> messageStream =
+    Stream<List<dynamic>> messageStream =
         CombineLatestStream.list([receivedQuerySnapshot, sentQuerySnapshot])
             .map((List<dynamic> snapshotList) {
       // Cast each dynamic element to QuerySnapshot<Map<String, dynamic>>
@@ -200,7 +199,12 @@ class ChatListState extends State<ChatList> {
         return aTimestamp
             .compareTo(bTimestamp); // Use compareTo for ascending order
       });
-      return allDocuments;
+      print(matchName);
+      return snapshots.isEmpty
+          ? [
+              {'content': 'Start your conversation!'}
+            ]
+          : allDocuments;
     });
     return messageStream;
   }
@@ -211,6 +215,7 @@ class ChatListState extends State<ChatList> {
     String currentUserId = auth.currentUser!.uid;
     return Scaffold(
         appBar: AppBar(
+            automaticallyImplyLeading: false,
             elevation: 1,
             backgroundColor: Colors.white,
             foregroundColor: Colors.black,
@@ -245,7 +250,6 @@ class ChatListState extends State<ChatList> {
                                     itemCount: matchSnapshot.data.length,
                                     itemBuilder:
                                         (matchChatContext, matchIndex) {
-                                      // FIXME
                                       if (matchSnapshot.data.length == 0) {
                                         return const Column(
                                           children: [
@@ -269,11 +273,26 @@ class ChatListState extends State<ChatList> {
                                               matchData['first_name']),
                                           builder: (previewContext,
                                               previewSnapshot) {
+                                            String content =
+                                                'Start your conversation with ${matchData['first_name']}!';
+
+                                            if (previewSnapshot.data is List &&
+                                                (previewSnapshot.data as List)
+                                                    .isNotEmpty) {
+                                              var lastDocument =
+                                                  (previewSnapshot.data as List)
+                                                      .last;
+                                              if (lastDocument['content'] !=
+                                                  null) {
+                                                content =
+                                                    lastDocument['content'];
+                                              }
+                                            }
+
                                             return Message(
                                                 senderId: matchData['user_id'],
                                                 receiverId: receiverId,
-                                                msgPreview: previewSnapshot
-                                                    .data!.last['content'],
+                                                msgPreview: content,
                                                 senderName:
                                                     matchData['first_name']);
                                           });
@@ -286,7 +305,14 @@ class ChatListState extends State<ChatList> {
                         child: CircularProgressIndicator(color: Colors.green));
                   });
             } else {
-              return const Center(child: CircularProgressIndicator());
+              return Center(
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('No matches yet - keep swiping!'),
+                  ],
+                ),
+              );
             }
           },
         ));
@@ -310,6 +336,23 @@ class Message extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<String?> findValidFileUrl(String senderId) async {
+      var fileExts = ['.jpg', '.jpeg', '.png'];
+      var baseUrl =
+          'https://firebasestorage.googleapis.com/v0/b/dating-appp-2d438.appspot.com/o/user_images%2F';
+      var token = 'd69fa31c-5470-4e27-8081-eeb7fc49a17a';
+
+      for (var ext in fileExts) {
+        var url = '${baseUrl}${senderId}${ext}?alt=media&token=$token';
+        var response = await http.head(Uri.parse(url));
+
+        if (response.statusCode == 200) {
+          return url;
+        }
+      }
+      return null; // No valid URL found
+    }
+
     return GestureDetector(
       onTap: () {
         // String format in the user and sender ids to get all the messages
@@ -345,23 +388,27 @@ class Message extends StatelessWidget {
           padding: const EdgeInsets.all(15),
           child: Row(
             children: [
-              Container(
-                width: 80.0,
-                height: 80.0,
-                decoration: BoxDecoration(
-                  color: const Color(0xff7c94b6),
-                  image: DecorationImage(
-                    image: NetworkImage(
-                        'https://firebasestorage.googleapis.com/v0/b/dating-appp-2d438.appspot.com/o/user_images%2F${senderId}.jpg?alt=media&token=d69fa31c-5470-4e27-8081-eeb7fc49a17a'),
-                    fit: BoxFit.cover,
-                  ),
-                  borderRadius: const BorderRadius.all(Radius.circular(50.0)),
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 2.0,
-                  ),
-                ),
-              ),
+              FutureBuilder(
+                  future: findValidFileUrl(senderId),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    return Container(
+                      width: 80.0,
+                      height: 80.0,
+                      decoration: BoxDecoration(
+                        color: const Color(0xff7c94b6),
+                        image: DecorationImage(
+                          image: NetworkImage(snapshot.data.toString()),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(50.0)),
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 2.0,
+                        ),
+                      ),
+                    );
+                  }),
               Padding(
                 padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
                 child: Column(
