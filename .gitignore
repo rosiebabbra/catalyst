@@ -48,6 +48,7 @@ frontend/lib/firebase_options.dart
 **/android/app/release
 
 # New directory structure
+frontend/assets/**
 frontend/assets/files/**
 frontend/assets/images/**
 frontend/assets/videos/**
