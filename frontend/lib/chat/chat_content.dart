@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:catalyst/matches/match_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -33,6 +33,29 @@ class ChatContentState extends State<ChatContent> {
   @override
   void initState() {
     super.initState();
+    fetchImages();
+  }
+
+  final FirebaseStorage storage = FirebaseStorage.instance;
+  List<String> imageUrls = [];
+
+  Future<void> fetchImages() async {
+    try {
+      // Reference to the folder where your images are stored
+      final ListResult result = await storage.ref('user_images').listAll();
+      final List<String> urls = [];
+
+      for (var ref in result.items) {
+        final String url = await ref.getDownloadURL();
+        urls.add(url);
+      }
+
+      setState(() {
+        imageUrls = urls;
+      });
+    } catch (e) {
+      print('Error fetching images: $e');
+    }
   }
 
   @override

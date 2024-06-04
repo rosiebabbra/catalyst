@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:rxdart/rxdart.dart';
 import 'chat_content.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<dynamic> getUserData(String userId) async {
   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -199,7 +200,6 @@ class ChatListState extends State<ChatList> {
         return aTimestamp
             .compareTo(bTimestamp); // Use compareTo for ascending order
       });
-      print(matchName);
       return snapshots.isEmpty
           ? [
               {'content': 'Start your conversation!'}
@@ -337,20 +337,22 @@ class Message extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<String?> findValidFileUrl(String senderId) async {
-      var fileExts = ['.jpg', '.jpeg', '.png'];
+      var token = dotenv.get('FIREBASE_TOKEN');
+      var fileExts = ['.jpeg', '.jpg', '.png'];
       var baseUrl =
-          'https://firebasestorage.googleapis.com/v0/b/dating-appp-2d438.appspot.com/o/user_images%2F';
-      var token = 'd69fa31c-5470-4e27-8081-eeb7fc49a17a';
+          'https://firebasestorage.googleapis.com/v0/b/dating-appp-2d438.appspot.com/o/';
+      var imgBucket = 'user_images%2F';
+      var url = '';
 
       for (var ext in fileExts) {
-        var url = '${baseUrl}${senderId}${ext}?alt=media&token=$token';
+        url = '${baseUrl}${imgBucket}${senderId}${ext}?alt=media&token=$token';
         var response = await http.head(Uri.parse(url));
 
         if (response.statusCode == 200) {
           return url;
         }
       }
-      return null; // No valid URL found
+      return '${baseUrl}error_loading_image.png?alt=media&token=$token';
     }
 
     return GestureDetector(
@@ -391,13 +393,18 @@ class Message extends StatelessWidget {
               FutureBuilder(
                   future: findValidFileUrl(senderId),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.data == null) {
+                      return CircularProgressIndicator();
+                    }
+                    var imageFile = NetworkImage(snapshot.data.toString());
+
                     return Container(
                       width: 80.0,
                       height: 80.0,
                       decoration: BoxDecoration(
                         color: const Color(0xff7c94b6),
                         image: DecorationImage(
-                          image: NetworkImage(snapshot.data.toString()),
+                          image: imageFile,
                           fit: BoxFit.cover,
                         ),
                         borderRadius:
