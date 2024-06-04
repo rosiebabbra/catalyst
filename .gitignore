@@ -49,17 +49,17 @@ frontend/lib/firebase_options.dart
 
 # New directory structure
 frontend/assets/**
-frontend/assets/files/**
-frontend/assets/images/**
-frontend/assets/videos/**
 frontend/build/**
 frontend/web/**
+frontend/android/**
+frontend/ios/**
+frontend/linux/**
+frontend/macos/**
+frontend/windows/**
 frontend/pubspec.lock
-frontend/hobby-app/hobby-app/Assets.xcassets/
 python/bin/
 python/lib/
 python/database/serviceAccountKey.json
-frontend/ios/Runner/Assets.xcassets/*
 
 # keys
 **/.env
