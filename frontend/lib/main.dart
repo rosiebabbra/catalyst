@@ -12,6 +12,7 @@ import 'package:catalyst/login/password_reset_screen.dart';
 import 'package:catalyst/swipes_completed/main.dart';
 import 'package:video_player/video_player.dart';
 import 'home/home_screen.dart';
+import 'login/forgot_password_screen.dart';
 import 'login/login_screen.dart';
 import 'login/password_reset_landing_screen.dart';
 import 'models/user_data.dart';
@@ -137,7 +138,7 @@ class BackgroundVideoState extends State<MyApp> {
       },
       '1.0.0': {
         '/login': (context) => const LoginScreen(versionId: '1.0.0'),
-        // '/forgot-password': (context) => const ForgotPasswordScreen(),
+        '/forgot-password': (context) => const ForgotPasswordScreen(),
         '/password-reset': (context) => const PasswordResetScreen(),
         '/password-reset-landing-page': (context) =>
             const PasswordResetLandingScreen(),
