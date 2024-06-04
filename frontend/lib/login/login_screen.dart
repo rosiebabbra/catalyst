@@ -124,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           _passwordVisible
                               ? Icons.visibility
                               : Icons.visibility_off,
-                          color: Theme.of(context).primaryColorDark,
+                          // color: Theme.of(context).primaryColorDark,
                         ),
                         onPressed: () {
                           // Update the state i.e. toogle the state of passwordVisible variable
@@ -144,59 +144,55 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              if (emailErrorMessage.isNotEmpty)
-                const SizedBox(
-                  height: 20,
-                ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      emailErrorMessage,
-                      style: const TextStyle(
-                          color: Colors.red, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-              if (passwordErrorMessage.isNotEmpty)
-                const SizedBox(
-                  height: 5,
-                ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      passwordErrorMessage,
-                      style: const TextStyle(
-                          color: Colors.red, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
+              SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Checkbox(
-                    side: const BorderSide(
-                        width: 2, color: Color.fromRGBO(97, 97, 97, 1)),
-                    checkColor: Colors.white,
-                    fillColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                      if (states.contains(MaterialState.selected)) {
-                        return const Color(0xff33D15F);
-                      }
-                      return Colors.transparent;
-                    }),
-                    value: isChecked,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        isChecked = value!;
-                      });
-                    },
+                  SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: Checkbox(
+                      side: const BorderSide(
+                          width: 2, color: Color.fromRGBO(97, 97, 97, 1)),
+                      checkColor: Colors.white,
+                      fillColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.selected)) {
+                          return const Color(0xff7301E4);
+                        }
+                        return Colors.transparent;
+                      }),
+                      value: isChecked,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isChecked = value!;
+                        });
+                      },
+                    ),
                   ),
-                  const Text('Remember me?', style: TextStyle(fontSize: 16))
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+                    child: const Text('Remember me?',
+                        style: TextStyle(fontSize: 16)),
+                  )
                 ],
+              ),
+              SizedBox(
+                height: 40,
+                child: Text(
+                  emailErrorMessage,
+                  textAlign: TextAlign.start,
+                  style: const TextStyle(
+                      color: Colors.red, fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(
+                height: 40,
+                child: Text(
+                  passwordErrorMessage,
+                  style: const TextStyle(
+                      color: Colors.red, fontWeight: FontWeight.bold),
+                ),
               ),
               const SizedBox(height: 25),
               Row(
@@ -278,9 +274,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.all(0),
                   ),
-                  child: const Text(
+                  child: Text(
                     "Forgot your password?",
-                    style: TextStyle(fontSize: 14),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[800]),
                   ),
                 ),
               ),
@@ -291,10 +287,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.all(0),
                 ),
-                child: const Text(
+                child: Text(
                   "Don't have an account yet? Register now",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[800]),
                 ),
               ),
             ],
