@@ -6,6 +6,7 @@ import 'package:rxdart/rxdart.dart';
 import 'chat_content.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:catalyst/utils/utils.dart';
 
 Future<dynamic> getUserData(String userId) async {
   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -336,25 +337,6 @@ class Message extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<String?> findValidFileUrl(String senderId) async {
-      var token = dotenv.get('FIREBASE_TOKEN');
-      var fileExts = ['.jpeg', '.jpg', '.png'];
-      var baseUrl =
-          'https://firebasestorage.googleapis.com/v0/b/dating-appp-2d438.appspot.com/o/';
-      var imgBucket = 'user_images%2F';
-      var url = '';
-
-      for (var ext in fileExts) {
-        url = '${baseUrl}${imgBucket}${senderId}${ext}?alt=media&token=$token';
-        var response = await http.head(Uri.parse(url));
-
-        if (response.statusCode == 200) {
-          return url;
-        }
-      }
-      return '${baseUrl}error_loading_image.png?alt=media&token=$token';
-    }
-
     return GestureDetector(
       onTap: () {
         // String format in the user and sender ids to get all the messages
@@ -391,7 +373,7 @@ class Message extends StatelessWidget {
           child: Row(
             children: [
               FutureBuilder(
-                  future: findValidFileUrl(senderId),
+                  future: findValidFirebaseUrl(senderId),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.data == null) {
                       return CircularProgressIndicator();
