@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:catalyst/utils/utils.dart';
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({Key? key}) : super(key: key);
@@ -55,19 +56,27 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Center(
                 child: Stack(children: [
-                  Container(
-                    width: 100.0,
-                    height: 100.0,
-                    decoration: BoxDecoration(
-                      color: const Color(0xff7c94b6),
-                      image: DecorationImage(
-                        image: NetworkImage(
-                            'https://firebasestorage.googleapis.com/v0/b/dating-appp-2d438.appspot.com/o/user_images%2F$currentUserId.jpg?alt=media&token=93205064-c7ab-4b20-8750-9821c2bd97d0'),
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(50.0)),
-                    ),
+                  FutureBuilder(
+                    future: findValidFirebaseUrl(currentUserId.toString()),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      var imageFile = NetworkImage(snapshot.data.toString());
+                      if (snapshot.data == null) {
+                        return CircularProgressIndicator();
+                      }
+                      return Container(
+                        width: 100.0,
+                        height: 100.0,
+                        decoration: BoxDecoration(
+                          color: const Color(0xff7c94b6),
+                          image: DecorationImage(
+                            image: imageFile,
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(50.0)),
+                        ),
+                      );
+                    },
                   ),
                 ]),
               ),
