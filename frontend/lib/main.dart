@@ -16,7 +16,7 @@ import 'login/forgot_password_screen.dart';
 import 'login/login_screen.dart';
 import 'login/password_reset_landing_screen.dart';
 import 'models/user_data.dart';
-import 'my_profile/my_profile_screen.dart';
+import 'my_profile/main.dart';
 import 'onboarding/dob_screen.dart';
 import 'onboarding/gender_identification_screen.dart';
 import 'onboarding/location_disclaimer_screen.dart';
