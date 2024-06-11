@@ -28,7 +28,7 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordReEntryController = TextEditingController();
 
-  updateUserInfo(String userId, String email) {
+  createUserRecord(String userId, String email) {
     if (isSafeFromSqlInjection(userId) && isSafeFromSqlInjection(email)) {
       FirebaseFirestore.instance.collection('users').add(
           {'user_id': userId, 'email': email, 'created_at': DateTime.now()});
@@ -389,7 +389,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                       password: passwordController.text,
                                     );
                                     if (credential.user != null) {
-                                      updateUserInfo(
+                                      createUserRecord(
                                           credential.user!.uid.toString(),
                                           emailController.text);
                                     } else {

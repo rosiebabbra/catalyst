@@ -18,31 +18,6 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
   var incorrectlyFormattedErrorMsg = '';
   TextEditingController controller = TextEditingController();
 
-  updateUserInfo(User? currentUser, String firstName) async {
-    if (isSafeFromSqlInjection(firstName)) {
-      // Filter to user's record and write name
-      QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('user_id', isEqualTo: currentUser?.uid)
-          .get();
-
-      if (snapshot.docs.isNotEmpty) {
-        // Assume there's only one matching document (you might need to adjust if multiple documents match)
-        DocumentSnapshot documentSnapshot = snapshot.docs.first;
-
-        // Get the document reference and update the fields
-        DocumentReference documentReference = FirebaseFirestore.instance
-            .collection('users')
-            .doc(documentSnapshot.id);
-
-        // Update the fields
-        await documentReference.update({
-          'first_name': firstName,
-        });
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -205,7 +180,7 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                                   if (emptyNameErrorMsg.isEmpty &&
                                       incorrectlyFormattedErrorMsg.isEmpty &&
                                       isSafeFromSqlInjection(formattedName)) {
-                                    updateUserInfo(
+                                    updateUserFirstName(
                                         currentUser, controller.text);
                                     Navigator.pushNamed(
                                         context, '/onboarding-dob');

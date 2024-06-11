@@ -1,29 +1,9 @@
 import 'dart:math' as math;
+import 'package:catalyst/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-updateUserInfo(User? user, int birthDate) async {
-  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-      .collection('users')
-      .where('user_id', isEqualTo: user?.uid)
-      .get();
-
-  if (querySnapshot.docs.isNotEmpty) {
-    // Assume there's only one matching document (you might need to adjust if multiple documents match)
-    DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
-
-    // Get the document reference and update the fields
-    DocumentReference documentReference =
-        FirebaseFirestore.instance.collection('users').doc(documentSnapshot.id);
-
-    // Update the fields
-    await documentReference.update({
-      'birthdate': birthDate,
-    });
-  }
-}
 
 class DOBEntryScreen extends StatefulWidget {
   const DOBEntryScreen({
@@ -137,7 +117,7 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
                                 var intBirthDate = selectedDate.year * 10000 +
                                     selectedDate.month * 100 +
                                     selectedDate.day;
-                                updateUserInfo(currentUser, intBirthDate);
+                                updateUserBirthdate(currentUser, intBirthDate);
                                 Navigator.pushNamed(
                                     context, '/onboarding-gender');
                               },

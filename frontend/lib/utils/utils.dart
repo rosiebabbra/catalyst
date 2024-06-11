@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -73,5 +74,51 @@ Future<dynamic> getUserData(String userId) async {
     }
   } else {
     return {'first_name': 'Error rendering user name'};
+  }
+}
+
+updateUserFirstName(User? currentUser, String firstName) async {
+  if (isSafeFromSqlInjection(firstName)) {
+    // Filter to user's record and write name
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('user_id', isEqualTo: currentUser?.uid)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      // Assume there's only one matching document (you might need to adjust if multiple documents match)
+      DocumentSnapshot documentSnapshot = snapshot.docs.first;
+
+      // Get the document reference and update the fields
+      DocumentReference documentReference = FirebaseFirestore.instance
+          .collection('users')
+          .doc(documentSnapshot.id);
+
+      // Update the fields
+      await documentReference.update({
+        'first_name': firstName,
+      });
+    }
+  }
+}
+
+updateUserBirthdate(User? user, int birthDate) async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .where('user_id', isEqualTo: user?.uid)
+      .get();
+
+  if (querySnapshot.docs.isNotEmpty) {
+    // Assume there's only one matching document (you might need to adjust if multiple documents match)
+    DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+
+    // Get the document reference and update the fields
+    DocumentReference documentReference =
+        FirebaseFirestore.instance.collection('users').doc(documentSnapshot.id);
+
+    // Update the fields
+    await documentReference.update({
+      'birthdate': birthDate,
+    });
   }
 }
