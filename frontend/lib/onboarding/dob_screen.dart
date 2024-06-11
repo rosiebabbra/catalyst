@@ -4,6 +4,27 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+updateUserInfo(User? user, int birthDate) async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .where('user_id', isEqualTo: user?.uid)
+      .get();
+
+  if (querySnapshot.docs.isNotEmpty) {
+    // Assume there's only one matching document (you might need to adjust if multiple documents match)
+    DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+
+    // Get the document reference and update the fields
+    DocumentReference documentReference =
+        FirebaseFirestore.instance.collection('users').doc(documentSnapshot.id);
+
+    // Update the fields
+    await documentReference.update({
+      'birthdate': birthDate,
+    });
+  }
+}
+
 class DOBEntryScreen extends StatefulWidget {
   const DOBEntryScreen({
     Key? key,
@@ -17,28 +38,6 @@ class _DOBEntryScreenState extends State<DOBEntryScreen> {
   var errorMsg = '';
   DateTime selectedDate =
       DateTime.now().subtract(const Duration(days: 18 * 365));
-
-  updateUserInfo(User? user, int birthDate) async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .where('user_id', isEqualTo: user?.uid)
-        .get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      // Assume there's only one matching document (you might need to adjust if multiple documents match)
-      DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
-
-      // Get the document reference and update the fields
-      DocumentReference documentReference = FirebaseFirestore.instance
-          .collection('users')
-          .doc(documentSnapshot.id);
-
-      // Update the fields
-      await documentReference.update({
-        'birthdate': birthDate,
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

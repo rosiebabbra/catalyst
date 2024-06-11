@@ -59,3 +59,19 @@ double calculateDistance(GeoPoint point1, GeoPoint point2) {
 
   return haversineDistance();
 }
+
+Future<dynamic> getUserData(String userId) async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .where('user_id', isEqualTo: userId)
+      .get();
+
+  if (querySnapshot.docs.isNotEmpty) {
+    for (QueryDocumentSnapshot document in querySnapshot.docs) {
+      var recordData = document.data() as Map<String, dynamic>;
+      return recordData;
+    }
+  } else {
+    return {'first_name': 'Error rendering user name'};
+  }
+}
