@@ -20,9 +20,12 @@ class _SignupScreenState extends State<SignupScreen> {
   var validEmailErrorMsg = '';
   var userExistsErrorMsg = '';
   var signUpErrorMsg = '';
+  bool passwordIsVisible = false;
+  bool confirmPasswordIsVisible = false;
+  bool passwordIsObscured = true;
+  bool confirmPasswordIsObscured = true;
   final formatShakeKey = GlobalKey<ShakeWidgetState>();
   final matchShakeKey = GlobalKey<ShakeWidgetState>();
-  var obscureTextChecked = true;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -87,84 +90,50 @@ class _SignupScreenState extends State<SignupScreen> {
                   style: TextStyle(color: Colors.grey[800], fontSize: 16),
                 ),
               ),
-              const SizedBox(height: 20),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: SizedBox(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width * 0.85,
-                  child: TextField(
-                    controller: emailController,
-                    decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.email),
-                        labelText: 'Your email',
-                        border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10)))),
-                  ),
-                ),
+              const SizedBox(height: 50),
+              TextFormField(
+                controller: emailController,
+                decoration: const InputDecoration(
+                    labelText: 'Your email',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)))),
               ),
               const SizedBox(height: 15),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: SizedBox(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width * 0.85,
-                  child: TextField(
-                    controller: passwordController,
-                    obscureText: obscureTextChecked,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.password_sharp),
-                      labelText: 'Your password',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 15),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: SizedBox(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width * 0.85,
-                  child: TextField(
-                    controller: passwordReEntryController,
-                    obscureText: obscureTextChecked,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.password_sharp),
-                      labelText: 'Re-enter your password',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 25),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Row(
-                  children: [
-                    Checkbox(
-                      value: !obscureTextChecked,
-                      fillColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.selected)) {
-                          return const Color(0xff33D15F);
-                        }
-                        return Colors.transparent;
-                      }),
-                      onChanged: (value) {
+              TextFormField(
+                controller: passwordController,
+                obscureText: !passwordIsVisible,
+                decoration: InputDecoration(
+                  labelText: 'Your password',
+                  suffixIcon: IconButton(
+                      icon: passwordIsVisible
+                          ? Icon(Icons.visibility)
+                          : Icon(Icons.visibility_off),
+                      onPressed: () {
                         setState(() {
-                          obscureTextChecked = !obscureTextChecked;
+                          passwordIsVisible = !passwordIsVisible;
                         });
-                      },
-                    ),
-                    const Text(
-                      'Show password?',
-                      style: TextStyle(fontSize: 16),
-                    )
-                  ],
+                      }),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                ),
+              ),
+              const SizedBox(height: 15),
+              TextFormField(
+                controller: passwordReEntryController,
+                obscureText: !confirmPasswordIsVisible,
+                decoration: InputDecoration(
+                  labelText: 'Re-enter your password',
+                  suffixIcon: IconButton(
+                      icon: confirmPasswordIsVisible
+                          ? Icon(Icons.visibility)
+                          : Icon(Icons.visibility_off),
+                      onPressed: () {
+                        setState(() {
+                          confirmPasswordIsVisible = !confirmPasswordIsVisible;
+                        });
+                      }),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
                 ),
               ),
               Align(
@@ -172,17 +141,19 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (userExistsErrorMsg.isNotEmpty)
-                      const Icon(Icons.info_outline,
-                          size: 20, color: Colors.red),
-                    if (userExistsErrorMsg.isNotEmpty) const Text(' '),
-                    Expanded(
-                      child: Text(
-                        userExistsErrorMsg,
-                        style: const TextStyle(
-                            color: Colors.red, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                    userExistsErrorMsg.isNotEmpty
+                        ? Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 15.0),
+                              child: Text(
+                                userExistsErrorMsg,
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                          )
+                        : Container(),
                   ],
                 ),
               ),
@@ -190,12 +161,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 alignment: Alignment.centerLeft,
                 child: Row(
                   children: [
-                    if (validEmailErrorMsg.isNotEmpty)
-                      const SizedBox(height: 10),
-                    if (validEmailErrorMsg.isNotEmpty)
-                      const Icon(Icons.info_outline,
-                          size: 20, color: Colors.red),
-                    if (validEmailErrorMsg.isNotEmpty) const Text(' '),
                     Flexible(
                       child: Text(
                         validEmailErrorMsg,
@@ -210,17 +175,10 @@ class _SignupScreenState extends State<SignupScreen> {
                 alignment: Alignment.centerLeft,
                 child: Row(
                   children: [
-                    if (passwordFormatErrorMsg.isNotEmpty)
-                      const SizedBox(height: 5),
-                    if (passwordFormatErrorMsg.isNotEmpty)
-                      const Icon(Icons.info_outline,
-                          size: 20, color: Colors.red),
-                    if (passwordFormatErrorMsg.isNotEmpty) const Text(' '),
                     Flexible(
                       child: Text(
                         passwordFormatErrorMsg,
-                        style: const TextStyle(
-                            color: Colors.red, fontWeight: FontWeight.bold),
+                        style: const TextStyle(color: Colors.red),
                       ),
                     ),
                   ],
@@ -230,12 +188,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 alignment: Alignment.centerLeft,
                 child: Row(
                   children: [
-                    if (unMatchingPasswordsErrorMsg.isNotEmpty)
-                      const SizedBox(height: 5),
-                    if (unMatchingPasswordsErrorMsg.isNotEmpty)
-                      const Icon(Icons.info_outline,
-                          size: 20, color: Colors.red),
-                    if (unMatchingPasswordsErrorMsg.isNotEmpty) const Text(' '),
                     Text(
                       unMatchingPasswordsErrorMsg,
                       style: const TextStyle(
@@ -247,11 +199,6 @@ class _SignupScreenState extends State<SignupScreen> {
               Align(
                 child: Row(
                   children: [
-                    if (signUpErrorMsg.isNotEmpty) const SizedBox(height: 5),
-                    if (signUpErrorMsg.isNotEmpty)
-                      const Icon(Icons.info_outline,
-                          size: 20, color: Colors.red),
-                    if (signUpErrorMsg.isNotEmpty) const Text(' '),
                     Text(signUpErrorMsg),
                   ],
                 ),
@@ -310,10 +257,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                         // Email is not registered
                                       }
                                     } catch (e) {
-                                      setState(() {
-                                        userExistsErrorMsg =
-                                            "An error occurred. Please check your network settings or try again later.";
-                                      });
+                                      // setState(() {
+                                      //   userExistsErrorMsg =
+                                      //       "An error occurred. Please check your network settings or try again later.";
+                                      // });
                                     }
                                   }
 
@@ -330,7 +277,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   if (isExistingUser == true) {
                                     setState(() {
                                       userExistsErrorMsg =
-                                          "It looks like you've already registered! Head to the login page to log in to your account.";
+                                          "User already exists.";
                                     });
                                   } else {
                                     setState(() {

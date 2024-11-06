@@ -268,7 +268,7 @@ class HobbyScreenState extends State<HobbyScreen> {
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Explore'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.handshake_outlined), label: 'Inbox'),
+                icon: Icon(Icons.mail_outline), label: 'Inbox'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.star_border), label: 'My Profile'),
           ],

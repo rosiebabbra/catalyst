@@ -1,64 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-
-int calculateAge(int birthdateInt) {
-  // Extract year, month, and day from the birthdate integer
-  int year = birthdateInt ~/ 10000;
-  int month = (birthdateInt % 10000) ~/ 100;
-  int day = birthdateInt % 100;
-
-  // Create a DateTime object for the birthdate
-  DateTime birthDateTime = DateTime(year, month, day);
-
-  // Get today's date
-  DateTime today = DateTime.now();
-
-  // Calculate the age
-  int age = today.year - birthDateTime.year;
-
-  // Check if the current date is before the birthdate in the current year
-  if (today.month < birthDateTime.month ||
-      (today.month == birthDateTime.month && today.day < birthDateTime.day)) {
-    age--; // Subtract one from the age if the birthday hasn't occurred yet this year
-  }
-
-  return age;
-}
-
-Future<String> getCityFromCoordinates(double latitude, double longitude) async {
-  try {
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(latitude, longitude);
-
-    if (placemarks.isNotEmpty) {
-      String city = placemarks[0].locality ?? 'Unknown City';
-      return city;
-    }
-  } catch (e) {
-    print('Error fetching city name: $e');
-    return Future.delayed(const Duration(seconds: 2), () => 'Unknown City');
-  }
-  return Future.delayed(const Duration(seconds: 2), () => 'Unknown City');
-}
-
-Future<dynamic> getUserData(String userId) async {
-  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-      .collection('users')
-      .where('user_id', isEqualTo: userId)
-      .get();
-
-  if (querySnapshot.docs.isNotEmpty) {
-    for (QueryDocumentSnapshot document in querySnapshot.docs) {
-      var recordData = document.data() as Map<String, dynamic>;
-      return recordData;
-    }
-  } else {
-    return {'first_name': 'Error rendering user name'};
-  }
-}
+import 'package:catalyst/utils/utils.dart';
 
 class MatchScreen extends StatefulWidget {
   final String matchId;
@@ -724,55 +667,6 @@ class ActionButton extends StatelessWidget {
                         color: Colors.green,
                         size: 40,
                       ))),
-      ),
-    );
-  }
-}
-
-class InterestsWidget extends StatelessWidget {
-  InterestsWidget({super.key, required uid});
-
-  // Get all interest IDs associated with the currently logged in user ID
-  // Query each interest ID for its name from the interests table
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * .85,
-      height: 100,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.grey[300]!,
-          style: BorderStyle.solid,
-          width: 1.0,
-        ),
-        color: Colors.white,
-        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: TextButton(
-              style: ButtonStyle(
-                  enableFeedback: false,
-                  foregroundColor:
-                      MaterialStateProperty.all<Color>(const Color(0xff7301E4)),
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.grey[100]!),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(45),
-                          side: BorderSide(color: Colors.grey[800]!)))),
-              onPressed: () => {},
-              child: Text(
-                'somecrap',
-                style: TextStyle(fontSize: 12),
-              ),
-            ),
-          )
-        ],
       ),
     );
   }
