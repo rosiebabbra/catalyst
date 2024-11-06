@@ -184,11 +184,7 @@ class BackgroundVideoState extends State<MyApp> {
                   gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              const Color(0xffffffff).withOpacity(0.4),
-              Colors.transparent,
-              const Color(0xffffffff).withOpacity(0.2)
-            ],
+            colors: [Colors.black.withOpacity(0.25), Colors.black],
           ))),
           const HomeScreen()
         ],

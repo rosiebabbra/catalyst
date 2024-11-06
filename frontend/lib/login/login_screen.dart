@@ -94,53 +94,45 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(color: Colors.grey[800], fontSize: 16),
                   )),
               const SizedBox(height: 25),
-              SizedBox(
-                height: 50,
-                child: TextField(
-                  controller: emailController,
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: 'Your email',
+                  labelStyle: TextStyle(color: Colors.grey[600]),
+                  border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 15),
+              Form(
+                key: formKey,
+                child: TextFormField(
+                  controller: passwordController,
+                  obscureText: !_passwordVisible,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.email),
-                    labelText: 'Your email',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        // Based on passwordVisible state choose the icon
+                        _passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        // color: Theme.of(context).primaryColorDark,
+                      ),
+                      onPressed: () {
+                        // Update the state i.e. toogle the state of passwordVisible variable
+                        setState(() {
+                          _passwordVisible = !_passwordVisible;
+                        });
+                      },
+                    ),
                     labelStyle: TextStyle(color: Colors.grey[600]),
+                    labelText: 'Your password',
                     border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     filled: true,
                     fillColor: Colors.white,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 15),
-              SizedBox(
-                height: 50,
-                child: Form(
-                  key: formKey,
-                  child: TextFormField(
-                    controller: passwordController,
-                    obscureText: !_passwordVisible,
-                    decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          // Based on passwordVisible state choose the icon
-                          _passwordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          // color: Theme.of(context).primaryColorDark,
-                        ),
-                        onPressed: () {
-                          // Update the state i.e. toogle the state of passwordVisible variable
-                          setState(() {
-                            _passwordVisible = !_passwordVisible;
-                          });
-                        },
-                      ),
-                      prefixIcon: const Icon(Icons.password),
-                      labelStyle: TextStyle(color: Colors.grey[600]),
-                      labelText: 'Your password',
-                      border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
                   ),
                 ),
               ),

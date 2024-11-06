@@ -1,11 +1,11 @@
 import 'package:catalyst/onboarding/image_upload.dart';
-import 'package:catalyst/onboarding/location_disclaimer_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:catalyst/utils/text_fade.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:catalyst/utils/utils.dart';
 
 class LocationServiceDeniedScreen extends StatefulWidget {
   final String versionId;

@@ -85,8 +85,7 @@ Future<bool> determineMatch(userAId, userBId) async {
   }
 }
 
-Stream<List<dynamic>> fetchMatches(
-    double currentUserLat, double currentUserLong) {
+Stream<List<dynamic>> fetchMatches(String currentUserLocation) {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final User? user = auth.currentUser;
   final currentUserId = user?.uid;
@@ -97,9 +96,7 @@ Stream<List<dynamic>> fetchMatches(
     var users =
         snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
     var potentialMatches = users.where((user) {
-      double distance = getDistanceBetweenUsers(
-          {'location': GeoPoint(currentUserLat, currentUserLong)}, user);
-      return distance <= 100;
+      return user['location'] == currentUserLocation;
     }).toList();
 
     var matchedUsers = [];
@@ -217,8 +214,7 @@ class ChatListState extends State<ChatList> {
 
             if (userSnapshot.data['location'] != null) {
               return StreamBuilder(
-                  stream: fetchMatches(userSnapshot.data['location'].latitude,
-                      userSnapshot.data['location'].longitude),
+                  stream: fetchMatches(userSnapshot.data['location']),
                   builder:
                       (BuildContext matchContext, AsyncSnapshot matchSnapshot) {
                     if (matchSnapshot.hasError) {
@@ -287,7 +283,13 @@ class ChatListState extends State<ChatList> {
                       }
                     }
                     return const Center(
-                        child: CircularProgressIndicator(color: Colors.green));
+                        child: SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator(
+                              color: Colors.green,
+                              strokeWidth: 10,
+                            )));
                   });
             } else {
               return Center(

@@ -7,28 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:catalyst/utils/text_fade.dart';
-
-Future<void> writeData(
-  String collection,
-  String fieldToFilter,
-  String valueToFilter,
-  String columnToWrite,
-  dynamic valueToWrite,
-) async {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  try {
-    QuerySnapshot querySnapshot = await firestore
-        .collection(collection)
-        .where(fieldToFilter, isEqualTo: valueToFilter)
-        .get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      // If the document with the specified field and value exists, update the column
-      DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
-      await documentSnapshot.reference.update({columnToWrite: valueToWrite});
-    }
-  } catch (e) {}
-}
+import 'package:catalyst/utils/utils.dart';
 
 class LocationDisclaimerScreen extends StatefulWidget {
   final String versionId;

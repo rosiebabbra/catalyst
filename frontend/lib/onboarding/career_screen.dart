@@ -77,9 +77,7 @@ class CareerScreenState extends State<CareerScreen> {
                 DropdownMenuItem(
                     value: 'Entertainment', child: Text('Entertainment')),
                 DropdownMenuItem(value: 'Fashion', child: Text('Fashion')),
-                DropdownMenuItem(
-                    value: 'Finance and economic',
-                    child: Text('Finance and economic')),
+                DropdownMenuItem(value: 'Finance', child: Text('Finance')),
                 DropdownMenuItem(
                     value: 'Healthcare', child: Text('Healthcare')),
                 DropdownMenuItem(

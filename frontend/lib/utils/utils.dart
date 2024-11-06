@@ -3,6 +3,82 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:geocoding/geocoding.dart';
+
+final List<String> cities = [
+  'New York',
+  'London',
+  'Tokyo',
+  'Paris',
+  'Sydney',
+  'Berlin',
+  'Dubai',
+  'Singapore',
+  'Los Angeles',
+  'Toronto',
+  'Hong Kong',
+  'Beijing',
+  'San Francisco',
+  'Mumbai',
+  'Mexico City',
+  'Moscow',
+  'São Paulo',
+  'Istanbul',
+  'Seoul',
+  'Bangkok'
+];
+
+List<String> genderIdentities = [
+  'Woman (she/her)',
+  'Man (he/him)',
+  'Non binary (they/them)',
+  'Agender (they/them)',
+  'Gender non-conforming (they/them)',
+  'Prefer not to say',
+];
+
+List<String> occupations = [
+  'Advertising and marketing',
+  'Aerospace',
+  'Agriculture',
+  'Computer and technology',
+  'Construction',
+  'Education',
+  'Energy',
+  'Entertainment',
+  'Fashion',
+  'Finance',
+  'Healthcare',
+  'Hospitality',
+  'Manufacturing',
+  'Service',
+  'Media and news',
+  'Telecommunications',
+];
+
+int calculateAge(int birthdateInt) {
+  // Extract year, month, and day from the birthdate integer
+  int year = birthdateInt ~/ 10000;
+  int month = (birthdateInt % 10000) ~/ 100;
+  int day = birthdateInt % 100;
+
+  // Create a DateTime object for the birthdate
+  DateTime birthDateTime = DateTime(year, month, day);
+
+  // Get today's date
+  DateTime today = DateTime.now();
+
+  // Calculate the age
+  int age = today.year - birthDateTime.year;
+
+  // Check if the current date is before the birthdate in the current year
+  if (today.month < birthDateTime.month ||
+      (today.month == birthDateTime.month && today.day < birthDateTime.day)) {
+    age--; // Subtract one from the age if the birthday hasn't occurred yet this year
+  }
+
+  return age;
+}
 
 bool isSafeFromSqlInjection(String input) {
   RegExp sqlPattern = RegExp(
@@ -59,6 +135,13 @@ double calculateDistance(GeoPoint point1, GeoPoint point2) {
   }
 
   return haversineDistance();
+}
+
+DateTime parseDateFromInt(int yyyymmdd) {
+  int year = yyyymmdd ~/ 10000;
+  int month = (yyyymmdd % 10000) ~/ 100;
+  int day = yyyymmdd % 100;
+  return DateTime(year, month, day);
 }
 
 Future<dynamic> getUserData(String userId) async {
@@ -120,5 +203,73 @@ updateUserBirthdate(User? user, int birthDate) async {
     await documentReference.update({
       'birthdate': birthDate,
     });
+  }
+}
+
+Future<String> getCityFromCoordinates(double latitude, double longitude) async {
+  try {
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(latitude, longitude);
+
+    if (placemarks.isNotEmpty) {
+      String city = placemarks[0].locality ?? 'Unknown City';
+      return city;
+    }
+  } catch (e) {
+    print('Error fetching city name: $e');
+    return Future.delayed(const Duration(seconds: 2), () => 'Unknown City');
+  }
+  return Future.delayed(const Duration(seconds: 2), () => 'Unknown City');
+}
+
+Future<void> writeData(
+  String collection,
+  String fieldToFilter,
+  String valueToFilter,
+  String columnToWrite,
+  dynamic valueToWrite,
+) async {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  try {
+    QuerySnapshot querySnapshot = await firestore
+        .collection(collection)
+        .where(fieldToFilter, isEqualTo: valueToFilter)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // If the document with the specified field and value exists, update the column
+      DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+      await documentSnapshot.reference.update({columnToWrite: valueToWrite});
+    }
+  } catch (e) {}
+}
+
+Future getSelectedInterests(uid) async {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  try {
+    QuerySnapshot querySnapshot = await firestore
+        .collection('selected_interests')
+        .where('user_id', isEqualTo: uid)
+        .get();
+
+    return querySnapshot;
+  } catch (e) {
+    print(e);
+    return [];
+  }
+}
+
+Future getInterestNameFromId(interestId) async {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  try {
+    QuerySnapshot querySnapshot = await firestore
+        .collection('interests')
+        .where('interest_id', isEqualTo: interestId)
+        .get();
+
+    return querySnapshot;
+  } catch (e) {
+    print(e);
+    return [];
   }
 }
